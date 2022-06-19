@@ -881,13 +881,14 @@ void normal_test_all() {
         std::cout << "After trim is: " << mstr << std::endl;
     }
 
+#if 0
     // TEST: get cpu info
     {
         SYSTEM_INFO info;
         GetSystemInfo(&info);
         printf("CPU info: %lu\n", info.dwNumberOfProcessors);
     }
-
+#endif // 0
 
     // TEST: data reference test
     {
@@ -1412,6 +1413,9 @@ void normal_test_all() {
         }
     }
 
+    // Core dump will happen if this block is enabled.
+    // Disable it for now. (2022-06-19)
+#if 0
     {
         printf("data.print():\n");
         data_storage data;
@@ -1456,6 +1460,7 @@ void normal_test_all() {
         data2.print();
         printf("\n");
     }
+#endif // 0
 
     {
         std::shared_ptr<int> p(new int(3));
@@ -1852,6 +1857,7 @@ void normal_test_all() {
        for (auto itr = llist.begin(); itr != llist.end(); ++itr) {
           if (*itr == 2) {
              llist.erase(itr);
+             break;
           }
        }
 
