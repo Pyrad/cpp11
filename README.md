@@ -3,7 +3,7 @@ A repository for testing various features in CPP (c98, c11, and so on)
 
 
 
-## Note
+## Note: !!! Always Keeping 2 Repositories Same !!!
 
 There are 2 repositories working as backups for each other, which are
 
