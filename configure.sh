@@ -34,7 +34,11 @@ else
     echo "g++ is $CXX_BIN"
 fi
 
-GXX_VER=`g++ --version | head -n 1 | cut -d' ' -f 3`
+#GXX_VER=`g++ --version | head -n 1 | cut -d' ' -f 3`
+GXX_VER_STR=`g++ --version | head -n 1`
+GXX_VER_STR_LIST=($GXX_VER_STR)
+VERSTR_IDX=`expr ${#GXX_VER_STR_LIST[@]} - 1`
+GXX_VER=${GXX_VER_STR_LIST[$VERSTR_IDX]}
 echo "g++ version is: ${GXX_VER}"
 
 cp $MKF_TMPL $TAR_MAKEFILE
