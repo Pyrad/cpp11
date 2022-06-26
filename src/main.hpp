@@ -91,7 +91,7 @@ void tester_constexpr() {
     constexpr int x = 9;
     std::cout << x << std::endl;
 
-    int t = -1;
+    // int t = -1;
 
     // A pointer points to a constant value
     const int *p = nullptr;
@@ -109,6 +109,12 @@ void tester_constexpr() {
     // A constant pointer points to a constant
     constexpr const int *pp = &A_CONST_I;// OK, since A_CONST_I is defined globaly(outside functions)
     constexpr int *qq = &A_CONST_J;// OK, since A_CONST_J is defined globaly(outside functions)
+
+    std::cout << "value of *p = " << *p << std::endl;
+    std::cout << "value of *ip = " << *ip << std::endl;
+    std::cout << "value of q = " << q << std::endl;
+    std::cout << "value of pp = " << *pp << std::endl;
+    std::cout << "value of qq = " << *qq << std::endl;
 
     delete ip;
     delete np;
@@ -152,6 +158,12 @@ void tester_auto() {
     auto k = ci, &l = i; // Good, k is an integer, l is a reference to an integer
     auto &m = ci, *pp = &ci; // Good, m is an const reference to a constant value
                             // pp is a pointer to a constant value
+                            //
+    std::cout << ", " << b << ", " << c << ", "
+              << d << ", " << e << ", " << f << ", "
+              << g << ", " << j << ", " << k << ", "
+              << l << ", " << m << ", " << pp << ", "
+              << p << std::endl;
 
     std::cout << "End of tester\n" << std::endl;
 }
@@ -164,6 +176,8 @@ void tester_decltype() {
     decltype(ci) x = 0; // x is a constant integer
     decltype(cj) y = x; // y is a reference to a constant integer
     // decltype(cj) z; // Error! z is a reference to a constant integer, must be initialized
+
+    std::cout << y << std::endl;
 
     std::cout << "End of tester\n" << std::endl;
 }
@@ -626,16 +640,19 @@ void test_all() {
     	int *pstart = std::begin(ia);
     	int *pend = std::end(ia);
     	std::ptrdiff_t d1 = pstart - pend;
+        std::cout <<"std::ptrdiff_t d1 = "<< d1 << std::endl;
 
     	std::vector<std::string> svec1{"good", "day", "today"};
     	auto ps = std::begin(svec1);
     	auto pe = std::end(svec1);
     	auto d2 = ps - pe;
+        std::cout <<"std::ptrdiff_t d2 = "<< d2 << std::endl;
 
     	std::vector<std::string> svec2{"good", "day", "today"};
     	decltype(svec2.begin()) s = std::begin(svec2);
     	decltype(svec2.end()) e = std::end(svec2);
     	auto d3 = s - e;
+        std::cout <<"std::ptrdiff_t d3 = "<< d3 << std::endl;
     }
 
     // sizeof operator
@@ -775,6 +792,11 @@ void test_all() {
             std::cout << ' ' << val;
         }
         std::cout << '\n';
+
+        for (const auto &val : otherArr2) {
+            std::cout << ' ' << val;
+        }
+        std::cout << '\n';
     }
 
     // cbegin() & cend() & crbegin() & crend()
@@ -853,7 +875,7 @@ void test_all() {
         std::cout << x("abc", "defg") << std::endl;
 
         auto sz = 9;
-        auto y = [sz](const std::string &a) { return a.size() < sz ? "YES" : "NO"; };
+        auto y = [sz](const std::string &a) { return a.size() < std::size_t(sz) ? "YES" : "NO"; };
         std::cout << y("abc") << std::endl;
 
         // Multiple captures
@@ -1092,6 +1114,11 @@ void test_all() {
         const int &r3 = i * 42;
         // Pass
         int &&rr2 = i * 42;
+
+        std::cout << "r, r3, rr2 = "
+                  << r << ", "
+                  << r3 << ", "
+                  << rr2 << std::endl;
     }
 
     // rvalue reference - additional
@@ -1161,7 +1188,7 @@ void test_all() {
         printf("'pcr' is: %d\n", pcr);
         printf("\n");
 
-        printf("'qcr' is: %d\n", pcr);
+        printf("'qcr' is: %d\n", qcr);
         printf("\n");
     }
 

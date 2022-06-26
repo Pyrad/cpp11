@@ -171,7 +171,7 @@ void boost_polygon_test() {
 
     typedef bg::model::point<int, 2, bg::cs::cartesian> point;
     // typedef bg::model::point<double, 2, bg::cs::cartesian> point;
-    typedef bg::model::box<point> box;
+    // typedef bg::model::box<point> box;
     typedef bg::model::polygon<point, false, false> polygon; // ccw, open polygon
 
     // typedef boost::geometry::model::polygon<boost::geometry::model::d2::point_xy<int> > polygon;

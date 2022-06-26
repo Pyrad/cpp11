@@ -150,10 +150,10 @@ public:
 
 protected:
     int m_id;
-public:
-    int m_value2;
 private:
     int m_value;
+public:
+    int m_value2;
 };
 
 
@@ -459,7 +459,7 @@ template<typename T> struct SharedArray {
     boost::shared_ptr<T[]> m_data;
 };
 
-template<typename T, bool> inline int getAniValue(const T &v) { }
+template<typename T, bool> inline int getAniValue(const T &v) { return 0; }
 
 template<> inline int getAniValue<zoo_data, true>(const zoo_data &v) { return v.get_monkey(); }
 template<> inline int getAniValue<zoo_data, false>(const zoo_data &v) { return v.get_tiger(); }
@@ -517,6 +517,8 @@ public:
    // Point3D(const Point3D &p) : GeoPoint(p.x(), p.y()), m_z(p.z()) { }
    Point3D(const Point3D &p) = default;
    Point3D(Point3D &&p) = default;
+   virtual ~Point3D() { }
+
 public:
    const int& z() const { return m_z; }
    int& z() { return m_z; }
@@ -528,6 +530,8 @@ public:
       m_x = pt.x();
       m_y = pt.y();
       m_z = pt.z();
+
+      return *this;
    }
 
    void swap(Point3D &pt) {
