@@ -32,7 +32,7 @@ LINK_LIBS	:=	$(foreach n,$(BOOST_LNK),$(subst $n,-l$n,$n))
 
 OPT_OPTN	:=
 DEBUG_OPTN	:=	-g
-WARN_OPTN	:=	-Wall
+WARN_OPTN	:=	-Wall -Wno-deprecated
 MSG_OPTN	:=	-fmessage-length=0
 NO_LINK		:=	-c
 
