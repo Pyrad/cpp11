@@ -29,3 +29,6 @@ done
 
 # Return value is the ver_str
 echo "$ver_str"
+
+exit 0
+
