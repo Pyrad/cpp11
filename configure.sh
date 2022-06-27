@@ -1,38 +1,20 @@
 #!/bin/bash -
 
-if [[ -z "$BOOST_INC_HOME" ]]; then
-    echo "Env var BOOST_INC_HOME is not found"
-    exit
-else
-    echo "Found env var BOOST_INC_HOME: $BOOST_INC_HOME"
-fi
-
-if [[ -z "$BOOST_LIB_HOME" ]]; then
-    echo "Env var BOOST_LIB_HOME is not found"
-    exit
-else
-    echo "Found env var BOOST_LIB_HOME: $BOOST_LIB_HOME"
-fi
+[[ -z "$BOOST_INC_HOME" || ! -d "$BOOST_INC_HOME" ]] && echo "Env var BOOST_INC_HOME is not found" && exit 20
+[[ -z "$BOOST_LIB_HOME" || ! -d "$BOOST_LIB_HOME" ]] && echo "Env var BOOST_LIB_HOME is not found" && exit 20
+echo "Found env var BOOST_INC_HOME: $BOOST_INC_HOME"
+echo "Found env var BOOST_LIB_HOME: $BOOST_LIB_HOME"
 
 MKF_TMPL="./template.makefile"
 TAR_MAKEFILE="GNUmakefile"
-if [[ ! -f $MKF_TMPL ]]; then
-    echo "Template file($MKF_TMPL) for Makefile is not found"
-    exit
-fi
 
-if [[ -f $TAR_MAKEFILE ]]; then
-    echo "Warning: removing old $TAR_MAKEFILE"
-    rm -rf $TAR_MAKEFILE
-fi
+[[ ! -f $MKF_TMPL ]] && echo "Template file($MKF_TMPL) for Makefile is NOT found" && exit 2
+echo "Template file($MKF_TMPL) for Makefile is found"
+[[ -f $TAR_MAKEFILE ]] && echo "Warning: removing old $TAR_MAKEFILE" && rm -rf $TAR_MAKEFILE
 
 CXX_BIN=`which g++`
-if [[ $? == 1 ]]; then
-    echo "Error: g++ is not found"
-    exit
-else
-    echo "g++ is $CXX_BIN"
-fi
+[[ $? == 1 ]] && echo "Error: g++ is not found" && exit 2
+echo "g++ is $CXX_BIN"
 
 #GXX_VER=`g++ --version | head -n 1 | cut -d' ' -f 3`
 GXX_VER_STR=`g++ --version | head -n 1`
