@@ -23,6 +23,14 @@ VERSTR_IDX=`expr ${#GXX_VER_STR_LIST[@]} - 1`
 GXX_VER=${GXX_VER_STR_LIST[$VERSTR_IDX]}
 echo "g++ version is: ${GXX_VER}"
 
+UTILS_FILE="utils.config.sh"
+[[ ! -f $UTILS_FILE ]] && echo "$UTILS_FILE not found" && exit 2
+echo "Searching for boost library string..."
+BVERSTR=`. $UTILS_FILE`
+[[ -z $BVERSTR ]] && echo "Empty string found for boost library"
+echo "Boost library string found: $BVERSTR"
+[[ $? -ne 0 ]] && echo "Error source $UTILS_FILE" && exit 2
+
 cp $MKF_TMPL $TAR_MAKEFILE
 
 ### Don't use '/' in reg expression in sed, as $BOOST_INC_HOME has '/'
@@ -30,6 +38,8 @@ cp $MKF_TMPL $TAR_MAKEFILE
 sed -i "s#<__BOOST_INC_TO_FILL__>#${BOOST_INC_HOME}#g" $TAR_MAKEFILE
 sed -i "s#<__BOOST_LIB_TO_FILL__>#${BOOST_LIB_HOME}#g" $TAR_MAKEFILE
 sed -i "s#<__CXX_TO_FILL>#${CXX_BIN}#g" $TAR_MAKEFILE
+# Replace boost library version string
+sed -i "s#<__BVSTR__>#${BVERSTR}#g" $TAR_MAKEFILE
 
 
 ### Clean old objects & binary directory

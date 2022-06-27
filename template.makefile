@@ -9,7 +9,7 @@ FTYPE	:=	.cpp
 
 BOOST_INC	:=	<__BOOST_INC_TO_FILL__>
 BOOST_LIB	:=	<__BOOST_LIB_TO_FILL__>
-BOOST_LNK	:=	boost_regex boost_filesystem
+BOOST_LNK	:=	boost_regex<__BVSTR__> boost_filesystem<__BVSTR__>
 
 CXX	:=	<__CXX_TO_FILL>
 
