@@ -26,7 +26,8 @@ echo "g++ version is: ${GXX_VER}"
 UTILS_FILE="utils.config.sh"
 [[ ! -f $UTILS_FILE ]] && echo "$UTILS_FILE not found" && exit 2
 echo "Searching for boost library string..."
-BVERSTR=`. $UTILS_FILE`
+. $UTILS_FILE
+BVERSTR=`find_boost_version_str $BOOST_LIB_HOME`
 [[ -z $BVERSTR ]] && echo "Empty string found for boost library"
 echo "Boost library string found: $BVERSTR"
 [[ $? -ne 0 ]] && echo "Error source $UTILS_FILE" && exit 2
