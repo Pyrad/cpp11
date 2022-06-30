@@ -2207,6 +2207,25 @@ void normal_test_all() {
        printf("\n");
     }
 
+    // Test for filling/padding/width of std::cout
+    {
+        std::cout << 100 << '\n';
+        std::cout.width(10);
+        std::cout << 100 << '\n';
+        std::cout << 200 << '\n';
+        std::cout << 300 << std::endl;
+        std::cout.fill('x');
+        std::cout.width(15);
+        std::cout << std::right << 400 << '\n';
+        std::cout << std::right << 400 << "kkk" << "ttt" << '\n';
+        std::cout << 500 << '\n';
+        std::cout << 600 << " " << 700 << '\n';
+        std::cout.flags(std::ios::right);
+        std::cout.width(20);
+        std::cout << 600 << " " << 700 << '\n';
+        std::cout << 500 << '\n';
+    }
+
     std::cout << "---------- END OF FUNCTION: " << __FUNCTION__ << std::endl;
 
 } /* function normal_test_all */
