@@ -47,3 +47,6 @@ run
 # Ignore GNUmakefile, as configure.sh will generate it each time
 # make search files in order: GNUmakefile --> makefile --> Makefile
 GNUmakefile
+
+# Ignore a build folder (for CMake)
+build/
