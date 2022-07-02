@@ -41,10 +41,8 @@ BUILD_OPTIONS	:=	$(OPT_OPTN) $(DEBUG_OPTN) $(WARN_OPTN) $(MSG_OPTN) $(NO_LINK)
 all	: $(build_objs)
 	@echo "linked"
 	@if [[ -f $(target) ]]; then echo "$(target) exists"; rm -rf $(target); fi
-	@if [[ -L $(TAREGT_BIN) ]]; then echo "./$(TAREGT_BIN) exists"; rm -rf $(TAREGT_BIN); fi
 	$(CXX) -std=c++11 -L$(BOOST_LIB) -o $(target) $^ $(LINK_LIBS)
 	@echo "Create link to $(target)"
-	@ln -s $(target_r) $(TAREGT_BIN)
 
 ./$(OBJ_DIR)/%.o : ./$(SRC_DIR)/%.cpp
 	@echo "Building (no linking)"

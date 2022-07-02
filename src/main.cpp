@@ -33,7 +33,9 @@ int main() {
 
     namespace B = boost_test;
 
-    M::tester_constexpr();
+    namespace N = NORMAL;
+
+    N::tester_constexpr();
     M::tester_alias_declaration();
     M::tester_auto();
 
