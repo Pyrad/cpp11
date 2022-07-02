@@ -577,6 +577,27 @@ void partial_specialization_test(const int i) {
    }
 }
 
+// Inside class initialization
+class tester_initialization_in_class {
+public:
+    tester_initialization_in_class() {}
+    tester_initialization_in_class(int a): m_a(a) {}
+    tester_initialization_in_class(double b): m_b(b) {}
+    tester_initialization_in_class(int a, double b): m_a(a), m_b(b) {}
+
+public:
+    void print() const {
+        std::cout << "m_a: " << m_a << ", m_b: " << m_b << std::endl;
+    }
+public:
+    int m_global = 3;
+private:
+    int m_a = 1;
+    double m_b = 23.1;
+};
+
+    
+
 } // namespace NORMAL
 
 #endif //_NORMAL_HPP

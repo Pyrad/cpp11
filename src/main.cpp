@@ -37,14 +37,6 @@ int main() {
     M::tester_alias_declaration();
     M::tester_auto();
 
-
-    std::shared_ptr<M::tester_initialization_in_class> pa(new M::tester_initialization_in_class);
-    pa->print();
-    std::shared_ptr<M::tester_initialization_in_class> pb(new M::tester_initialization_in_class(3));
-    pb->print();
-    std::shared_ptr<M::tester_initialization_in_class> pc(new M::tester_initialization_in_class(11.9));
-    pc->print();
-
 #if SWITCH_ORDER
     M::test_all();
 

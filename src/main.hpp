@@ -183,26 +183,6 @@ void tester_decltype() {
 }
 
 
-// Inside class initialization
-class tester_initialization_in_class {
-public:
-    tester_initialization_in_class() {}
-    tester_initialization_in_class(int a): m_a(a) {}
-    tester_initialization_in_class(double b): m_b(b) {}
-    tester_initialization_in_class(int a, double b): m_a(a), m_b(b) {}
-
-public:
-    void print() const {
-        std::cout << "m_a: " << m_a << ", m_b: " << m_b << std::endl;
-    }
-public:
-    int m_global = 3;
-private:
-    int m_a = 1;
-    double m_b = 23.1;
-};
-
-    
 constexpr int getLiteralVal() {
     return 88;
 }
@@ -654,19 +634,6 @@ void test_all() {
     	auto d3 = s - e;
         std::cout <<"std::ptrdiff_t d3 = "<< d3 << std::endl;
     }
-
-    // sizeof operator
-    {
-        printf("\n");
-        tester_initialization_in_class a(1, 9.9);
-        std::size_t sz = sizeof tester_initialization_in_class::m_global;
-        auto sz1 = sizeof tester_initialization_in_class::m_global;
-        decltype(tester_initialization_in_class::m_global) sz2 = sizeof tester_initialization_in_class::m_global;
-        printf("Size of tester_initialization_in_class's member m_global: %llu\n", sz);
-        printf("Size of tester_initialization_in_class's member m_global: %llu\n", sz1);
-        printf("Size of tester_initialization_in_class's member m_global: %d\n", sz2);
-    }
-
 
     // for range loop
     {

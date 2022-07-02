@@ -901,6 +901,31 @@ void normal_test_all() {
     }
 #endif // 0
 
+    {
+        using TIIC = tester_initialization_in_class;
+        using t_sptr = std::shared_ptr<TIIC>;
+        t_sptr pa(new TIIC);
+        pa->print();
+        t_sptr pb(new TIIC(3));
+        pb->print();
+        t_sptr pc(new TIIC(11.9));
+        pc->print();
+    }
+
+    // sizeof operator
+    {
+        printf("\n");
+        tester_initialization_in_class a(1, 9.9);
+        std::size_t sz = sizeof tester_initialization_in_class::m_global;
+        auto sz1 = sizeof tester_initialization_in_class::m_global;
+        decltype(tester_initialization_in_class::m_global) sz2 = sizeof tester_initialization_in_class::m_global;
+        printf("Size of tester_initialization_in_class's member m_global: %llu\n", sz);
+        printf("Size of tester_initialization_in_class's member m_global: %llu\n", sz1);
+        printf("Size of tester_initialization_in_class's member m_global: %d\n", sz2);
+    }
+
+
+
     // TEST: data reference test
     {
         // See the definition of class dataRef
