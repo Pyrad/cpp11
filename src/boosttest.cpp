@@ -8,6 +8,9 @@
 #include <boost/geometry/index/rtree.hpp>
 #include <boost/foreach.hpp>
 
+#include <boost/bimap.hpp>
+#include <boost/circular_buffer.hpp>
+
 #include <cmath>
 #include <vector>
 #include <iostream>
@@ -340,6 +343,56 @@ void boost_polygon_creation_test() {
         printf("p is null after boost_polygon_creation\n");
     }
 }
+
+void test_boost_all() {
+    std::cout << "Start of function: " << __FUNCTION__ << "\n";
+
+    // boost::bimap
+    {
+        printf("\n");
+        typedef boost::bimap<std::string, int> bimap;
+        bimap animals;
+
+        animals.insert({"cat", 4});
+        animals.insert({"shark", 0});
+        animals.insert({"spider", 8});
+
+        std::cout << animals.left.count("cat") << '\n';
+        std::cout << animals.right.count(8) << '\n';
+    }
+
+    // boost::circular_buffer
+    {
+        printf("\n");
+        typedef boost::circular_buffer<int> circular_buffer;
+        circular_buffer cb{3};
+
+        cb.push_back(0);
+        cb.push_back(1);
+        cb.push_back(2);
+        cb.push_back(3);
+
+        std::cout << std::boolalpha << cb.is_linearized() << '\n';
+
+        circular_buffer::array_range ar1, ar2;
+
+        ar1 = cb.array_one();
+        ar2 = cb.array_two();
+        std::cout << ar1.second << ";" << ar2.second << '\n';
+
+        for (int i : cb)
+            std::cout << i << '\n';
+
+        cb.linearize();
+
+        ar1 = cb.array_one();
+        ar2 = cb.array_two();
+        std::cout << ar1.second << ";" << ar2.second << '\n';
+    }
+
+    std::cout << "End of function: " << __FUNCTION__ << "\n";
+
+} /* func tester_boost_all */
 
 
 void boost_normal_test_all() {

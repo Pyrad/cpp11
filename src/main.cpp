@@ -50,7 +50,7 @@ int main() {
 
 #if ENABLE_TEST_NORMAL_FEATURES
 
-    M::test_boost_all();
+    B::test_boost_all();
 
     M::test_std_regex();
 
@@ -64,5 +64,5 @@ int main() {
 
     std::cout << "\n\n---end of function main---\n" << std::endl;
 
-    // return 0;
+    return 0;
 }
