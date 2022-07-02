@@ -24,6 +24,8 @@
 
 namespace NORMAL {
 
+void tester_constexpr();
+
 
 using path_query_result_type = std::tuple<int, int, int, int>;
 using size_type = std::size_t;

@@ -34,6 +34,49 @@
 
 namespace NORMAL {
 
+/// ATTENTION!!!
+/// the warning option '-Wall' has been turn off since no need for this project
+/// just testing new features for c++11
+
+int A_CONST_J = 0;
+constexpr int A_CONST_I = 42;
+void tester_constexpr() {
+    std::cout << "START OF " << __FUNCTION__ << std::endl;
+    constexpr int x = 9;
+    std::cout << x << std::endl;
+
+    // int t = -1;
+
+    // A pointer points to a constant value
+    const int *p = nullptr;
+    int *np = new int(99);
+    p = np;
+
+    // A pointer points to a constant value
+    // But this value need to be a constant
+    constexpr int *q = nullptr;
+    // q = &t; // Error to assign a mutable value to read-only 'q'
+
+    int *ip = new int(88);
+    // q = ip; // Error to assign a mutable value to read-only 'q'
+
+    // A constant pointer points to a constant
+    constexpr const int *pp = &A_CONST_I;// OK, since A_CONST_I is defined globaly(outside functions)
+    constexpr int *qq = &A_CONST_J;// OK, since A_CONST_J is defined globaly(outside functions)
+
+    std::cout << "value of *p = " << *p << std::endl;
+    std::cout << "value of *ip = " << *ip << std::endl;
+    std::cout << "value of q = " << q << std::endl;
+    std::cout << "value of pp = " << *pp << std::endl;
+    std::cout << "value of qq = " << *qq << std::endl;
+
+    delete ip;
+    delete np;
+
+    std::cout << "End of tester\n" << std::endl;
+}
+
+
 bool validate_order(const std::vector<int> &arr) {
    if (arr.size() <= 1) {
       return true;
