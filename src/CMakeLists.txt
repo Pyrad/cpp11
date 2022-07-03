@@ -27,7 +27,8 @@ MESSAGE(STATUS "[PYRAD] This is the SOURCE directory: " ${MYCPP11TEST_SOURCE_DIR
 # set(BOOST_INCLUDEDIR /home/pyrad/procs/boost_1_69_0/include)
 # set(BOOST_LIBRARYDIR /home/pyrad/procs/boost_1_69_0/lib)
 
-set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0_v1)
+#set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0_v1)
+set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0)
 #set(BOOST_INCLUDEDIR /home/pyrad/procs/boost_1_69_0/include)
 #set(BOOST_LIBRARYDIR /home/pyrad/procs/boost_1_69_0/lib)
 
