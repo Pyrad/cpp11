@@ -18,6 +18,32 @@ SET(CMAKE_CXX_STANDARD_REQUIRED True)
 
 MESSAGE(STATUS "[PYRAD] This is the BINARY directory: " ${MYCPP11TEST_BINARY_DIR})
 MESSAGE(STATUS "[PYRAD] This is the SOURCE directory: " ${MYCPP11TEST_SOURCE_DIR})
+MESSAGE(STATUS "[PYRAD] CYGWIN: " ${CYGWIN})
+MESSAGE(STATUS "[PYRAD] MINGW: " ${MINGW})
+MESSAGE(STATUS "[PYRAD] MSYS: " ${MSYS})
+MESSAGE(STATUS "[PYRAD] UNIX: " ${UNIX})
+MESSAGE(STATUS "[PYRAD] CMAKE_SYSTEM: " ${CMAKE_SYSTEM})
+MESSAGE(STATUS "[PYRAD] CMAKE_SYSTEM_NAME: " ${CMAKE_SYSTEM_NAME})
+MESSAGE(STATUS "[PYRAD] CMAKE_SYSTEM_PROCESSOR: " ${CMAKE_SYSTEM_PROCESSOR})
+MESSAGE(STATUS "[PYRAD] CMAKE_HOST_SYSTEM: " ${CMAKE_HOST_SYSTEM})
+MESSAGE(STATUS "[PYRAD] CMAKE_HOST_SYSTEM_NAME: " ${CMAKE_HOST_SYSTEM_NAME})
+
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" AND ${MINGW} EQUAL 1)
+	MESSAGE(STATUS "[PYRAD] Windows MinGW system!")
+	MESSAGE(STATUS "[PYRAD] Assume current is MSYS2")
+	# NOTE, the boost should be compiled with the following command
+	# b2.exe install --layout=system threading=multi variant=release \
+	#                link=shared toolset=gcc address-model=64 \
+	#                --build-dir="D:\procs\boost_1_79_0_src\PyradBuild" \
+	#                --prefix="D:\procs\boost_1_79_0_system"
+	set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0_system")
+	set(BOOST_ROOT ${MY_BOOST_HOME_DIR})
+	set(BOOST_INCLUDEDIR ${MY_BOOST_HOME_DIR}/include)
+	set(BOOST_LIBRARYDIR ${MY_BOOST_HOME_DIR}/lib)
+elseif(${UNIX} STREQUAL "Unix")
+	MESSAGE(STATUS "[PYRAD] Unix system!")
+	set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0)
+endif()
 
 #set(BOOST_ROOT /home/pyrad/procs/boost_1_73_0)
 #set(BOOST_INCLUDEDIR /home/pyrad/procs/boost_1_73_0/include)
@@ -28,9 +54,18 @@ MESSAGE(STATUS "[PYRAD] This is the SOURCE directory: " ${MYCPP11TEST_SOURCE_DIR
 # set(BOOST_LIBRARYDIR /home/pyrad/procs/boost_1_69_0/lib)
 
 #set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0_v1)
-set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0)
+#set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0)
 #set(BOOST_INCLUDEDIR /home/pyrad/procs/boost_1_69_0/include)
 #set(BOOST_LIBRARYDIR /home/pyrad/procs/boost_1_69_0/lib)
+
+# set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0_system")
+# #set(MY_BOOST_HOME_DIR " /d/procs/boost_1_79_0")
+# set(BOOST_ROOT ${MY_BOOST_HOME_DIR})
+# set(BOOST_INCLUDEDIR ${MY_BOOST_HOME_DIR}/include)
+# set(BOOST_LIBRARYDIR ${MY_BOOST_HOME_DIR}/lib)
+# #set(Boost_LIB_PREFIX "lib")
+# #set(Boost_USE_STATIC_LIBS ON)
+# #set(Boost_USE_STATIC_RUNTIME ON)
 
 find_package(Boost 1.65.0 REQUIRED COMPONENTS filesystem regex)
 
