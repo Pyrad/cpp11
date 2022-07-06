@@ -1,3 +1,11 @@
+#############################################################################################
+### How to make this project ?
+###
+###  $ cmake -G Ninja <path-to-this-cmake-file> -DCMAKE_BUILD_TYPE=Release -DBoost_DEBUG=ON
+###  $ cmake --build .
+###
+#############################################################################################
+
 # Set the minimun version of CMake
 CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 
@@ -37,15 +45,37 @@ foreach(VAR IN LISTS DISTRO)
   message(STATUS "[PYRAD]   ${VAR}=`${${VAR}}`")
 endforeach()
 
+
+
+# In order to compiled with boost successfully, the boost library
+# should be compiled with the following command,
+# ==============================================================
+# .\b2.exe install \
+#		--build-type=complete \
+#		threading=multi \
+#		link=shared \
+#		address-model=64 \
+#		toolset=gcc \
+#		--prefix="D:\procs\boost_1_79_0"
+#
+# The structure of directories should look like below,
+# ==============================================================
+# boost_1_79_0_system/
+#	|---include/
+#	|		|---boost-1_79/
+#	|		      |---boost/
+#	|		      	  |---<all *.hpp headers>
+#	|		      	  |---<all_header_filer_folders>
+#	|
+#	|---lib/
+#		 |---cmake/
+#		 |---<all *.dll.a files>
+#		 |---<all *.dll files>
+
+
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" AND ${MINGW} EQUAL 1)
 	MESSAGE(STATUS "[PYRAD] Windows MinGW system!")
 	MESSAGE(STATUS "[PYRAD] Assume current is MSYS2")
-	# NOTE, the boost should be compiled with the following command
-	# b2.exe install --layout=system threading=multi variant=release \
-	#                link=shared toolset=gcc address-model=64 \
-	#                --build-dir="D:\procs\boost_1_79_0_src\PyradBuild" \
-	#                --prefix="D:\procs\boost_1_79_0_system"
-	#set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0_system")
 	set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0")
 	set(BOOST_ROOT ${MY_BOOST_HOME_DIR})
 	set(BOOST_INCLUDEDIR ${MY_BOOST_HOME_DIR}/include)
@@ -56,31 +86,12 @@ elseif(${UNIX} STREQUAL "Unix")
 	set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0)
 endif()
 
-#set(BOOST_ROOT /home/pyrad/procs/boost_1_73_0)
-#set(BOOST_INCLUDEDIR /home/pyrad/procs/boost_1_73_0/include)
-#set(BOOST_LIBRARYDIR /home/pyrad/procs/boost_1_73_0/lib)
-
-# set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0)
-# set(BOOST_INCLUDEDIR /home/pyrad/procs/boost_1_69_0/include)
-# set(BOOST_LIBRARYDIR /home/pyrad/procs/boost_1_69_0/lib)
-
-#set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0_v1)
-#set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0)
-#set(BOOST_INCLUDEDIR /home/pyrad/procs/boost_1_69_0/include)
-#set(BOOST_LIBRARYDIR /home/pyrad/procs/boost_1_69_0/lib)
-
-# set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0_system")
-# #set(MY_BOOST_HOME_DIR " /d/procs/boost_1_79_0")
-# set(BOOST_ROOT ${MY_BOOST_HOME_DIR})
-# set(BOOST_INCLUDEDIR ${MY_BOOST_HOME_DIR}/include)
-# set(BOOST_LIBRARYDIR ${MY_BOOST_HOME_DIR}/lib)
 # #set(Boost_LIB_PREFIX "lib")
 # #set(Boost_USE_STATIC_LIBS ON)
 # #set(Boost_USE_STATIC_RUNTIME ON)
 
+# Try to analyze boost library and look for headers & libs required
 find_package(Boost 1.65.0 REQUIRED COMPONENTS filesystem regex)
-
-
 
 #check if boost was found
 if(Boost_FOUND)
