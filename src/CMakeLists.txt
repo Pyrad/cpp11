@@ -28,6 +28,15 @@ MESSAGE(STATUS "[PYRAD] CMAKE_SYSTEM_PROCESSOR: " ${CMAKE_SYSTEM_PROCESSOR})
 MESSAGE(STATUS "[PYRAD] CMAKE_HOST_SYSTEM: " ${CMAKE_HOST_SYSTEM})
 MESSAGE(STATUS "[PYRAD] CMAKE_HOST_SYSTEM_NAME: " ${CMAKE_HOST_SYSTEM_NAME})
 
+### Print out some host information
+### Looks nothing got on Windows?
+cmake_host_system_information(RESULT PRETTY_NAME QUERY DISTRIB_PRETTY_NAME)
+message(STATUS "[PYRAD] PRETTY_NAME:" ${PRETTY_NAME})
+cmake_host_system_information(RESULT DISTRO QUERY DISTRIB_INFO)
+foreach(VAR IN LISTS DISTRO)
+  message(STATUS "[PYRAD]   ${VAR}=`${${VAR}}`")
+endforeach()
+
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" AND ${MINGW} EQUAL 1)
 	MESSAGE(STATUS "[PYRAD] Windows MinGW system!")
 	MESSAGE(STATUS "[PYRAD] Assume current is MSYS2")
@@ -36,10 +45,12 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" AND ${MINGW} EQUAL 1)
 	#                link=shared toolset=gcc address-model=64 \
 	#                --build-dir="D:\procs\boost_1_79_0_src\PyradBuild" \
 	#                --prefix="D:\procs\boost_1_79_0_system"
-	set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0_system")
+	#set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0_system")
+	set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0")
 	set(BOOST_ROOT ${MY_BOOST_HOME_DIR})
 	set(BOOST_INCLUDEDIR ${MY_BOOST_HOME_DIR}/include)
 	set(BOOST_LIBRARYDIR ${MY_BOOST_HOME_DIR}/lib)
+	set(Boost_USE_STATIC_LIBS OFF)
 elseif(${UNIX} STREQUAL "Unix")
 	MESSAGE(STATUS "[PYRAD] Unix system!")
 	set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0)
