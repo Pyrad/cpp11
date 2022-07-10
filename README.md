@@ -32,3 +32,34 @@ origin  git@github.com:Pyrad/cpp11.git (push)
 
 
 
+## How to build?
+
+- Create a directory named `build` in current folder, then change directory to `build` just created
+
+- Run CMake to generate Makefile
+
+  ```bash
+  $ cmake -G Ninja ../src -DCMAKE_BUILD_TYPE=Release
+  ```
+
+  
+
+  If you want to generate `compile_commands.json` for editor's completion plugin, add option `-DCMAKE_EXPORT_COMPILE_COMMANDS=1`
+
+  ```bash
+  $ cmake -G Ninja ../src -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+  ```
+
+  More about `compile_commands.json`, refer to [**clangd**](https://clangd.llvm.org/installation)
+
+  
+
+- Make
+
+  ```bash
+  $ cmake --build .
+  ```
+
+  
+
+- Since currently I set the target name as `mymainrun`, so after compilation, a binary named `mymainrun` is created.
