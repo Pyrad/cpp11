@@ -24,6 +24,32 @@
 
 namespace NORMAL {
 
+namespace smart_pointer_test {
+
+class CircularTestB;
+class CircularTestA {
+public:
+    CircularTestA() { std::cout << "Constructing CircularTestA\n"; }
+    ~CircularTestA() { std::cout << "Destructing CircularTestA\n"; }
+    void set_ptr(const std::shared_ptr<CircularTestB> &p) { m_ptr = p; }
+
+private:
+    std::weak_ptr<CircularTestB> m_ptr;
+    // std::shared_ptr<CircularTestB> m_ptr;
+}; // class CircularTestA
+
+class CircularTestB {
+public:
+    CircularTestB() { std::cout << "Constructing CircularTestB\n"; }
+    ~CircularTestB() { std::cout << "Destructing CircularTestB\n"; }
+    void set_ptr(const std::shared_ptr<CircularTestA> &p) { m_ptr = p; }
+
+private:
+    std::shared_ptr<CircularTestA> m_ptr;
+}; // class CircularTestB
+
+} // namespace smart_pointer_test
+
 void tester_constexpr();
 
 

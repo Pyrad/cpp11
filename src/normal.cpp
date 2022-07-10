@@ -16,6 +16,7 @@
 #include <bitset>
 #include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <boost/math/special_functions/relative_difference.hpp>
 #include <boost/math/special_functions/next.hpp>
@@ -2292,6 +2293,19 @@ void normal_test_all() {
         std::cout.width(20);
         std::cout << 600 << " " << 700 << '\n';
         std::cout << 500 << '\n';
+    }
+
+    // weak_ptr to resolve circular reference
+    {
+        using CTA = smart_pointer_test::CircularTestA;
+        using CTB = smart_pointer_test::CircularTestB;
+        std::shared_ptr<CTB> spb(new CTB);
+        std::shared_ptr<CTA> spa(new CTA);
+
+        spa->set_ptr(spb);
+        spb->set_ptr(spa);
+        std::cout << "spa.use_count() = " << spa.use_count() << '\n';
+        std::cout << "spb.use_count() = " << spb.use_count() << '\n';
     }
 
     std::cout << "---------- END OF FUNCTION: " << __FUNCTION__ << std::endl;
