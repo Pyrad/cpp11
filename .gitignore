@@ -54,3 +54,5 @@ build/
 # Ignore cache files created by clangd (conducted by coc-nvim from VIM)
 .cache/
 
+# Ignore compiled database
+compile_commands.json
