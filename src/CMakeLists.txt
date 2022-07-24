@@ -104,18 +104,33 @@ else()
     message (FATAL_ERROR "Cannot find Boost")
 endif()
 
+# Define a macro to enable testing for CPP feature testing (src/cppfeatures)
+option(ENB_CPP_FEATURES "Testing cpp features" ON)
+# add the MathFunctions library
+if(ENB_CPP_FEATURES)
+  add_subdirectory(cppfeatures)
+  list(APPEND CPPFEATURES_LIB cppfeatures)
+endif()
+
+# configure a header file to pass some of the CMake settings
+# to the source code
+configure_file(projectconfig.h.in projectconfig.h)
 
 AUX_SOURCE_DIRECTORY(./ MY_DIR_SRC)
 
+# Set the project name 
+set(MY_CUR_PROJ_NAME "mymainrun")
+
 # Add the executable
-#ADD_EXECUTABLE(mymainrun main.cpp)
-ADD_EXECUTABLE(mymainrun ${MY_DIR_SRC})
+ADD_EXECUTABLE(${MY_CUR_PROJ_NAME} ${MY_DIR_SRC})
 
+# Set link library
+target_link_libraries(${MY_CUR_PROJ_NAME} PUBLIC ${CPPFEATURES_LIB})
 
-#target_link_directories(mymainrun PUBLIC ${MYCPP11TEST_BINARY_DIR})
+#target_link_directories(${MY_CUR_PROJ_NAME} PUBLIC ${MYCPP11TEST_BINARY_DIR})
 
-# The name 'mymainrun' MUST have been declared by add_executable() or add_library()
-#target_include_directories(mymainrun PUBLIC "${PROJECT_BINARY_DIR}" )
+# The name '${MY_CUR_PROJ_NAME}' MUST have been declared by add_executable() or add_library()
+target_include_directories(${MY_CUR_PROJ_NAME} PUBLIC "${PROJECT_BINARY_DIR}" )
 
 
 

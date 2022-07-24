@@ -5,6 +5,8 @@
 // #include <boost/shared_ptr.hpp>
 #include <memory>
 
+#include "projectconfig.h"
+
 /**************************************/
 /**  Enable normal feature testing   **/
 /**  correspond to noraml.[h|c]pp    **/
@@ -24,6 +26,10 @@
 #ifndef SWITCH_ORDER
 #define SWITCH_ORDER 0
 #endif // SWITCH_ORDER
+
+#ifdef ENB_CPP_FEATURES
+#include "./cppfeatures/lvalue_rvalue.hpp"
+#endif // ENB_CPP_FEATURES
 
 int main() {
 
@@ -63,6 +69,10 @@ int main() {
 #if ENABLE_TEST_BOOST_FEATURES
     B::boost_normal_test_all();
 #endif // ENABLE_TEST_BOOST_FEATURES
+
+#ifdef ENB_CPP_FEATURES
+    lvalue_rvalue::test_all();
+#endif // ENB_CPP_FEATURES
 
     std::cout << "\n\n---end of function main---\n" << std::endl;
 
