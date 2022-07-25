@@ -1,6 +1,9 @@
 #include <iostream>
 #include <ostream>
 #include <stdio.h>
+#include <string.h>
+#include <utility>
+#include <vector>
 #include <wchar.h>
 #include "lvalue_rvalue.hpp"
 
@@ -16,6 +19,8 @@ void test_all() {
     // function_msg_printer(__FUNCTION__);
     fprintf(stdout, "----- Start of function of lvalue_rvalue::test_all -----\n");
     test_lvalue_rvalue();
+
+    test_resource_move();
     fprintf(stdout, "----- End of function of lvalue_rvalue::test_all -----\n");
 } // test_all
 
@@ -107,6 +112,28 @@ void test_lvalue_rvalue() {
     fprintf(stdout, "----- End of function of lvalue_rvalue::test_lvalue_rvalue -----\n");
 
 } // test_lvalue_rvalue
+
+
+void test_resource_move() {
+    constexpr const char *dogs = "dogs";
+    constexpr const char *cats = "cats";
+    constexpr const char *fish = "fish";
+
+    std::vector<char_string> cvec;
+    char_string tmp(dogs, strlen(dogs));
+    cvec.push_back(tmp);
+    cvec.clear();
+
+    std::vector<char_string2> cvec2;
+    char_string2 tmp2(cats, strlen(cats));
+    cvec2.push_back(tmp2);
+    cvec2.clear();
+
+    char_string2 tmp3(fish, strlen(fish));
+    cvec2.push_back(std::move(tmp3));
+    cvec2.clear();
+
+} // test_resource_move
 
 } // namespace lvalue_rvalue
 
