@@ -15,6 +15,13 @@
 
 namespace utilities {
 
+/**
+ * @brief Check a parameter's value type(not value category)
+ * Copied from the following website
+ *     https://newbedev.com/is-it-possible-to-print-a-variable-s-type-in-standard-c/#
+ * 
+ * @return A char string to say which type it is. For example, "int&", "const foo &&", etc
+ */
 template <class T>
 std::string type_name() {
     typedef typename std::remove_reference<T>::type TR;
