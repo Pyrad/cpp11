@@ -5,6 +5,8 @@
 #include <utility>
 #include <vector>
 #include <wchar.h>
+
+#include "../utilities/utilities.hpp"
 #include "lvalue_rvalue.hpp"
 
 #define MSG_BAR function_msg_printer(__FUNCTION__)
@@ -179,9 +181,9 @@ void test_distinguish_lvalue_rvalue_reference() {
     auto &&val = v[0];
     fprintf(stdout, "The address of val is %p\n", &val);
 
-    show_template_lvalue_rvalue(10);
+    utilities::show_template_lvalue_rvalue(10);
     int k = 10;
-    show_template_lvalue_rvalue(k);
+    utilities::show_template_lvalue_rvalue(k);
 
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 }

@@ -21,6 +21,7 @@
 
 namespace lvalue_rvalue {
 
+#if 0
 template <class T>
 std::string type_name() {
     typedef typename std::remove_reference<T>::type TR;
@@ -57,6 +58,7 @@ void show_template_lvalue_rvalue(T&& param) {
     fprintf(stdout, "typeid(param).name = %s\n", typeid(param).name());
 }
 
+#endif // 0
 
 
 

@@ -104,6 +104,10 @@ else()
     message (FATAL_ERROR "Cannot find Boost")
 endif()
 
+# Add the utilites library at all time
+add_subdirectory(utilities)
+list(APPEND CPPFEATURES_LIB utilities)
+
 # Define a macro to enable testing for CPP feature testing (src/cppfeatures)
 option(ENB_CPP_FEATURES "Testing cpp features" ON)
 # add the MathFunctions library
@@ -130,7 +134,7 @@ target_link_libraries(${MY_CUR_PROJ_NAME} PUBLIC ${CPPFEATURES_LIB})
 #target_link_directories(${MY_CUR_PROJ_NAME} PUBLIC ${MYCPP11TEST_BINARY_DIR})
 
 # The name '${MY_CUR_PROJ_NAME}' MUST have been declared by add_executable() or add_library()
-target_include_directories(${MY_CUR_PROJ_NAME} PUBLIC "${PROJECT_BINARY_DIR}" )
+target_include_directories(${MY_CUR_PROJ_NAME} PUBLIC "${PROJECT_BINARY_DIR}")
 
 
 
