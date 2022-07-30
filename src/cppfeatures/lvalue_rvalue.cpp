@@ -173,17 +173,21 @@ void test_extend_lifetime() {
 void test_distinguish_lvalue_rvalue_reference() {
     fprintf(stdout, "----- BEGIN of function %s -----\n", __FUNCTION__);
 
+    namespace U = utilities;
+
     foo &&curf = foo::get_foo();
     auto &&r = curf;
-    fprintf(stdout, "The address of r is %p\n", &r);
+    // fprintf(stdout, "The address of r is %p\n", &r);
+    U::show_template_lvalue_rvalue(r, "r");
 
     std::vector<int> v{-1, 0, 1};
     auto &&val = v[0];
-    fprintf(stdout, "The address of val is %p\n", &val);
+    // fprintf(stdout, "The address of val is %p\n", &val);
+    U::show_template_lvalue_rvalue(val, "val");
 
-    utilities::show_template_lvalue_rvalue(10);
+    U::show_template_lvalue_rvalue(10, "10");
     int k = 10;
-    utilities::show_template_lvalue_rvalue(k);
+    U::show_template_lvalue_rvalue(k, "k");
 
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 }

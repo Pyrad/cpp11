@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+#include <stdio.h>
 #include <type_traits>
 #include <typeinfo>
 #ifndef _MSC_VER
@@ -40,14 +41,9 @@ std::string type_name() {
 }
 
 template<typename T>
-void show_template_lvalue_rvalue(T&& param) {
-    // fprintf(stdout, "T : %s\n", std::is_const<T>::value ? "IsConst" : "NotConst");
-    // fprintf(stdout, "T : %s\n", std::is_volatile<T>::value ? "IsVolatile" : "NotVolatile");
-    // fprintf(stdout, "T : %s\n", std::is_lvalue_reference<T>::value ? "IsLValueReference" : "NotLValueReference");
-    // fprintf(stdout, "T : %s\n", std::is_rvalue_reference<T>::value ? "IsRValueReference": "NotRValueReference");
-    fprintf(stdout, "type of param is: %s\n", type_name<decltype(param)>().c_str());
-
-    fprintf(stdout, "typeid(param).name = %s\n", typeid(param).name());
+void show_template_lvalue_rvalue(T&& param, const char *pname = nullptr) {
+    fprintf(stdout, "template<typename T>\nvoid show_template_lvalue_rvalue(T&& param)\n");
+    fprintf(stdout, "==> type of param (%s) is: %s\n\n", pname, type_name<decltype(param)>().c_str());
 }
 
 
