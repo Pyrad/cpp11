@@ -11,6 +11,8 @@
 
 namespace lvalue_rvalue {
 
+int foo::global_cnt = 0;
+
 /**
  * Run all test functions in this (header) file
  */
@@ -25,6 +27,8 @@ void test_all() {
     test_temporary_lifetime();
 
     test_extend_lifetime();
+
+    test_distinguish_lvalue_rvalue_reference();
 
     fprintf(stdout, "----- End of function of lvalue_rvalue::test_all -----\n");
 } // test_all
@@ -164,5 +168,26 @@ void test_extend_lifetime() {
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 }
 
+void test_distinguish_lvalue_rvalue_reference() {
+    fprintf(stdout, "----- BEGIN of function %s -----\n", __FUNCTION__);
+
+    foo &&curf = foo::get_foo();
+    auto &&r = curf;
+    fprintf(stdout, "The address of r is %p\n", &r);
+
+    std::vector<int> v{-1, 0, 1};
+    auto &&val = v[0];
+    fprintf(stdout, "The address of val is %p\n", &val);
+
+    show_template_lvalue_rvalue(10);
+    int k = 10;
+    show_template_lvalue_rvalue(k);
+
+    fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
+}
+    
+
 } // namespace lvalue_rvalue
+
+
 
