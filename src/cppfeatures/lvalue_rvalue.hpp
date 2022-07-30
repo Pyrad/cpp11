@@ -1,6 +1,8 @@
 #ifndef LVALUE_RVALUE
 #define LVALUE_RVALUE
 
+#include <iostream>
+#include <ostream>
 #include <stdlib.h>
 #include <string>
 #include <stdio.h>
@@ -88,9 +90,61 @@ private:
 
 }; // function_msg_printer
 
+struct T {
+    double a[4];
+};
+inline struct T f(void) { return (struct T){3.15}; }
+inline double g1(double* x) { return *x; }
+inline void g2(double* x) { *x = 1.0; }
+
+
+
+/**
+ *
+ * shape
+ *   |
+ *   +-----> circle
+ *   |
+ *   +-----> triangle
+ *   |
+ *   +-----> rectangle
+ */
+class shape {
+public:
+    shape() { std::cout << "shape" << std::endl; }
+    virtual ~shape() { std::cout << "~shape" << std::endl; }
+};
+class circle : public shape {
+public:
+    circle() { std::cout << "circle" << std::endl; }
+    ~circle() { std::cout << "~circle" << std::endl; }
+};
+class triangle : public shape {
+public:
+    triangle() { std::cout << "triangle" << std::endl; }
+    ~triangle() { std::cout << "~triangle" << std::endl; }
+};
+class rectangle : public shape {
+public:
+    rectangle() { std::cout << "rectangle" << std::endl; }
+    ~rectangle() { std::cout << "~rectangle" << std::endl; }
+};
+class result {
+public:
+    result() { std::cout << "result()" << std::endl; }
+    ~result() { std::cout << "~result()" << std::endl; }
+};
+
+result process_shape(const shape &shape1, const shape &shape2);
+
+
 void test_lvalue_rvalue();
 
 void test_resource_move();
+
+void test_temporary_lifetime();
+
+void test_extend_lifetime();
 
 void test_all();
 

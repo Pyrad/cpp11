@@ -21,6 +21,11 @@ void test_all() {
     test_lvalue_rvalue();
 
     test_resource_move();
+
+    test_temporary_lifetime();
+
+    test_extend_lifetime();
+
     fprintf(stdout, "----- End of function of lvalue_rvalue::test_all -----\n");
 } // test_all
 
@@ -113,6 +118,19 @@ void test_lvalue_rvalue() {
 
 } // test_lvalue_rvalue
 
+/**
+ * @brief test for temporary value lifetime
+ *
+ */
+void test_temporary_lifetime() {
+    double d = g1(f().a); // C99: UB access to a[0] in g1 whose lifetime ended
+                          //      at the sequence point at the start of g1
+                          // C11: OK, d is 3.15
+    fprintf(stdout, "d = %d\n", d);
+
+    g2(f().a); // C99: UB modification of a[0] whose lifetime ended at the sequence point
+               // C11: UB attempt to modify a temporary object
+}
 
 void test_resource_move() {
     constexpr const char *dogs = "dogs";
@@ -134,6 +152,17 @@ void test_resource_move() {
     cvec2.clear();
 
 } // test_resource_move
+
+result process_shape(const shape &shape1, const shape &shape2) {
+    std::cout << "process_shape()" << std::endl;
+    return result();
+}
+
+void test_extend_lifetime() {
+    fprintf(stdout, "----- BEGIN of function %s -----\n", __FUNCTION__);
+    result &&r = process_shape(circle(), triangle());
+    fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
+}
 
 } // namespace lvalue_rvalue
 

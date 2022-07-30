@@ -12,7 +12,7 @@
 /**  correspond to noraml.[h|c]pp    **/
 /**************************************/
 #ifndef ENABLE_TEST_NORMAL_FEATURES
-#define ENABLE_TEST_NORMAL_FEATURES 1
+#define ENABLE_TEST_NORMAL_FEATURES 0
 #endif // ENABLE_TEST_NORMAL_FEATURES
 
 /**************************************/
