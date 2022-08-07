@@ -195,19 +195,52 @@ void test_distinguish_lvalue_rvalue_reference() {
 }
 
 
+/**
+ * @brief Pass a value to a template with a universal reference, and 
+ *        show the type it deduced
+ * 
+ * @return void
+ */
 void test_show_lr_ref() {
+    fprintf(stdout, "----- BEGIN of function %s -----\n", __FUNCTION__);
+
     int x = 10;
     int &&a = 13;
     int &b = x;
     int m = 19;
 
-    show_universal_reference(a);
-    show_universal_reference(b);
-    show_universal_reference(x);
-    show_universal_reference(std::move(x));
-    show_universal_reference(static_cast<int&&>(x));
-    show_universal_reference(14);
+    /**
+     * Macro SHOW_UNI_REF will be expended to the following
+     * #define SHOW_UNI_REF(v) show_universal_reference_with_str(v, #v)
+     */
+    SHOW_UNI_REF(a);
+    SHOW_UNI_REF(b);
+    SHOW_UNI_REF(x);
+    SHOW_UNI_REF(std::move(x));
+    SHOW_UNI_REF(static_cast<int&&>(x));
+    SHOW_UNI_REF(14);
 
+    foo &&curf = foo::get_foo();
+    SHOW_UNI_REF(curf);
+    SHOW_UNI_REF(foo::get_foo());
+
+    foo myfoo;
+    curf = myfoo; // curf is an rvalue reference, but it is still an lvalue,
+                  // So it can be assigned to a new value!!!
+
+    auto &&r = curf;
+    SHOW_UNI_REF(r);
+
+    std::vector<int> v{-1, 0, 1};
+    SHOW_UNI_REF(v[0]);
+    auto &&val = v[0]; // Initialize a universal reference by a lvalue
+                       // So 'val' is deduced to a lvalue reference
+    SHOW_UNI_REF(val);
+
+    // Since val is a lvalue reference, so it CAN be changed!!
+    val = 99;
+
+    fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_show_lr_ref
     
 

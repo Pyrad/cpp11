@@ -19,6 +19,16 @@ public:
 public:
     foo () :m_id(global_cnt++) { }
     virtual ~foo () { }
+    foo& operator=(const foo &v) {
+        if (v.id() % 2 == 0) {
+            global_cnt++;
+        } else {
+            global_cnt += 2;
+        }
+        m_id = global_cnt;
+
+        return *this;
+    }
 
 public:
     int id() const { return m_id; }
@@ -191,13 +201,66 @@ void show_universal_reference(T &&param) {
      * Show type information
      */
     fprintf(stdout, "Parameter type info\n");
-    fprintf(stdout, "  type of param is lvalue reference: %s\n", is_lr ? "1" : "0");
-    fprintf(stdout, "  type of param is rvalue reference: %s\n", is_rr ? "1" : "0");
-    fprintf(stdout, "  type of param is integral: %s\n", is_intgl ? "1" : "0");
-    fprintf(stdout, "  type of T is lvalue reference: %s\n", is_T_lr ? "1" : "0");
-    fprintf(stdout, "  type of T is rvalue reference: %s\n", is_T_rr ? "1" : "0");
-    fprintf(stdout, "  type of T is integral: %s\n", is_T_intgl ? "1" : "0");
+    fprintf(stdout, "  param is: lvalue ref(%s)", is_lr ? "1" : "0");
+    fprintf(stdout, " rvalue ref(%s)", is_rr ? "1" : "0");
+    fprintf(stdout, " integral(%s)\n", is_intgl ? "1" : "0");
+    fprintf(stdout, "      T is: lvalue ref(%s)", is_T_lr ? "1" : "0");
+    fprintf(stdout, " rvalue ref(%s)", is_T_rr ? "1" : "0");
+    fprintf(stdout, " integral(%s)\n", is_T_intgl ? "1" : "0");
 } // show_universal_reference
+
+
+/**
+ * @brief Similar to show_universal_reference. See @function
+ *        show_universal_reference for more details
+ * 
+ * @param[in] param An input parameter
+ * @param[in] s A char string to indicate the name of parameter 'param'
+ *
+ * @param[out] N/A 
+ *
+ * @return void 
+ *
+ * @note N/A
+ */
+template<typename T>
+void show_universal_reference_with_str(T &&param, const char *s) {
+    /**
+     * Use std::is_lvalue_reference<decltype(param)>::value to check the
+     * which type of input parameter 'param', to see which type of
+     * !!reference!! is deduced by the compiler
+     */
+    constexpr const bool is_lr = std::is_lvalue_reference<decltype(param)>::value;
+    constexpr const bool is_rr = std::is_rvalue_reference<decltype(param)>::value;
+    constexpr const bool is_intgl = std::is_integral<decltype(param)>::value;
+
+    /**
+     * Use std::is_lvalue_reference<T>::value to check the type 'T' is
+     * deduced by compiler to which type (maybe reference, plain data type)
+     */
+    constexpr const bool is_T_lr = std::is_lvalue_reference<T>::value;
+    constexpr const bool is_T_rr = std::is_rvalue_reference<T>::value;
+    constexpr const bool is_T_intgl = std::is_integral<T>::value;
+
+    /**
+     * Show type information
+     */
+    fprintf(stdout, "Parameter type info (param = %s)\n", s);
+    fprintf(stdout, "  param is: lvalue ref(%s)", is_lr ? "1" : "0");
+    fprintf(stdout, " rvalue ref(%s)", is_rr ? "1" : "0");
+    fprintf(stdout, " integral(%s)\n", is_intgl ? "1" : "0");
+    fprintf(stdout, "      T is: lvalue ref(%s)", is_T_lr ? "1" : "0");
+    fprintf(stdout, " rvalue ref(%s)", is_T_rr ? "1" : "0");
+    fprintf(stdout, " integral(%s)\n", is_T_intgl ? "1" : "0");
+} // show_universal_reference_with_str
+
+/**
+ * Expand to pass in together with the paramter's name 
+ * 'v' is the paramter
+ * '#v' is the paramter's name
+ */
+#define SHOW_UNI_REF(v) show_universal_reference_with_str(v, #v)
+
 
 void test_all();
 
