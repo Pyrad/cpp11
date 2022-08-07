@@ -34,6 +34,8 @@ void test_all() {
 
     test_show_lr_ref();
 
+    test_ref_collapse();
+
     fprintf(stdout, "----- End of function of lvalue_rvalue::test_all -----\n");
 } // test_all
 
@@ -243,6 +245,18 @@ void test_show_lr_ref() {
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_show_lr_ref
     
+
+void test_ref_collapse() {
+    fprintf(stdout, "----- BEGIN of function %s -----\n", __FUNCTION__);
+    foo2<int&> myf1;
+    myf1.judge_0();
+    // myf1.judge_1(); // Compiler will issue an static_assert error
+
+    foo2<int&&> myf2;
+    // myf2.judge_0(); // Compiler will issue an static_assert error
+    myf2.judge_1();
+    fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
+}
 
 } // namespace lvalue_rvalue
 

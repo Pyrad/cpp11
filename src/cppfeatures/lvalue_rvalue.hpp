@@ -11,6 +11,9 @@
 
 namespace lvalue_rvalue {
 
+/**
+ * @brief This is just a class to return an rvalue by one of its static function
+ */
 class foo {
 public:
     static int global_cnt;
@@ -36,6 +39,32 @@ public:
 private:
     int m_id;
 }; // class foo
+   //
+
+/**
+ * @brief This is a function to test/show reference collapsing
+ */
+template<typename T>
+class foo2 {
+public:
+    typedef T& LvalueRefType;
+    typedef T&& RvalueRefType;
+public:
+    void judge_0() {
+        static_assert(std::is_lvalue_reference<LvalueRefType>::value,
+                        "LvalueRefType & is lvalue reference");
+        static_assert(std::is_lvalue_reference<RvalueRefType>::value,
+                        "RvalueRefType & is lvalue reference");
+        fprintf(stdout, "LvalueRefType and RvalueRefType is lvalue reference\n");
+    }
+    void judge_1() {
+        static_assert(std::is_lvalue_reference<LvalueRefType>::value,
+                        "LvalueRefType & is lvalue reference");
+        static_assert(std::is_rvalue_reference<RvalueRefType>::value,
+                        "RvalueRefType & is rvalue reference");
+        fprintf(stdout, "LvalueRefType is lvalue reference and RvalueRefType is rvalue reference\n");
+    }
+}; // class foo2
 
 /**
  * A class for rvalue test
@@ -275,6 +304,8 @@ void test_extend_lifetime();
 void test_distinguish_lvalue_rvalue_reference();
 
 void test_show_lr_ref();
+
+void test_ref_collapse();
 
 } // namespace lvalue_rvalue
 
