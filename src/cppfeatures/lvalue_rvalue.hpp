@@ -155,6 +155,50 @@ public:
 result process_shape(const shape &shape1, const shape &shape2);
 
 
+
+/**
+ * Assume only one parameter for this template function
+ * Assume the parameter is a universal reference
+ * Based on above, check if the type deduced is lvalue reference or rvalue reference
+ * 
+ * @param[in] param A parameter to check for its type
+ *
+ * TODO Currently it only shows the type of the parameter, can't show the name.
+ * Perhaps there's is a way to identify the name of the input parameters.
+ * 2022-08-07 19:24
+ *
+ */
+template<typename T>
+void show_universal_reference(T &&param) {
+    /**
+     * Use std::is_lvalue_reference<decltype(param)>::value to check the
+     * which type of input parameter 'param', to see which type of
+     * !!reference!! is deduced by the compiler
+     */
+    constexpr const bool is_lr = std::is_lvalue_reference<decltype(param)>::value;
+    constexpr const bool is_rr = std::is_rvalue_reference<decltype(param)>::value;
+    constexpr const bool is_intgl = std::is_integral<decltype(param)>::value;
+
+    /**
+     * Use std::is_lvalue_reference<T>::value to check the type 'T' is
+     * deduced by compiler to which type (maybe reference, plain data type)
+     */
+    constexpr const bool is_T_lr = std::is_lvalue_reference<T>::value;
+    constexpr const bool is_T_rr = std::is_rvalue_reference<T>::value;
+    constexpr const bool is_T_intgl = std::is_integral<T>::value;
+
+    /**
+     * Show type information
+     */
+    fprintf(stdout, "Parameter type info\n");
+    fprintf(stdout, "  type of param is lvalue reference: %s\n", is_lr ? "1" : "0");
+    fprintf(stdout, "  type of param is rvalue reference: %s\n", is_rr ? "1" : "0");
+    fprintf(stdout, "  type of param is integral: %s\n", is_intgl ? "1" : "0");
+    fprintf(stdout, "  type of T is lvalue reference: %s\n", is_T_lr ? "1" : "0");
+    fprintf(stdout, "  type of T is rvalue reference: %s\n", is_T_rr ? "1" : "0");
+    fprintf(stdout, "  type of T is integral: %s\n", is_T_intgl ? "1" : "0");
+} // show_universal_reference
+
 void test_all();
 
 void test_lvalue_rvalue();
@@ -166,6 +210,8 @@ void test_temporary_lifetime();
 void test_extend_lifetime();
 
 void test_distinguish_lvalue_rvalue_reference();
+
+void test_show_lr_ref();
 
 } // namespace lvalue_rvalue
 

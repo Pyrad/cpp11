@@ -32,6 +32,8 @@ void test_all() {
 
     test_distinguish_lvalue_rvalue_reference();
 
+    test_show_lr_ref();
+
     fprintf(stdout, "----- End of function of lvalue_rvalue::test_all -----\n");
 } // test_all
 
@@ -191,6 +193,22 @@ void test_distinguish_lvalue_rvalue_reference() {
 
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 }
+
+
+void test_show_lr_ref() {
+    int x = 10;
+    int &&a = 13;
+    int &b = x;
+    int m = 19;
+
+    show_universal_reference(a);
+    show_universal_reference(b);
+    show_universal_reference(x);
+    show_universal_reference(std::move(x));
+    show_universal_reference(static_cast<int&&>(x));
+    show_universal_reference(14);
+
+} // test_show_lr_ref
     
 
 } // namespace lvalue_rvalue
