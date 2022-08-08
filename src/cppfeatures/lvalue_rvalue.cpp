@@ -34,7 +34,7 @@ void test_all() {
 
     test_show_lr_ref();
 
-    test_ref_collapse();
+    test_ref_collapse_with_typedef();
 
     fprintf(stdout, "----- End of function of lvalue_rvalue::test_all -----\n");
 } // test_all
@@ -246,7 +246,7 @@ void test_show_lr_ref() {
 } // test_show_lr_ref
     
 
-void test_ref_collapse() {
+void test_ref_collapse_with_typedef() {
     fprintf(stdout, "----- BEGIN of function %s -----\n", __FUNCTION__);
     foo2<int&> myf1;
     myf1.judge_0();

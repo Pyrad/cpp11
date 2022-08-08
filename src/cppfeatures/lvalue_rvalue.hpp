@@ -39,7 +39,7 @@ public:
 private:
     int m_id;
 }; // class foo
-   //
+
 
 /**
  * @brief This is a function to test/show reference collapsing
@@ -305,7 +305,7 @@ void test_distinguish_lvalue_rvalue_reference();
 
 void test_show_lr_ref();
 
-void test_ref_collapse();
+void test_ref_collapse_with_typedef();
 
 } // namespace lvalue_rvalue
 
