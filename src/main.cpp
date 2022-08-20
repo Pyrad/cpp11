@@ -32,7 +32,7 @@
 #endif // ENB_CPP_FEATURES
 
 #ifdef ENB_EFFECTIVE_MODERN_CPP
-#include "./EffectiveModernCpp/effectiveModernCpp.hpp"
+#include "EffectiveModernCpp/effectiveModernCpp.hpp"
 #endif // ENB_EFFECTIVE_MODERN_CPP
 
 int main() {
