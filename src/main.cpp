@@ -31,6 +31,10 @@
 #include "./cppfeatures/lvalue_rvalue.hpp"
 #endif // ENB_CPP_FEATURES
 
+#ifdef ENB_EFFECTIVE_MODERN_CPP
+#include "./EffectiveModernCpp/effectiveModernCpp.hpp"
+#endif // ENB_EFFECTIVE_MODERN_CPP
+
 int main() {
 
     namespace M = mainspace;
@@ -73,6 +77,10 @@ int main() {
 #ifdef ENB_CPP_FEATURES
     lvalue_rvalue::test_all();
 #endif // ENB_CPP_FEATURES
+
+#ifdef ENB_EFFECTIVE_MODERN_CPP
+    effective_mordern_cpp::test_all();
+#endif // ENB_EFFECTIVE_MODERN_
 
     std::cout << "\n\n---end of function main---\n" << std::endl;
 

@@ -24,17 +24,18 @@ SET(CMAKE_CXX_STANDARD_REQUIRED True)
 # SET(CMAKE_C_COMPILER "${MY_MINGW64_HOME}/bin/gcc.exe")
 # SET(CMAKE_CXX_COMPILER "${MY_MINGW64_HOME}/bin/g++.exe")
 
-MESSAGE(STATUS "[PYRAD] This is the BINARY directory: " ${MYCPP11TEST_BINARY_DIR})
-MESSAGE(STATUS "[PYRAD] This is the SOURCE directory: " ${MYCPP11TEST_SOURCE_DIR})
-MESSAGE(STATUS "[PYRAD] CYGWIN: " ${CYGWIN})
-MESSAGE(STATUS "[PYRAD] MINGW: " ${MINGW})
-MESSAGE(STATUS "[PYRAD] MSYS: " ${MSYS})
-MESSAGE(STATUS "[PYRAD] UNIX: " ${UNIX})
-MESSAGE(STATUS "[PYRAD] CMAKE_SYSTEM: " ${CMAKE_SYSTEM})
-MESSAGE(STATUS "[PYRAD] CMAKE_SYSTEM_NAME: " ${CMAKE_SYSTEM_NAME})
-MESSAGE(STATUS "[PYRAD] CMAKE_SYSTEM_PROCESSOR: " ${CMAKE_SYSTEM_PROCESSOR})
-MESSAGE(STATUS "[PYRAD] CMAKE_HOST_SYSTEM: " ${CMAKE_HOST_SYSTEM})
-MESSAGE(STATUS "[PYRAD] CMAKE_HOST_SYSTEM_NAME: " ${CMAKE_HOST_SYSTEM_NAME})
+MESSAGE(STATUS "[PYRAD] This is the BINARY directory = " ${MYCPP11TEST_BINARY_DIR})
+MESSAGE(STATUS "[PYRAD] This is the SOURCE directory = " ${MYCPP11TEST_SOURCE_DIR})
+MESSAGE(STATUS "[PYRAD]                       CYGWIN = " ${CYGWIN})
+MESSAGE(STATUS "[PYRAD]                        MINGW = " ${MINGW})
+MESSAGE(STATUS "[PYRAD]                         MSYS = " ${MSYS})
+MESSAGE(STATUS "[PYRAD]                         UNIX = " ${UNIX})
+MESSAGE(STATUS "[PYRAD]                 CMAKE_SYSTEM = " ${CMAKE_SYSTEM})
+MESSAGE(STATUS "[PYRAD]            CMAKE_SYSTEM_NAME = " ${CMAKE_SYSTEM_NAME})
+MESSAGE(STATUS "[PYRAD]       CMAKE_SYSTEM_PROCESSOR = " ${CMAKE_SYSTEM_PROCESSOR})
+MESSAGE(STATUS "[PYRAD]            CMAKE_HOST_SYSTEM = " ${CMAKE_HOST_SYSTEM})
+MESSAGE(STATUS "[PYRAD]       CMAKE_HOST_SYSTEM_NAME = " ${CMAKE_HOST_SYSTEM_NAME})
+MESSAGE(STATUS "[PYRAD]           PROJECT_BINARY_DIR = " ${PROJECT_BINARY_DIR})
 
 ### Print out some host information
 ### Looks nothing got on Windows?
@@ -104,17 +105,43 @@ else()
     message (FATAL_ERROR "Cannot find Boost")
 endif()
 
+# Create a list to append libraries for linking
+set(LIB_LIST "")
+
+# Create a list to append libraries for headers to include
+set(HEADER_LIST "")
+
+# Define a function to append variables
+#function(F_APPEND_VAL_TO_2_LIST val alist blist)
+#    list(APPEND ${alist} ${val})
+#    list(APPEND ${blist} ${val})
+#endfunction(F_APPEND_VAL)
+
 # Add the utilites library at all time
-add_subdirectory(utilities)
-list(APPEND CPPFEATURES_LIB utilities)
+set(LIB_UTILITIES "utilities")
+add_subdirectory(${LIB_UTILITIES})
+list(APPEND LIB_LIST ${LIB_UTILITIES})
 
 # Define a macro to enable testing for CPP feature testing (src/cppfeatures)
 option(ENB_CPP_FEATURES "Testing cpp features" ON)
-# add the MathFunctions library
+# add the Cpp features library at all time
+set(LIB_CPPFEATURES "cppfeatures")
 if(ENB_CPP_FEATURES)
-  add_subdirectory(cppfeatures)
-  list(APPEND CPPFEATURES_LIB cppfeatures)
+    add_subdirectory(${LIB_CPPFEATURES})
+    list(APPEND LIB_LIST ${LIB_CPPFEATURES})
 endif()
+
+# Define a macro to enable testing for the reading minutes of EffectiveModernCpp (src/EffectiveModernCpp)
+option(ENB_EFFECTIVE_MODERN_CPP "Reading minutes of EffectiveModernCpp" ON)
+# add the EffectiveModernCpp library
+set(LIB_EFFECTIVE_MODERN_CPP "EffectiveModernCpp")
+if(ENB_EFFECTIVE_MODERN_CPP)
+    add_subdirectory(${LIB_EFFECTIVE_MODERN_CPP})
+    list(APPEND LIB_LIST ${LIB_EFFECTIVE_MODERN_CPP})
+endif()
+
+# DEBUG: Show the value of the LIB_LIST
+MESSAGE(STATUS "[PYRAD] LIB_LIST = ${LIB_LIST}")
 
 # configure a header file to pass some of the CMake settings
 # to the source code
@@ -129,7 +156,7 @@ set(MY_CUR_PROJ_NAME "mymainrun")
 ADD_EXECUTABLE(${MY_CUR_PROJ_NAME} ${MY_DIR_SRC})
 
 # Set link library
-target_link_libraries(${MY_CUR_PROJ_NAME} PUBLIC ${CPPFEATURES_LIB})
+target_link_libraries(${MY_CUR_PROJ_NAME} PUBLIC ${LIB_LIST})
 
 #target_link_directories(${MY_CUR_PROJ_NAME} PUBLIC ${MYCPP11TEST_BINARY_DIR})
 

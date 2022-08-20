@@ -1,4 +1,7 @@
 // the configured options and settings for Tutorial
 #define CPP11_VERSION_MAJOR @CPP11_VERSION_MAJOR@
 #define CPP11_VERSION_MINOR @CPP11_VERSION_MINOR@
+
+// Define the macros to enable different modules
 #cmakedefine ENB_CPP_FEATURES
+#cmakedefine ENB_EFFECTIVE_MODERN_CPP
