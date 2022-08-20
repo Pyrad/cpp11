@@ -27,6 +27,16 @@ void test_template_type_deduction() {
     func_by_ref_const(cx);
     func_by_ref_const(rx);
 
+    // Test T*
+    int y = 23;
+    int *p = &y;
+    const int *cp = &y;
+
+    // Test "const T*" as the parameter type
+    func_by_ptr(&y);
+    func_by_ptr(p);
+    func_by_ptr(cp);
+
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_template_type_deduction
 

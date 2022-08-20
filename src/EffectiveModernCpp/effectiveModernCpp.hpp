@@ -20,10 +20,16 @@ namespace chapter_1 {
 template<typename T>
 std::string get_type_name() {
     typedef typename std::remove_reference<T>::type T_NO_REF;
+    typedef typename std::remove_pointer<T>::type T_NO_PTR;
 
     // Check if the type T is a reference
     constexpr const bool sflag(std::is_reference<T>::value);
     std::string refstr;
+
+    // Check if the type T is a pointer to
+    constexpr const bool pflag(std::is_pointer<T>::value);
+    std::string ptrstr;
+
     if (sflag) {
         // fprintf(stdout, "Type T is a %s reference\n", (sflag ? "" : "NOT"));
         if (std::is_lvalue_reference<T>::value) {
@@ -34,6 +40,8 @@ std::string get_type_name() {
             // fprintf(stdout, "Type T is a rvalue reference\n");
             refstr = "&&";
         }
+    } else if (pflag) {
+        ptrstr = "*";
     } else {
         // fprintf(stdout, "Type T is not a reference\n");
     }
@@ -41,7 +49,11 @@ std::string get_type_name() {
     // The of T (without reference sign)
     char *tname_str =
 #ifndef _MSC_VER
+    #if sflag
         abi::__cxa_demangle(typeid(T_NO_REF).name(), nullptr, nullptr, nullptr);
+    #else
+        abi::__cxa_demangle(typeid(T_NO_PTR).name(), nullptr, nullptr, nullptr);
+    #endif
 #else
         nullptr;
 #endif
@@ -88,6 +100,21 @@ void func_by_ref_const(const T &param) {
     fprintf(stdout, "\n");
 } // func_by_ref_const
 
+/**
+ * @brief Print the deduced type of the parameter passed to this
+ *        template function.
+ * @note Template parameter is a (non-const) pointer
+ *
+ * @param[in] A parameter to type deduce use
+ *
+ * @return void
+ */
+template<typename T>
+void func_by_ptr(T *param) {
+    fprintf(stdout, "                Deduction for type T: %s\n", get_type_name<T>().c_str());
+    fprintf(stdout, "Deduction for type of argument param: %s\n", get_type_name<decltype(param)>().c_str());
+    fprintf(stdout, "\n");
+} // func_by_ref_const
 
 void test_template_type_deduction();
 
