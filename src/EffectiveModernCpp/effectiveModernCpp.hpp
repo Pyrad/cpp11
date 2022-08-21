@@ -26,6 +26,8 @@ std::string get_type_name() {
     constexpr const bool rflag(std::is_reference<T>::value);
     // Check if the type T is a pointer to
     constexpr const bool pflag(std::is_pointer<T>::value);
+    // Check if the type T is an array
+    constexpr const bool aflag(std::is_array<T>::value);
     // A string contains either a pointer or a reference
     std::string flagstr;
 
@@ -38,6 +40,7 @@ std::string get_type_name() {
         }
     } else if (pflag) {
         flagstr = "*"; // Type T is a pointer
+    } else if (aflag) {
     } else {
         // fprintf(stdout, "Type T is neither a pointer nor a reference\n");
     }
@@ -55,14 +58,22 @@ std::string get_type_name() {
 #endif
     std::unique_ptr<char, void(*)(void*)> own(tname_str, std::free);
 
+    // const bool bool_value_a = (rflag && std::is_const<T_NO_REF>::value);
+    // const bool bool_value_b = (pflag && std::is_const<T_NO_PTR>::value);
+    // const bool bool_value_c = (aflag && std::is_const<T>::value);
+    // fprintf(stdout, "a, b, c = %d, %d, %d\n", bool_value_a, bool_value_b, bool_value_c);
+
     // If T (without reference/pointer sign) is constant or not
-    const std::string const_str(
-#if rflag
-            std::is_const<T_NO_REF>::value
-#else
-            std::is_const<T_NO_PTR>::value
-#endif
-            ? "const" : "");
+    std::string const_str;
+    if (rflag) {
+        const_str = std::is_const<T_NO_REF>::value ? "const" : const_str;
+    } else if (pflag) {
+        const_str = std::is_const<T_NO_PTR>::value ? "const" : const_str;
+    } else if (aflag) {
+        const_str = std::is_const<T>::value ? "const" : const_str;
+    } else {
+        // do nothing
+    }
 
     // It can't be a reference and a pointer at the same time.
     assert(!(rflag && pflag));
