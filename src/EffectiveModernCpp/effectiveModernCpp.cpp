@@ -9,6 +9,11 @@ namespace effective_mordern_cpp {
 
 namespace chapter_1 {
 
+int func_test_sample(int i, double d) {
+    double x = i + d;
+    fprintf(stdout, "This is an example of function\n");
+}
+
 void test_template_type_deduction() {
     fprintf(stdout, "----- BEGIN of function %s -----\n", __FUNCTION__);
 
@@ -101,6 +106,13 @@ void test_template_type_deduction() {
     fprintf(stdout, "The size of an array is %d\n", len);
     // Use the size of the array to initialize another array
     int arr_mapped[len] = {7, 6, 5, 4, 3, 2, 1, 0};
+
+    // ----------------------------------------
+    // Function as argument
+    // ----------------------------------------
+    func_by_value(func_test_sample);
+    func_by_ref(func_test_sample);
+
 
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_template_type_deduction

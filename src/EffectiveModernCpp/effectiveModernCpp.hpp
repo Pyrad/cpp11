@@ -12,6 +12,13 @@ namespace effective_mordern_cpp {
 
 namespace chapter_1 {
 
+
+/**
+ * This is an example of a normal function to test for functions as
+ * arguments
+ */
+int func_test_sample(int i, double d);
+
 /**
  * @brief Get the name of the type of this template's argument
  *
