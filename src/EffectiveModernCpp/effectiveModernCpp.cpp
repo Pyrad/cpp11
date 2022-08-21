@@ -32,10 +32,15 @@ void test_template_type_deduction() {
     int *p = &y;
     const int *cp = &y;
 
-    // Test "const T*" as the parameter type
+    // Test "T*" as the parameter type
     func_by_ptr(&y);
     func_by_ptr(p);
     func_by_ptr(cp);
+
+    // Test "const T*" as the parameter type
+    func_by_ptr_const(&y);
+    func_by_ptr_const(p);
+    func_by_ptr_const(cp);
 
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_template_type_deduction

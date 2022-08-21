@@ -121,6 +121,22 @@ void func_by_ptr(T *param) {
     fprintf(stdout, "\n");
 } // func_by_ref_const
 
+/**
+ * @brief Print the deduced type of the parameter passed to this
+ *        template function.
+ * @note Template parameter is a (const) pointer
+ *
+ * @param[in] A parameter to type deduce use
+ *
+ * @return void
+ */
+template<typename T>
+void func_by_ptr_const(const T *param) {
+    fprintf(stdout, "                Deduction for type T: %s\n", get_type_name<T>().c_str());
+    fprintf(stdout, "Deduction for type of argument param: %s\n", get_type_name<decltype(param)>().c_str());
+    fprintf(stdout, "\n");
+} // func_by_ref_const
+
 void test_template_type_deduction();
 
 } // namespace chapter_1
