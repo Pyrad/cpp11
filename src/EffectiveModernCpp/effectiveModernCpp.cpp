@@ -99,6 +99,8 @@ void test_template_type_deduction() {
     const int arr[] = {0, 1, 2, 3, 4, 5, 6, 7};
     constexpr const int len = getArraySize(arr);
     fprintf(stdout, "The size of an array is %d\n", len);
+    // Use the size of the array to initialize another array
+    int arr_mapped[len] = {7, 6, 5, 4, 3, 2, 1, 0};
 
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_template_type_deduction
