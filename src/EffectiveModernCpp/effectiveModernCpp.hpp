@@ -23,33 +23,29 @@ std::string get_type_name() {
     typedef typename std::remove_pointer<T>::type T_NO_PTR;
 
     // Check if the type T is a reference
-    constexpr const bool sflag(std::is_reference<T>::value);
-    std::string refstr;
-
+    constexpr const bool rflag(std::is_reference<T>::value);
     // Check if the type T is a pointer to
     constexpr const bool pflag(std::is_pointer<T>::value);
-    std::string ptrstr;
+    // A string contains either a pointer or a reference
+    std::string flagstr;
 
-    if (sflag) {
-        // fprintf(stdout, "Type T is a %s reference\n", (sflag ? "" : "NOT"));
+    if (rflag) {
         if (std::is_lvalue_reference<T>::value) {
-            // fprintf(stdout, "Type T is a lvalue reference\n");
-            refstr = "&";
+            flagstr = "&"; // Type T is an lvalue reference
         } else {
             assert(std::is_rvalue_reference<T>::value);
-            // fprintf(stdout, "Type T is a rvalue reference\n");
-            refstr = "&&";
+            flagstr = "&&"; // Type T is an rvalue reference
         }
     } else if (pflag) {
-        ptrstr = "*";
+        flagstr = "*"; // Type T is a pointer
     } else {
-        // fprintf(stdout, "Type T is not a reference\n");
+        // fprintf(stdout, "Type T is neither a pointer nor a reference\n");
     }
 
-    // The of T (without reference sign)
+    // The of T (without reference/pointer sign)
     char *tname_str =
 #ifndef _MSC_VER
-    #if sflag
+    #if rflag
         abi::__cxa_demangle(typeid(T_NO_REF).name(), nullptr, nullptr, nullptr);
     #else
         abi::__cxa_demangle(typeid(T_NO_PTR).name(), nullptr, nullptr, nullptr);
@@ -59,10 +55,19 @@ std::string get_type_name() {
 #endif
     std::unique_ptr<char, void(*)(void*)> own(tname_str, std::free);
 
-    // If T (without reference sign) is constant or not
-    const std::string const_str(std::is_const<T_NO_REF>::value ? "const" : "");
+    // If T (without reference/pointer sign) is constant or not
+    const std::string const_str(
+#if rflag
+            std::is_const<T_NO_REF>::value
+#else
+            std::is_const<T_NO_PTR>::value
+#endif
+            ? "const" : "");
 
-    const std::string ttypename(const_str + " " + tname_str + " " + refstr);
+    // It can't be a reference and a pointer at the same time.
+    assert(!(rflag && pflag));
+
+    const std::string ttypename(const_str + " " + tname_str + " " + flagstr);
 
     return ttypename;
 
