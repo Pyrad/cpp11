@@ -93,6 +93,13 @@ void test_template_type_deduction() {
     func_by_value(name);
     func_by_ref(name);
 
+    // ------------------------------------------------
+    // Calculate/Get size of an array at compile time
+    // ------------------------------------------------
+    const int arr[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    constexpr const int len = getArraySize(arr);
+    fprintf(stdout, "The size of an array is %d\n", len);
+
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_template_type_deduction
 

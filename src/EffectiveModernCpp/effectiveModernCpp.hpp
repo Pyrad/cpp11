@@ -180,6 +180,22 @@ void func_by_value(T param) {
     fprintf(stdout, "\n");
 } // func_by_ref_const
 
+
+/**
+ * @brief Get an array's size at compile time
+ * 
+ * @param[in] (No argument name) An array of C type
+ *
+ * @return The size of the array
+ *
+ * @note Calculate the size of the array at compile time
+ *       The name of the parameter is omitted because of no use
+ */
+template<typename T, std::size_t N>
+constexpr std::size_t getArraySize(T (&)[N]) noexcept {
+    return N;
+}
+
 void test_template_type_deduction();
 
 } // namespace chapter_1
