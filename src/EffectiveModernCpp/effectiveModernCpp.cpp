@@ -42,6 +42,17 @@ void test_template_type_deduction() {
     func_by_ptr_const(p);
     func_by_ptr_const(cp);
 
+    // Test T&&
+    int z = 27;         // z is an int
+    const int cz = z;   // cz is a const int
+    const int &rz = z;  // rz is a reference to z as a const int
+
+    // Test "T&&" as the parameter type
+    func_by_ref_universal(z);
+    func_by_ref_universal(cz);
+    func_by_ref_universal(rz);
+    func_by_ref_universal(27);
+
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_template_type_deduction
 
