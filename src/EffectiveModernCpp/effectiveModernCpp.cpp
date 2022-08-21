@@ -53,6 +53,18 @@ void test_template_type_deduction() {
     func_by_ref_universal(rz);
     func_by_ref_universal(27);
 
+    // Test T
+    int k = 27;         // k is an int
+    const int ck = k;   // ck is a const int
+    const int &rk = k;  // rk is a reference to k as a const int
+    const char * const pk = "Fun with pointer"; // kp is const pointer to const object
+
+    // Test "T" as the parameter type
+    func_by_value(k);
+    func_by_value(ck);
+    func_by_value(rk);
+    func_by_value(pk);
+
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_template_type_deduction
 
