@@ -1,14 +1,14 @@
 #include <iostream>
-// #include <stdio.h>
 
-#include "effectiveModernCpp.hpp"
 #include "chapter1_item01.hpp"
 #include "../utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
 
-#if 0
 namespace chapter_1 {
+
+namespace item_01 {
+
 
 int func_test_sample(int i, double d) {
     double x = i + d;
@@ -120,17 +120,8 @@ void test_template_type_deduction() {
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_template_type_deduction
 
+} // namespace item_01
+
 } // namespace chapter_1
-
-#endif // 0
-
-void test_all() {
-    fprintf(stdout, "\n----- BEGIN of function effective_mordern_cpp::%s -----\n\n", __FUNCTION__);
-
-    chapter_1::item_01::test_template_type_deduction();
-
-    fprintf(stdout, "----- END of function effective_mordern_cpp::%s -----\n\n", __FUNCTION__);
-
-} // test_all
 
 } // namespace effective_mordern_cpp

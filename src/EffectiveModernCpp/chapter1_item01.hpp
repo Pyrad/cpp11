@@ -1,21 +1,20 @@
-#ifndef EFFECTIVE_MODERN_CPP
-#define EFFECTIVE_MODERN_CPP
+#ifndef EFFECTIVE_MODERN_CPP_CHAPTER1_ITEM01
+#define EFFECTIVE_MODERN_CPP_CHAPTER1_ITEM01
 
-// #include <stdio.h>
-// #include <string>
-// #include <type_traits>
-// #ifndef _MSC_VER
-// #   include <cxxabi.h>
-// #endif // _MSC_VER
-// 
-// #include "../utilities/utilities.hpp"
+#include <stdio.h>
+#include <string>
+#include <type_traits>
+#ifndef _MSC_VER
+#   include <cxxabi.h>
+#endif // _MSC_VER
+
+#include "../utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
 
-void test_all();
-
-#if 0
 namespace chapter_1 {
+
+namespace item_01 {
 
 /**
  * This is an example of a normal function to test for functions as
@@ -137,12 +136,10 @@ constexpr std::size_t getArraySize(T (&)[N]) noexcept {
 
 void test_template_type_deduction();
 
+} // namespace item_01
+
 } // namespace chapter_1
 
-#endif // 0
+} // namespace effective_mordern_cpp
 
-// void test_all();
-
-} // effective_mordern_cpp
-
-#endif // EFFECTIVE_MODERN_CPP
+#endif // EFFECTIVE_MODERN_CPP_CHAPTER1_ITEM01
