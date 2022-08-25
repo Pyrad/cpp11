@@ -12,6 +12,8 @@ namespace chapter_1 {
 int func_test_sample(int i, double d) {
     double x = i + d;
     fprintf(stdout, "This is an example of function\n");
+
+    return int(x);
 }
 
 void test_template_type_deduction() {

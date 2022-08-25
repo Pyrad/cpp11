@@ -4,10 +4,13 @@
 #include <stdio.h>
 #include <string>
 #include <type_traits>
-#include <cassert>
+// #include <cassert>
 #ifndef _MSC_VER
 #   include <cxxabi.h>
 #endif // _MSC_VER
+
+#include "../utilities/utilities.hpp"
+
 namespace effective_mordern_cpp {
 
 namespace chapter_1 {
@@ -19,6 +22,7 @@ namespace chapter_1 {
  */
 int func_test_sample(int i, double d);
 
+#if 0
 /**
  * @brief Get the name of the type of this template's argument
  *
@@ -89,7 +93,8 @@ std::string get_type_name() {
 
     return ttypename;
 
-} // getype_name
+} // get_type_name
+#endif // 0
 
 /**
  * @brief Print the deduced type of the parameter passed to this
@@ -102,8 +107,8 @@ std::string get_type_name() {
  */
 template<typename T>
 void func_by_ref(T &param) {
-    fprintf(stdout, "                Deduction for type T: %s\n", get_type_name<T>().c_str());
-    fprintf(stdout, "Deduction for type of argument param: %s\n", get_type_name<decltype(param)>().c_str());
+    fprintf(stdout, "                Deduction for type T: %s\n", utilities::get_type_name<T>().c_str());
+    fprintf(stdout, "Deduction for type of argument param: %s\n", utilities::get_type_name<decltype(param)>().c_str());
     fprintf(stdout, "\n");
 } // func_by_ref
 
@@ -118,8 +123,8 @@ void func_by_ref(T &param) {
  */
 template<typename T>
 void func_by_ref_const(const T &param) {
-    fprintf(stdout, "                Deduction for type T: %s\n", get_type_name<T>().c_str());
-    fprintf(stdout, "Deduction for type of argument param: %s\n", get_type_name<decltype(param)>().c_str());
+    fprintf(stdout, "                Deduction for type T: %s\n", utilities::get_type_name<T>().c_str());
+    fprintf(stdout, "Deduction for type of argument param: %s\n", utilities::get_type_name<decltype(param)>().c_str());
     fprintf(stdout, "\n");
 } // func_by_ref_const
 
@@ -134,8 +139,8 @@ void func_by_ref_const(const T &param) {
  */
 template<typename T>
 void func_by_ptr(T *param) {
-    fprintf(stdout, "                Deduction for type T: %s\n", get_type_name<T>().c_str());
-    fprintf(stdout, "Deduction for type of argument param: %s\n", get_type_name<decltype(param)>().c_str());
+    fprintf(stdout, "                Deduction for type T: %s\n", utilities::get_type_name<T>().c_str());
+    fprintf(stdout, "Deduction for type of argument param: %s\n", utilities::get_type_name<decltype(param)>().c_str());
     fprintf(stdout, "\n");
 } // func_by_ref_const
 
@@ -150,8 +155,8 @@ void func_by_ptr(T *param) {
  */
 template<typename T>
 void func_by_ptr_const(const T *param) {
-    fprintf(stdout, "                Deduction for type T: %s\n", get_type_name<T>().c_str());
-    fprintf(stdout, "Deduction for type of argument param: %s\n", get_type_name<decltype(param)>().c_str());
+    fprintf(stdout, "                Deduction for type T: %s\n", utilities::get_type_name<T>().c_str());
+    fprintf(stdout, "Deduction for type of argument param: %s\n", utilities::get_type_name<decltype(param)>().c_str());
     fprintf(stdout, "\n");
 } // func_by_ref_const
 
@@ -166,8 +171,8 @@ void func_by_ptr_const(const T *param) {
  */
 template<typename T>
 void func_by_ref_universal(T &&param) {
-    fprintf(stdout, "                Deduction for type T: %s\n", get_type_name<T>().c_str());
-    fprintf(stdout, "Deduction for type of argument param: %s\n", get_type_name<decltype(param)>().c_str());
+    fprintf(stdout, "                Deduction for type T: %s\n", utilities::get_type_name<T>().c_str());
+    fprintf(stdout, "Deduction for type of argument param: %s\n", utilities::get_type_name<decltype(param)>().c_str());
     fprintf(stdout, "\n");
 } // func_by_ref_const
 
@@ -182,8 +187,8 @@ void func_by_ref_universal(T &&param) {
  */
 template<typename T>
 void func_by_value(T param) {
-    fprintf(stdout, "                Deduction for type T: %s\n", get_type_name<T>().c_str());
-    fprintf(stdout, "Deduction for type of argument param: %s\n", get_type_name<decltype(param)>().c_str());
+    fprintf(stdout, "                Deduction for type T: %s\n", utilities::get_type_name<T>().c_str());
+    fprintf(stdout, "Deduction for type of argument param: %s\n", utilities::get_type_name<decltype(param)>().c_str());
     fprintf(stdout, "\n");
 } // func_by_ref_const
 
