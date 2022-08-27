@@ -6,6 +6,22 @@ namespace chapter_1 {
 
 namespace item_02 {
 
+/**
+ * @brief A simple function to be used as a function pointer
+ * 
+ * @param[in] i no use indeed
+ * @param[out] d no use indeed
+ *
+ * @return an integer of no use indeed.
+ *
+ * @note This function acts as a function pointer to be used later
+ */
+int func_test_sample(int i, double d) {
+    double x = i + d;
+    fprintf(stdout, "This is an example of function\n");
+
+    return int(x);
+} //func_test_sample
 
 /**
  * @brief To check what type of the auto is deduced.
@@ -52,9 +68,29 @@ void test_auto_deduction() {
     // --------------------------------------------------------------
     auto z = 10;
     const auto cz = 20;
+    fprintf(stdout, "---------------\n");
     fprintf(stdout, "auto z = 10; <type of 'z': %s>\n", utilities::get_type_name<decltype(z)>().c_str());
     fprintf(stdout, "const auto cz = 20; <type of 'cz': %s>\n", utilities::get_type_name<decltype(cz)>().c_str());
 
+    // --------------------------------------------------------------
+    // Array-decay-to-pointer rule
+    // --------------------------------------------------------------
+    char const name[] = "R. N. Briggs"; // name's type is const char[13]
+    auto arr1 = name;
+    auto &arr2 = name;
+    fprintf(stdout, "---------------\n");
+    fprintf(stdout, "name = %s\n", name);
+    fprintf(stdout, "auto arr1 = name; <type of 'arr1': %s>\n", utilities::get_type_name<decltype(arr1)>().c_str());
+    fprintf(stdout, "auto &arr2 = name; <type of 'arr2': %s>\n", utilities::get_type_name<decltype(arr2)>().c_str());
+
+    // --------------------------------------------------------------
+    // Function-decay-to-pointer rule
+    // --------------------------------------------------------------
+    auto func1 = func_test_sample;
+    auto &func2 = func_test_sample;
+    fprintf(stdout, "---------------\n");
+    fprintf(stdout, "auto func1 = func_test_sample; <type of 'func1': %s>\n", utilities::get_type_name<decltype(func1)>().c_str());
+    fprintf(stdout, "auto &func2 = func_test_sample; <type of 'func2': %s>\n", utilities::get_type_name<decltype(func2)>().c_str());
 
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_auto_deduction

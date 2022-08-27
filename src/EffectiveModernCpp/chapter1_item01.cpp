@@ -9,7 +9,16 @@ namespace chapter_1 {
 
 namespace item_01 {
 
-
+/**
+ * @brief A simple function to be used as a function pointer
+ * 
+ * @param[in] i no use indeed
+ * @param[out] d no use indeed
+ *
+ * @return an integer of no use indeed.
+ *
+ * @note This function acts as a function pointer to be used later
+ */
 int func_test_sample(int i, double d) {
     double x = i + d;
     fprintf(stdout, "This is an example of function\n");
