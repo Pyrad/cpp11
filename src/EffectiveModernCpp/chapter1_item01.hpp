@@ -116,7 +116,7 @@ void func_by_value(T param) {
     fprintf(stdout, "                Deduction for type T: %s\n", utilities::get_type_name<T>().c_str());
     fprintf(stdout, "Deduction for type of argument param: %s\n", utilities::get_type_name<decltype(param)>().c_str());
     fprintf(stdout, "\n");
-} // func_by_ref_const
+} // func_by_value
 
 
 /**

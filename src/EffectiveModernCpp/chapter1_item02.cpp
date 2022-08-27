@@ -42,6 +42,36 @@ void test_auto_deduction_initializer() {
 } // test_auto_deduction_initializer
 
 /**
+ * @brief Test function to call func_deduce_T  and func_deduce_initializer_list_T, and
+ *        to show the only difference between the auto type deduction and the template
+ *        type deduction.
+ *
+ * @param[in] no
+ * @param[out] no
+ *
+ * @return void
+ *
+ * @note no
+ */
+void test_auto_diff_from_template_deduction() {
+    // The auto CAN be deduced from the initializer list (while
+    // the template type deduction can't be, see below).
+    auto x = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    fprintf(stdout, "auto x = {0,1,2,3,4,5,6,7,8,9}; <type of 'x': %s>\n", utilities::get_type_name<decltype(x)>().c_str());
+
+    // The initializer list will be deduced from the input correctly
+    func_deduce_initializer_list_T({0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+    // !!! An intended compile error
+    // The following function call fails to compile because the type T
+    // can't be deduced from the input
+    // That's the only difference is between the auto deduction and template deduction
+    // !!! An intended compile error
+    //func_deduce_T({0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
+
+} // test_auto_diff_from_template_deduction
+
+
+/**
  * @brief To check what type of the auto is deduced.
  */
 void test_auto_deduction() {
@@ -115,6 +145,12 @@ void test_auto_deduction() {
     // Sometimes auto will be deduced as an initializer
     // --------------------------------------------------------------
     test_auto_deduction_initializer();
+
+    // --------------------------------------------------------------
+    // Only difference between the auto type deduction and the template
+    // type deduction
+    // --------------------------------------------------------------
+    test_auto_diff_from_template_deduction();
 
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_auto_deduction
