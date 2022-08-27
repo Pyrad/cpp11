@@ -4,6 +4,7 @@ MESSAGE(STATUS "[PYRAD] [DIR EffectiveModernCpp] CMAKE_CURRENT_SOURCE_DIR: " ${C
 add_library(EffectiveModernCpp 
     effectiveModernCpp.cpp
     chapter1_item01.cpp
+    chapter1_item02.cpp
     )
 
 # Remember INTERFACE means things that consumers 
