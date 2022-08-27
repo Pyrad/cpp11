@@ -18,6 +18,10 @@ void test_auto_deduction();
 
 
 
+/**
+ * @brief An initializer might be deduced from auto type
+ */
+void test_auto_deduction_initializer();
 
 
 } // namespace item_02

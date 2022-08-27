@@ -23,6 +23,24 @@ int func_test_sample(int i, double d) {
     return int(x);
 } //func_test_sample
 
+
+/**
+ * @brief An initializer might be deduced from auto type
+ */
+void test_auto_deduction_initializer() {
+    auto a = 27;
+    auto b(27);
+    auto c = {27};
+    auto d{27};
+
+    fprintf(stdout, "---------------\n");
+    fprintf(stdout, "auto a = 27; <type of 'a': %s>\n", utilities::get_type_name<decltype(a)>().c_str());
+    fprintf(stdout, "auto b(27); <type of 'b': %s>\n", utilities::get_type_name<decltype(b)>().c_str());
+    fprintf(stdout, "auto c = {27}; <type of 'c': %s>\n", utilities::get_type_name<decltype(c)>().c_str());
+    fprintf(stdout, "auto d{27}; <type of 'd': %s>\n", utilities::get_type_name<decltype(d)>().c_str());
+
+} // test_auto_deduction_initializer
+
 /**
  * @brief To check what type of the auto is deduced.
  */
@@ -91,6 +109,12 @@ void test_auto_deduction() {
     fprintf(stdout, "---------------\n");
     fprintf(stdout, "auto func1 = func_test_sample; <type of 'func1': %s>\n", utilities::get_type_name<decltype(func1)>().c_str());
     fprintf(stdout, "auto &func2 = func_test_sample; <type of 'func2': %s>\n", utilities::get_type_name<decltype(func2)>().c_str());
+
+
+    // --------------------------------------------------------------
+    // Sometimes auto will be deduced as an initializer
+    // --------------------------------------------------------------
+    test_auto_deduction_initializer();
 
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 } // test_auto_deduction
