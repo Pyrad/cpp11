@@ -6,6 +6,7 @@ add_library(EffectiveModernCpp
     chapter1_item01.cpp
     chapter1_item02.cpp
     chapter1_item03.cpp
+    chapter1_item04.cpp
     )
 
 # Remember INTERFACE means things that consumers 
