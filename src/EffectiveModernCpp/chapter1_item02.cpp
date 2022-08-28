@@ -116,9 +116,12 @@ void test_auto_deduction() {
     // --------------------------------------------------------------
     auto z = 10;
     const auto cz = 20;
+    const int val = 11;
+    auto k = &val;
     fprintf(stdout, "---------------\n");
     fprintf(stdout, "auto z = 10; <type of 'z': %s>\n", utilities::get_type_name<decltype(z)>().c_str());
     fprintf(stdout, "const auto cz = 20; <type of 'cz': %s>\n", utilities::get_type_name<decltype(cz)>().c_str());
+    fprintf(stdout, "auto k = &val; <type of 'k': %s>\n", utilities::get_type_name<decltype(k)>().c_str());
 
     // --------------------------------------------------------------
     // Array-decay-to-pointer rule
