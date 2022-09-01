@@ -5,6 +5,7 @@
 #include "chapter1_item02.hpp"
 #include "chapter1_item03.hpp"
 #include "chapter1_item04.hpp"
+#include "chapter1_item05.hpp"
 #include "../utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
@@ -16,6 +17,7 @@ void test_all() {
     chapter_1::item_02::test_auto_deduction();
     chapter_1::item_03::test_decltype();
     chapter_1::item_04::test_show_runtime_types();
+    chapter_1::item_05::test_auto_all();
 
     fprintf(stdout, "----- END of function effective_mordern_cpp::%s -----\n\n", __FUNCTION__);
 
