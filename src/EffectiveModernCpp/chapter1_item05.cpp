@@ -1,4 +1,7 @@
 #include "chapter1_item05.hpp"
+#include <functional>
+#include <memory>
+#include <stdio.h>
 #include <unordered_map>
 
 namespace effective_mordern_cpp {
@@ -57,9 +60,44 @@ void test_unordered_map_without_auto() {
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 }
 
-void test_auto_all() {
+/**
+ * @brief Compare using 'auto' or not using 'auto' when iterating an
+ *        unordered_map
+ */
+void test_auto_in_map_iteration() {
     test_unordered_map_without_auto();
     test_unordered_map_with_auto();
+}
+
+bool compare_foo_less(const std::unique_ptr<foo> &lhs,
+                      const std::unique_ptr<foo> &rhs)
+{ return *lhs < *rhs; }
+
+
+void test_std_func_and_auto() {
+    std::unique_ptr<foo> aptr(new foo());
+    std::unique_ptr<foo> bptr(new foo());
+
+    // Use std::function
+    std::function<bool(const std::unique_ptr<foo> &, const std::unique_ptr<foo> &)> func = compare_foo_less;
+    fprintf(stdout, "aptr < bptr = %s (using std::function)\n", func(aptr, bptr) ? "YES" : "NO");
+
+    // Use lambda with specific return type name
+    std::function<bool(const std::unique_ptr<foo> &, const std::unique_ptr<foo> &)> 
+    deref_up_less = [](const std::unique_ptr<foo> &a, const std::unique_ptr<foo> &b)
+    { return *a < *b; };
+    fprintf(stdout, "aptr < bptr = %s (using deref_up_less)\n", deref_up_less(aptr, bptr) ? "YES" : "NO" );
+
+    // Use lambda with auto (compiler deduces types)
+    auto
+    deref_up_less_auto = [](const std::unique_ptr<foo> &a, const std::unique_ptr<foo> &b)
+    { return *a < *b; };
+    fprintf(stdout, "aptr < bptr = %s (using deref_up_less_auto)\n", deref_up_less_auto(aptr, bptr) ? "YES" : "NO" );
+} // test_std_func_and_auto
+
+void test_auto_all() {
+    test_auto_in_map_iteration();
+    test_std_func_and_auto();
 }
 
 } // namespace item_05

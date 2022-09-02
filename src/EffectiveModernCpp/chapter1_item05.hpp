@@ -37,6 +37,10 @@ public:
         return id() == rhs.id();
     }
 
+    bool operator<(const foo &rhs) const {
+        return id() < rhs.id();
+    }
+
 public:
     int id() const { return m_id; }
 
@@ -53,6 +57,9 @@ struct fooHash {
 
 void test_unordered_map_without_auto();
 void test_unordered_map_with_auto();
+void test_auto_in_map_iteration();
+
+void test_std_func_and_auto();
 
 void test_auto_all();
 
