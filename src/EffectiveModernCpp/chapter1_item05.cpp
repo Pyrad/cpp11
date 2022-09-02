@@ -9,6 +9,13 @@ namespace item_05 {
 
 int foo::idcnt = 0;
 
+/**
+ * @brief To show the iterator returned by unordered_map is actually the type of
+ *        std::pair<const KeyType, ValueType>, not std::pair<KeyType, ValueType>
+ * 
+ * Because in the iteration below, the auto is used, then the compiler deduces the
+ * type as std::pair<const foo, int>, thus a temporary object creation is avoided
+ */
 void test_unordered_map_with_auto() {
     fprintf(stdout, "----- BEGIN of function %s -----\n", __FUNCTION__);
     std::unordered_map<foo, int, fooHash> fmap;
@@ -25,6 +32,15 @@ void test_unordered_map_with_auto() {
     fprintf(stdout, "----- END of function %s -----\n\n", __FUNCTION__);
 }
 
+/**
+ * @brief To show the iterator returned by unordered_map is actually the type of
+ *        std::pair<const KeyType, ValueType>, not std::pair<KeyType, ValueType>
+ * 
+ * Because in the iteration below, the std::pair<foo, int> other than
+ * std::pair<const foo, int> is used, so the compiler will try to convert 
+ * std::pair<const foo, int> to std::pair<foo, int>, thus a new foo object is created
+ * indeed, which is a temporary object.
+ */
 void test_unordered_map_without_auto() {
     fprintf(stdout, "----- BEGIN of function %s -----\n", __FUNCTION__);
     std::unordered_map<foo, int, fooHash> fmap;
