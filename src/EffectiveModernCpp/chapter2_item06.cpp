@@ -1,4 +1,4 @@
-#include "chapter1_item06.hpp"
+#include "chapter2_item06.hpp"
 #include <vector>
 #include <boost/type_index.hpp>
 
