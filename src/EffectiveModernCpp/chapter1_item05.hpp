@@ -1,5 +1,5 @@
-#ifndef EFFECTIVE_MODERN_CPP_CHAPTER1_ITEM05
-#define EFFECTIVE_MODERN_CPP_CHAPTER1_ITEM05
+#ifndef EFFECTIVE_MODERN_CPP_CHAPTER2_ITEM05
+#define EFFECTIVE_MODERN_CPP_CHAPTER2_ITEM05
 
 #include <corecrt.h>
 #include <functional>
@@ -9,7 +9,7 @@
 
 namespace effective_mordern_cpp {
 
-namespace chapter_1 {
+namespace chapter_2 {
 
 namespace item_05 {
 
@@ -66,9 +66,9 @@ void test_auto_all();
 
 } // namespace item_05
 
-} // namespace chapter_1
+} // namespace chapter_2
 
 } // namespace effective_mordern_cpp
 
 
-#endif // EFFECTIVE_MODERN_CPP_CHAPTER1_ITEM05
+#endif // EFFECTIVE_MODERN_CPP_CHAPTER2_ITEM05

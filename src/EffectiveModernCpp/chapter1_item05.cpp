@@ -6,7 +6,7 @@
 
 namespace effective_mordern_cpp {
 
-namespace chapter_1 {
+namespace chapter_2 {
 
 namespace item_05 {
 
@@ -102,7 +102,7 @@ void test_auto_all() {
 
 } // namespace item_05
 
-} // namespace chapter_1
+} // namespace chapter_2
 
 } // namespace effective_mordern_cpp
 

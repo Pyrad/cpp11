@@ -1,5 +1,5 @@
-#ifndef EFFECTIVE_MODERN_CPP_CHAPTER1_ITEM06
-#define EFFECTIVE_MODERN_CPP_CHAPTER1_ITEM06
+#ifndef EFFECTIVE_MODERN_CPP_CHAPTER2_ITEM06
+#define EFFECTIVE_MODERN_CPP_CHAPTER2_ITEM06
 
 #include <iostream>
 #include <vector>
@@ -7,7 +7,7 @@
 
 namespace effective_mordern_cpp {
 
-namespace chapter_1 {
+namespace chapter_2 {
 
 namespace item_06 {
 
@@ -20,9 +20,9 @@ void test_auto_all();
 
 } // namespace item_06
 
-} // namespace chapter_1
+} // namespace chapter_2
 
 } // namespace effective_mordern_cpp
 
 
-#endif // EFFECTIVE_MODERN_CPP_CHAPTER1_ITEM06
+#endif // EFFECTIVE_MODERN_CPP_CHAPTER2_ITEM06

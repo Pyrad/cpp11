@@ -19,8 +19,8 @@ void test_all() {
     chapter_1::item_02::test_auto_deduction();
     chapter_1::item_03::test_decltype();
     chapter_1::item_04::test_show_runtime_types();
-    chapter_1::item_05::test_auto_all();
-    chapter_1::item_06::test_auto_all();
+    chapter_2::item_05::test_auto_all();
+    chapter_2::item_06::test_auto_all();
     chapter_3::item_07::test_all();
 
     fprintf(stdout, "----- END of function effective_mordern_cpp::%s -----\n\n", __FUNCTION__);
