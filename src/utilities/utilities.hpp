@@ -136,10 +136,10 @@ public:
     ShowStartEndMsg() {}
     ShowStartEndMsg(const char *pname) : m_funcname(pname) {
         if (m_funcname.empty()) { m_funcname = "UnknownFunction"; }
-        fprintf(stdout, "stdout, ----- BEGIN of function %s -----\n", m_funcname.c_str());
+        fprintf(stdout, "----- BEGIN of function %s -----\n", m_funcname.c_str());
     }
     virtual ~ShowStartEndMsg () {
-        fprintf(stdout, "stdout, ----- END of function %s -----\n", m_funcname.c_str());
+        fprintf(stdout, "----- END of function %s -----\n", m_funcname.c_str());
     }
 
 private:
