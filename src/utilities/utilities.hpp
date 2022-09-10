@@ -131,6 +131,20 @@ void show_template_lvalue_rvalue(T&& param, const char *pname = nullptr) {
 }
 
 
+class ShowStartEndMsg {
+public:
+    ShowStartEndMsg() {}
+    ShowStartEndMsg(const char *pname) : m_funcname(pname) {
+        if (m_funcname.empty()) { m_funcname = "UnknownFunction"; }
+        fprintf(stdout, "stdout, ----- BEGIN of function %s -----\n", m_funcname.c_str());
+    }
+    virtual ~ShowStartEndMsg () {
+        fprintf(stdout, "stdout, ----- END of function %s -----\n", m_funcname.c_str());
+    }
+
+private:
+    std::string m_funcname = "UnknownFunction";
+};
 
 
 
