@@ -33,7 +33,19 @@ private:
     S m_value1 = 0;
 }; // class foo
 
+
+/**
+ * To compare with alias template, define a class which defines
+ * a type dependent on another type
+ */
+template <typename T>
+struct foo_bool {
+    typedef foo<T, bool> type;
+}; // foo_bool
+
 void test_define_alias_template();
+
+void test_typedef_template_alias();
 
 void test_all();
 
