@@ -35,6 +35,14 @@ private:
 
 
 /**
+ * Alias template can't be defined inside a function, while it
+ * can be declared inside a namespace or a class
+ */
+template<typename T>
+using foo_double = foo<T, double>;
+
+
+/**
  * To compare with alias template, define a class which defines
  * a type dependent on another type
  */
@@ -51,19 +59,34 @@ template <typename T>
 class myfoo {
 public:
     /**
+     * Here are 2 non-static member data to show alias template and the the template alias
+     * defined by typedef.
+     *
      * Here "typename" must be added before the type definition,
      * otherwise a compile error will be issued
      *  error: need 'typename' before 'effective_mordern_cpp::chapter_3::item_09::foo_bool<T>::type'
      *  because 'effective_mordern_cpp::chapter_3::item_09::foo_bool<T>' is a dependent scope
      */
-    typename foo_bool<T>::type foo_bool_type;
+    typename foo_bool<T>::type m_foo_bool;
+
+    /**
+     * Here a "typename" is neither need nor permitted, because compiler knows
+     * that it is a non-dependent type, which is defined as alias template
+     */
+    foo_double<T> m_foo_double;
 
 public:
     myfoo() { }
     virtual ~myfoo () { }
 
     T id() const { return m_id; }
-    void set_id(T id) { return m_id; }
+    void set_id(T id) { m_id = id; }
+
+    T get_bool_version_value0() const { return m_foo_bool.value0(); }
+    T get_double_version_value0() const { return m_foo_double.value0(); }
+
+    void set_bool_version_value0(T t) { m_foo_bool.set_value0(t); }
+    void set_double_version_value0(T t) { m_foo_double.set_value0(t); }
 
 private:
     T m_id = 0;

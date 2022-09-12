@@ -7,13 +7,6 @@ namespace chapter_3 {
 namespace item_09 {
 
 /**
- * Alias template can't be defined inside a function, while it
- * can be declared inside a namespace or a class
- */
-template<typename T>
-using foo_double = foo<T, double>;
-
-/**
  * @brief To show use of a template alias defined by typedef
  */
 void test_typedef_template_alias() {
@@ -48,11 +41,21 @@ void test_define_alias_template() {
 
 } // test_define_alias_template
 
+/**
+ * @brief This function shows how to define a dependent type definition in
+ *        a class. See class @myfoo to check how to define dependent types
+ */
 void test_dependent_type() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
-    myfoo<long int> mfoo;
-    fprintf(stdout, "mfoo: id = %ld\n", mfoo.id());
+    myfoo<long int> fbt;
+    fbt.set_id(9);
+
+    fbt.set_bool_version_value0(23);
+    fbt.set_double_version_value0(24);
+
+    fprintf(stdout, "fbt BoolVersionValue0: value0 = %d\n", fbt.get_bool_version_value0());
+    fprintf(stdout, "fbt DoubleVersionValue0: value0 = %d\n", fbt.get_double_version_value0());
 
 } // test_dependent_type
 
