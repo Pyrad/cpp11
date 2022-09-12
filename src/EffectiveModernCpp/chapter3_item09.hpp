@@ -43,9 +43,37 @@ struct foo_bool {
     typedef foo<T, bool> type;
 }; // foo_bool
 
+
+/**
+ * @brief To show "typename" must be added before a dependent type.
+ */
+template <typename T>
+class myfoo {
+public:
+    /**
+     * Here "typename" must be added before the type definition,
+     * otherwise a compile error will be issued
+     *  error: need 'typename' before 'effective_mordern_cpp::chapter_3::item_09::foo_bool<T>::type'
+     *  because 'effective_mordern_cpp::chapter_3::item_09::foo_bool<T>' is a dependent scope
+     */
+    typename foo_bool<T>::type foo_bool_type;
+
+public:
+    myfoo() { }
+    virtual ~myfoo () { }
+
+    T id() const { return m_id; }
+    void set_id(T id) { return m_id; }
+
+private:
+    T m_id = 0;
+}; // class myfoo
+
 void test_define_alias_template();
 
 void test_typedef_template_alias();
+
+void test_dependent_type();
 
 void test_all();
 

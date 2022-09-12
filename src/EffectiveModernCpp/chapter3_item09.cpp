@@ -48,12 +48,23 @@ void test_define_alias_template() {
 
 } // test_define_alias_template
 
+void test_dependent_type() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    myfoo<long int> mfoo;
+    fprintf(stdout, "mfoo: id = %ld\n", mfoo.id());
+
+} // test_dependent_type
+
 void test_all() {
     // Compare function test_typedef_template_alias and test_define_alias_template
     // to see the difference between alias template and template alias defined by
     // typedef keyword
     test_typedef_template_alias();
     test_define_alias_template();
+
+    test_dependent_type();
+
 } // test_all
 
 } // namespace item_09
