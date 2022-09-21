@@ -10,6 +10,7 @@
 #include "chapter3_item07.hpp"
 #include "chapter3_item08.hpp"
 #include "chapter3_item09.hpp"
+#include "chapter3_item10.hpp"
 #include "../utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
@@ -26,6 +27,7 @@ void test_all() {
     chapter_3::item_07::test_all();
     chapter_3::item_08::test_all();
     chapter_3::item_09::test_all();
+    chapter_3::item_10::test_all();
 
     fprintf(stdout, "----- END of function effective_mordern_cpp::%s -----\n\n", __FUNCTION__);
 
