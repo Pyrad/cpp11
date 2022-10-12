@@ -19,7 +19,7 @@ void test_enum_class_no_leak() {
 
     fprintf(stdout, "a = %d\n", int(a));
     fprintf(stdout, "b = %d\n", int(b));
-}
+} // test_enum_class_no_leak
 
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);

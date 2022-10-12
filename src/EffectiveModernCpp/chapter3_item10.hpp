@@ -10,6 +10,11 @@ namespace chapter_3 {
 
 namespace item_10 {
 
+/**
+ * Defines 2 enum classes, which will have a same name "tiger",
+ * but because the enumrator values won't leak to where they are
+ * defined, so the same names won't conflict
+ */
 enum class Animal { monkey, tiger, birds, lion, goat };
 enum class Beast { tiger, lion, cheetah };
 
