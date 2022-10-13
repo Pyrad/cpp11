@@ -9,6 +9,22 @@ namespace chapter_3 {
 namespace item_10 {
 
 /**
+ * An unscoped enum can be declared before defined, but the type
+ * must be specified when declared, because the compiler need to
+ * know the size it will take to optimize, for example, it needs
+ * to know if a char is enough or an integer is needed.
+ *
+ * An scoped enum can be declared before defined, and a type can
+ * be skipped for it.
+ * If the type is not specified, then the default type will be int.
+ */
+
+enum FLAG_ALPHA : std::uint32_t { F_ONE, F_TWO, F_THREE };
+enum class FLAG_BETA { EF_ONE, EF_TWO, EF_THREE };
+enum class FLAG_GAMMA : std::uint32_t { EF_1, EF_2, EF_3 };
+
+
+/**
  * A function just to show an unscoped enumrator will be implicitly
  * converted to integral types(int, uint ...)
  */

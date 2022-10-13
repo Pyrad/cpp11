@@ -2,6 +2,7 @@
 #define EFFECTIVE_MODERN_CPP_CHAPTER3_ITEM10
 
 #include <cstddef>
+#include <cstdint>
 #include <iostream>
 #include "../utilities/utilities.hpp"
 
@@ -11,9 +12,25 @@ namespace chapter_3 {
 
 namespace item_10 {
 
+/**
+ * An unscoped enum can be declared before defined, but the type
+ * must be specified when declared, because the compiler need to
+ * know the size it will take to optimize, for example, it needs
+ * to know if a char is enough or an integer is needed.
+ */
+enum FLAG_ALPHA : std::uint32_t;
+
+/**
+ * An scoped enum can be declared before defined, and a type can
+ * be skipped for it.
+ * If the type is not specified, then the default type will be int.
+ */
+enum class FLAG_BETA;
+enum class FLAG_GAMMA : std::uint32_t;
+
 enum Color { black, white, red }; // unscoped enum
 enum class EColor { black, white, red }; // scoped enum
-                                         //
+
 /**
  * A function just to show an unscoped enumrator will be implicitly
  * converted to integral types(int, uint ...)
