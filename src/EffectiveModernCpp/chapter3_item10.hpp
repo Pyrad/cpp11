@@ -57,6 +57,15 @@ void test_enum_class_no_leak();
  */
 void test_enum_class_no_implicit_convertion();
 
+
+enum AnimalInfo { ANI_NAME, ANI_YEAR, ANI_WEIGHT };
+enum class EAnimalInfo { E_NAME, E_YEAR, E_WEIGHT };
+/**
+ * The enumrator of unscoped enum can be directly used as an integral for
+ * indexing use, but the scoped enumrator can't.
+ */
+void test_unscoped_enum_used_as_index();
+
 void test_all();
 
 

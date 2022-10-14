@@ -1,6 +1,10 @@
 #include "chapter3_item10.hpp"
 #include <cstddef>
+#include <stdint.h>
 #include <stdio.h>
+#include <string>
+#include <tuple>
+#include <utility>
 
 namespace effective_mordern_cpp {
 
@@ -67,12 +71,37 @@ void test_enum_class_no_leak() {
     fprintf(stdout, "b = %d\n", int(b));
 } // test_enum_class_no_leak
 
+
+/**
+ * The enumrator of unscoped enum can be directly used as an integral for
+ * indexing use, but the scoped enumrator can't.
+ */
+void test_unscoped_enum_used_as_index() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    std::tuple<std::string, int, uint32_t> tp("tiger", 3, 278);
+
+    // Can directly use unscoped enumrator
+    fprintf(stdout, "%s is %d years old, and weight is %u kg\n",
+            std::get<ANI_NAME>(tp).c_str(), std::get<ANI_YEAR>(tp), std::get<ANI_WEIGHT>(tp));
+
+    // Can use scoped enumrator after static_cast
+    fprintf(stdout, "%s is %d years old, and weight is %u kg\n",
+            std::get<static_cast<int32_t>(EAnimalInfo::E_NAME)>(tp).c_str(),
+            std::get<static_cast<int32_t>(EAnimalInfo::E_YEAR)>(tp),
+            std::get<static_cast<int32_t>(EAnimalInfo::E_WEIGHT)>(tp));
+
+} // test_unscoped_enum_used_as_index
+
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_enum_class_no_leak();
 
     test_enum_class_no_implicit_convertion();
+
+    test_unscoped_enum_used_as_index();
 
 } // test_all
 
