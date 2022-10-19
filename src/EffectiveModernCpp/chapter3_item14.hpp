@@ -37,6 +37,14 @@ int test_f_noexcept_cxx11(const int x) noexcept; // Most optimized
 int test_f_noexcept_cxx98(const int x) throw(); // Less optimized
 int test_f_may_except(const int x); // Less optimized
 
+/**
+ * @brief Test for conditionally noexcept.
+ *        The noexcept of current function depends on another function
+ *
+ * @note Must use 2 noexcept keyword here
+ */
+int test_conditioned_noexcept(const int x) noexcept(noexcept(test_f_noexcept_cxx11(x)));
+
 
 void test_all();
 

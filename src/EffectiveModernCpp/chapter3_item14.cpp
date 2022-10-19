@@ -27,6 +27,17 @@ int test_f_may_except(const int x) { // Less optimized
     return x * x;
 }
 
+/**
+ * @brief Test for conditionally noexcept.
+ *        The noexcept of current function depends on another function
+ *
+ * @note Must use 2 noexcept keyword here
+ */
+int test_conditioned_noexcept(const int x) noexcept(noexcept(test_f_noexcept_cxx11(x))) {
+    return test_f_noexcept_cxx11(x);
+}
+
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
@@ -38,6 +49,8 @@ void test_all() {
     fprintf(stdout, "Square of %d is %d\n", 10, test_f_noexcept_cxx98(10));
     fprintf(stdout, "Square of %d is %d\n", 10, test_f_noexcept_cxx11(10));
     fprintf(stdout, "Square of %d is %d\n", 10, test_f_may_except(10));
+
+    fprintf(stdout, "Square of %d is %d\n", 10, test_conditioned_noexcept(10));
 
 } // test_all
 
