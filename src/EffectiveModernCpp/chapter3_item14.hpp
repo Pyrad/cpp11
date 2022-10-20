@@ -45,6 +45,16 @@ int test_f_may_except(const int x); // Less optimized
  */
 int test_conditioned_noexcept(const int x) noexcept(noexcept(test_f_noexcept_cxx11(x)));
 
+/**
+ * @brief A function which throws exceptions
+ */
+int test_throw_except(const int x);
+/**
+ * @brief To show that a function declared with "noexcept" can
+ *        actually call a function that throws exceptions
+ */
+int test_noexcept_call_func_with_except(const int x) noexcept;
+
 
 void test_all();
 
