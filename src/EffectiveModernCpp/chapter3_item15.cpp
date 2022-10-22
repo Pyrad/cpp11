@@ -61,11 +61,56 @@ void test_use_constexpr_func() {
 
 } // test_use_constexpr_func
 
+
+/**
+ * To show how to use constexpr objects
+ *
+ * (1) All built-in types in C++11 are literal types (except void), and they can
+ *     be declared as constexpr.
+ * (2) A customized class can also be declared as constexpr, because the constructor
+ *     and the member functions can be declared as constexpr too.
+ */
+void test_use_constexpr_objects() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    // Use compile time constant to initialize a constexpr object
+    constexpr CxprPoint p0(1.2, 3.4);
+
+    // Use compile time constant variable to initialize a constexpr object
+    constexpr double d0 = 7.8;
+    constexpr double d1 = 5.9;
+    constexpr CxprPoint p1(d0, d1);
+
+    // Use another constexpr function to initialize a new object
+    // Note that this function used the constexpr getter of class CxprPoint
+    constexpr CxprPoint p2 = CxprPoint::mid_point(p0, p1);
+
+    // In C++11, the constexpr members are implicitly declared as
+    // "const" member functions, but this restriction is loosed in
+    // C++14, in which you can define a setter which changes the
+    // data member but still can be declared as "constexpr"
+    double d2 = 7.8;
+    double d3 = 5.9;
+    CxprPoint p3(100, 200);
+    p3.set_x(d2); p3.set_y(d3);
+
+    // Use p2's constexpr setter in function reflection to 
+    // return a constexpr object and initialize another constexpr object
+    constexpr auto p4 = CxprPoint::reflection(p2);
+
+    p0.echo();
+    p1.echo();
+    p2.echo();
+    p3.echo();
+    p4.echo();
+} // test_use_constexpr_objects
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_use_constexpr_func();
 
+    test_use_constexpr_objects();
 }
 
 } // namespace item_15
