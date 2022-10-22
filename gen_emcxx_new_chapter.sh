@@ -49,7 +49,7 @@ cat << EOF > $hname
 
 namespace effective_mordern_cpp {
 
-namespace chapter_${cnum}{
+namespace chapter_${cnum} {
 
 namespace item_${inum} {
 
@@ -67,14 +67,11 @@ EOF
 
 # Write content to a source file
 cat << EOF > $sname
-#ifndef EFFECTIVE_MODERN_CPP_CHAPTER${cnum}_ITEM${inum}
-#define EFFECTIVE_MODERN_CPP_CHAPTER${cnum}_ITEM${inum}
-
 #include "chapter${cnum}_item${inum}.hpp"
 
 namespace effective_mordern_cpp {
 
-namespace chapter_${cnum}{
+namespace chapter_${cnum} {
 
 namespace item_${inum} {
 
@@ -90,8 +87,6 @@ void test_all() {
 
 } // namespace effective_mordern_cpp
 
-
-#endif // EFFECTIVE_MODERN_CPP_CHAPTER${cnum}_ITEM${inum}
 EOF
 
 echo "Finished"
