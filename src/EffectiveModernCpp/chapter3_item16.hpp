@@ -3,6 +3,7 @@
 
 #include "../utilities/utilities.hpp"
 #include <vector>
+#include <mutex>
 
 namespace effective_mordern_cpp {
 
@@ -23,13 +24,24 @@ public:
      *        declared as "mutable", so it can be changed in this const function
      */
     RootsType roots() const {
+        // In order to guarentee thread safety, use a mutex
+        // to resolve data racing issues
+        std::lock_guard<std::mutex> g(m_mtx);
         if (m_roots_are_valid) {
+            // If cache not valid, compute roots, and
+            // store them in m_root_vals
             m_roots_are_valid = true;
         }
         return m_root_vals;
     }
 
 private:
+    /**
+     * Once a class has a member data of std::mutex or std::atomic,
+     * then this object can't be copied, but only be moved (not copyable,
+     * move-only)
+     */
+    mutable std::mutex m_mtx;
     mutable bool m_roots_are_valid{false};
     mutable RootsType m_root_vals{};
 }; // end class Polynomial
