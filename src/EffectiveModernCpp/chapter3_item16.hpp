@@ -62,10 +62,40 @@ public:
         return std::sqrt(m_x * m_x + m_y * m_y);
     }
 
+    /**
+     * Just to show this is an expensive operation
+     */
+    double expensive_computation_0() const { return 3; }
+    /**
+     * Just to show this is an expensive operation
+     */
+    double expensive_computation_1() const { return 4; }
+
+    /**
+     * This function contains an issue(A) when multiple threads use it
+     */
+    double magic_value_versionA() const;
+    /**
+     * This function contains an issue(B) when multiple threads use it
+     */
+    double magic_value_versionB() const;
+
+    /**
+     * To fix the issues which might happen in magic_value_versionA and
+     * magic_value_versionB, use std::mutex
+     */
+    double magic_value() const;
+
 private:
     mutable std::atomic<unsigned> m_call_cnt{0};
     double m_x;
     double m_y;
+
+    // A cache flag and a cached value for quick reference
+    mutable std::atomic<bool> m_cache_valid{false};
+    mutable std::atomic<double> m_cached_value{0};
+
+    mutable std::mutex m_mtx;
 }; // end class AtomicPoint
 
 /**
@@ -78,6 +108,12 @@ void test_set_mutable_member_in_const_member_func();
  * Use atomic instead of mutex to improve performance
  */
 void test_use_atomic_to_improve_performance();
+
+/**
+ * Sometimes using mutex can avoid issues which can't be
+ * resolved by atomic values
+ */
+void test_use_mutex_to_avoid_issues_by_atomic();
 
 
 void test_all();
