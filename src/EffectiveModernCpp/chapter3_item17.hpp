@@ -20,6 +20,28 @@ namespace item_17 {
  *   (4) Copy assignment operator
  *   (5) Move constructor (since C++11)
  *   (6) Move assignment operator (since C++11)
+ * And by default, they are all declared as "inline" and "public" by the
+ * compiler.
+ *
+ * @note, conflictions between ctors/operators
+ * (1) Copy constructor does NOT conflict with copy assignment operator
+ * (2) Move constructor DOES conflict with move assignment operator
+ * (3) If copy ctor (or copy assignment) is defined, move ctor or move
+ *     assignment operator won't be created by compiler any more
+ * (4) If move ctor (or move assignment) is defined, copy ctor or copy 
+ *     assignment operator won't be created by compiler any more
+ *
+ * @note, Rule of three
+ * If any of the following 3 are defined, them 3 all should be defined
+ * (1) The copy ctor
+ * (2) The copy assignment
+ * (3) The destructor
+ *
+ * @note, Move operation can be created by compiler if all of the following
+ *        3 are satisfied,
+ * (1) No copy operations are declared in the class.
+ * (2) No move operations are declared in the class.
+ * (3) No destructor is declared in the class.
  *
  * Since here we don't define any of these special member functions, then
  * the compiler will create them for us
