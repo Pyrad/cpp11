@@ -2,8 +2,10 @@
 #define EFFECTIVE_MODERN_CPP_CHAPTER3_ITEM16
 
 #include "../utilities/utilities.hpp"
+#include <cmath>
 #include <vector>
 #include <mutex>
+#include <atomic>
 
 namespace effective_mordern_cpp {
 
@@ -47,10 +49,35 @@ private:
 }; // end class Polynomial
 
 /**
+ * @brief To improve performance by using atomic instead of mutex
+ */
+class AtomicPoint {
+public:
+    AtomicPoint() = default;
+    AtomicPoint(const double x, const double y) : m_x(x), m_y(y) { }
+
+public:
+    double dist_from_origin() const noexcept {
+        m_call_cnt++; // atomic increment
+        return std::sqrt(m_x * m_x + m_y * m_y);
+    }
+
+private:
+    mutable std::atomic<unsigned> m_call_cnt{0};
+    double m_x;
+    double m_y;
+}; // end class AtomicPoint
+
+/**
  * @brief Shows that a data member can be changed in 'const' member function
  *        if this data member is mutable
  */
 void test_set_mutable_member_in_const_member_func();
+
+/**
+ * Use atomic instead of mutex to improve performance
+ */
+void test_use_atomic_to_improve_performance();
 
 
 void test_all();

@@ -18,8 +18,22 @@ void test_set_mutable_member_in_const_member_func() {
     fprintf(stdout, "Polynomial object root size : %lu\n", p.roots().size());
 }
 
+/**
+ * Use atomic instead of mutex to improve performance
+ */
+void test_use_atomic_to_improve_performance() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    AtomicPoint p(3, 4);
+    fprintf(stdout, "Distancef from p to origin: %.3f\n", p.dist_from_origin());
+}
+
 void test_all() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
     test_set_mutable_member_in_const_member_func();
+
+    test_use_atomic_to_improve_performance();
 }
 
 
