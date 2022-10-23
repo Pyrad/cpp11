@@ -43,6 +43,25 @@ namespace item_17 {
  * (2) No move operations are declared in the class.
  * (3) No destructor is declared in the class.
  *
+ * @note, rules of creation for different special member functions by the compiler.
+ * (1) Default constructor
+ *     Only if there's no user defined constructor (not just default ctor), compiler
+ *     will create it.
+ * (2) Destructor
+ *     The destructor created by the compiler is "noexcept", and it wil be declared
+ *     as "virtual" only if its parent class is virtual
+ * (3) Copy constructor
+ *     Only if there's no user defined copy constructor, compiler will create it.
+ *     If there is move ctor or move assignment operator, it will be declared as "delete"
+ *     If there is user defined copy ctor or destructor, it will not be created
+ * (4) Copy assignment
+ *     Only if there's no user defined copy assignment, compiler will create it.
+ *     If there is move ctor or move assignment operator, it will be declared as "delete"
+ *     If there is user defined copy assignment or destructor, it will not be created
+ * (5) Move ctor and move assignment
+ *     If there is any copy operations (ctor or assignment), move operations (move
+ *     ctor or assignment) or destructor, the compiler won't create it any more
+ *
  * Since here we don't define any of these special member functions, then
  * the compiler will create them for us
  */
