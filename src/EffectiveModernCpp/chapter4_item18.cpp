@@ -36,13 +36,15 @@ auto CusDelInvmt = [](UniInvestment *p) {
 
 /**
  * @brief A factory method to return a std::unique_ptr with a
- *        customized deleter
+ *        customized deleter.
+ *        This is C++11 style, because a lambda is defined outside
+ *        of the function, and the return type is explicitly written.
  *
  * @note, This is currently defined in the source file, which needs
  *        a lambda expression defined in source file to avoid mutiple
  *        definitions
  */
-static std::unique_ptr<UniInvestment, decltype(CusDelInvmt)>
+std::unique_ptr<UniInvestment, decltype(CusDelInvmt)>
 makeInvestment2(const double val) {
     std::unique_ptr<UniInvestment, decltype(CusDelInvmt)> p(nullptr, CusDelInvmt);
 
@@ -60,10 +62,37 @@ makeInvestment2(const double val) {
 }
 
 /**
+ * @brief C++14 style to return a std::unique_ptr with a customized deleter
+ */
+auto makeInvestment3(const double val) {
+    auto CusDelInvmt2 = [](UniInvestment *p) {
+        fprintf(stdout, "Customized (2) deleting pointer to UniInvestment\n");
+        delete p;
+    };
+
+    std::unique_ptr<UniInvestment, decltype(CusDelInvmt2)> p(nullptr, CusDelInvmt2);
+
+    if (val < 0) {
+        p.reset(new UniInvestment(val));
+    } else if (val > 100) {
+        p.reset(new UniStock(val));
+    } else if (val > 50) {
+        p.reset(new UniBond(val));
+    } else {
+        p.reset(new UniRealEstate(val));
+    }
+
+    return p;
+}
+
+
+/**
  * @brief A factory method makeInvestment returns a std::unique_ptr,
  *        which might point to different kind of inheritted classes
  */
 void test_factory_method_return_unique_ptr() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
     auto p0 = makeInvestment(-1);
     p0->echo();
 
@@ -82,7 +111,9 @@ void test_factory_method_return_unique_ptr() {
  *        a customized deleter, this std::unique_ptr also can point to
  *        different kind of inheritted classes
  */
-void test_factory_method_return_unique_ptr_custom_deleter() {
+void test_factory_method_return_unique_ptr_custom_deleter_cxx11() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
     auto p0 = makeInvestment2(-1);
     p0->echo();
 
@@ -96,12 +127,39 @@ void test_factory_method_return_unique_ptr_custom_deleter() {
     p3->echo();
 }
 
+/**
+ * @brief A factory method makeInvestment3 returns a std::unique_ptr with
+ *        a customized deleter, this std::unique_ptr also can point to
+ *        different kind of inheritted classes, and makeInvestment3 is
+ *        implemented in C++14 style, that is lambda deleter is defined
+ *        inside the function object, but return type is actually a
+ *        std::unique_ptr with that lambda as a customized deleter.
+ *        (How this is achieved? Using "auto")
+ */
+void test_factory_method_return_unique_ptr_custom_deleter_cxx14() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    auto p0 = makeInvestment3(-1);
+    p0->echo();
+
+    auto p1 = makeInvestment3(102);
+    p1->echo();
+
+    auto p2 = makeInvestment3(63);
+    p2->echo();
+
+    auto p3 = makeInvestment3(15);
+    p3->echo();
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_factory_method_return_unique_ptr();
 
-    test_factory_method_return_unique_ptr_custom_deleter();
+    test_factory_method_return_unique_ptr_custom_deleter_cxx11();
+
+    test_factory_method_return_unique_ptr_custom_deleter_cxx14();
 }
 
 

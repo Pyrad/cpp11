@@ -96,13 +96,18 @@ std::unique_ptr<UniInvestment> makeInvestment(const double val);
 
 /**
  * @brief A factory method to return a std::unique_ptr with a
- *        customized deleter
+ *        customized deleter.
+ *        This is C++11 style, because a lambda is defined outside
+ *        of the function, and the return type is explicitly written.
  *
  * @note, This is currently defined in the source file, which needs
  *        a lambda expression defined in source file to avoid mutiple
  *        definitions
  */
 // static std::unique_ptr<UniInvestment, decltype(CusDelInvmt)> makeInvestment2(const double val);
+
+
+auto makeInvestment3(const double val);
 
 /**
  * @brief A factory method makeInvestment returns a std::unique_ptr,
@@ -115,7 +120,19 @@ void test_factory_method_return_unique_ptr();
  *        a customized deleter, this std::unique_ptr also can point to
  *        different kind of inheritted classes
  */
-void test_factory_method_return_unique_ptr_custom_deleter();
+void test_factory_method_return_unique_ptr_custom_deleter_cxx11();
+
+
+/**
+ * @brief A factory method makeInvestment3 returns a std::unique_ptr with
+ *        a customized deleter, this std::unique_ptr also can point to
+ *        different kind of inheritted classes, and makeInvestment3 is
+ *        implemented in C++14 style, that is lambda deleter is defined
+ *        inside the function object, but return type is actually a
+ *        std::unique_ptr with that lambda as a customized deleter.
+ *        (How this is achieved? Using "auto")
+ */
+void test_factory_method_return_unique_ptr_custom_deleter_cxx14();
 
 
 void test_all();
