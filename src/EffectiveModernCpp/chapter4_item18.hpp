@@ -28,6 +28,16 @@ private:
     double m_value;
 };
 
+// Note define this lambda in the source file to avoid mutiple
+// definitions issue
+// /**
+//  * @brief A customized deleter for a std::unique_ptr
+//  */
+// auto CusDelInvmt = [](UniInvestment *p) {
+//     fprintf(stdout, "Customized deleting pointer to UniInvestment\n");
+//     delete p;
+// };
+
 /**
  * @brief Inheritted class 1
  */
@@ -84,8 +94,28 @@ private:
  */
 std::unique_ptr<UniInvestment> makeInvestment(const double val);
 
+/**
+ * @brief A factory method to return a std::unique_ptr with a
+ *        customized deleter
+ *
+ * @note, This is currently defined in the source file, which needs
+ *        a lambda expression defined in source file to avoid mutiple
+ *        definitions
+ */
+// static std::unique_ptr<UniInvestment, decltype(CusDelInvmt)> makeInvestment2(const double val);
 
+/**
+ * @brief A factory method makeInvestment returns a std::unique_ptr,
+ *        which might point to different kind of inheritted classes
+ */
 void test_factory_method_return_unique_ptr();
+
+/**
+ * @brief A factory method makeInvestment2 returns a std::unique_ptr with
+ *        a customized deleter, this std::unique_ptr also can point to
+ *        different kind of inheritted classes
+ */
+void test_factory_method_return_unique_ptr_custom_deleter();
 
 
 void test_all();
