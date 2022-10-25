@@ -238,6 +238,19 @@ void test_2_types_of_unique_ptr() {
     pb[0].echo();
 }
 
+/**
+ * @brief Shows that a std::unique_ptr can be implicitly converted to
+ *        a std::shared_ptr, which is good to act as a return type of
+ *        a factory method
+ */
+void test_unique_ptr_implicitly_convert_to_shared_ptr() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    std::shared_ptr<UniInvestment> pa = makeInvestment(25);
+
+    pa->echo();
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
@@ -250,6 +263,8 @@ void test_all() {
     test_size_of_unique_ptr();
 
     test_2_types_of_unique_ptr();
+
+    test_factory_method_return_unique_ptr();
 }
 
 

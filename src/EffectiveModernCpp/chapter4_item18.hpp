@@ -163,6 +163,13 @@ void CusDelInvmt3(UniInvestment *p);
  */
 void test_2_types_of_unique_ptr();
 
+/**
+ * @brief Shows that a std::unique_ptr can be implicitly converted to
+ *        a std::shared_ptr, which is good to act as a return type of
+ *        a factory method
+ */
+void test_unique_ptr_implicitly_convert_to_shared_ptr();
+
 void test_all();
 
 } // namespace item_18
