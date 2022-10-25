@@ -215,6 +215,29 @@ void test_size_of_unique_ptr() {
 
 }
 
+/**
+ * std::unique_ptr has 2 types, the 2nd form is not recommended, because
+ * std::array, std::vector are all good ones to replace it.
+ *
+ * (1) std::unique_ptr<T>, which points to a single variable
+ *     This form has dereference operator, but doesn't have operator[]
+ * (2) std::unique_ptr<T[]>, which points to an array
+ *     This form has operator[], but doesn't have dereference operator
+ */
+void test_2_types_of_unique_ptr() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    std::unique_ptr<UniInvestment> pa(new UniInvestment(25));
+
+    std::unique_ptr<UniInvestment[]> pb(new UniInvestment[10]);
+
+    // Apparently, pa has no operator[]
+    pa->echo();
+
+    // Apparently, pb has operator[], but doesn't have dereference operator(*)
+    pb[0].echo();
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
@@ -225,6 +248,8 @@ void test_all() {
     test_factory_method_return_unique_ptr_custom_deleter_cxx14();
 
     test_size_of_unique_ptr();
+
+    test_2_types_of_unique_ptr();
 }
 
 

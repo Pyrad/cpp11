@@ -152,6 +152,16 @@ void test_size_of_unique_ptr();
  */
 void CusDelInvmt3(UniInvestment *p);
 
+/**
+ * std::unique_ptr has 2 types, the 2nd form is not recommended, because
+ * std::array, std::vector are all good ones to replace it.
+ *
+ * (1) std::unique_ptr<T>, which points to a single variable
+ *     This form has dereference operator, but doesn't have operator[]
+ * (2) std::unique_ptr<T[]>, which points to an array
+ *     This form has operator[], but doesn't have dereference operator
+ */
+void test_2_types_of_unique_ptr();
 
 void test_all();
 
