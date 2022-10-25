@@ -9,6 +9,14 @@ namespace item_18 {
 
 
 /**
+ * A function deleter for std::unique_ptr
+ */
+void CusDelInvmt3(UniInvestment *p) {
+    fprintf(stdout, "Customized (3) deleting pointer to UniInvestment\n");
+    delete p;
+}
+
+/**
  * @brief A factory method to return a std::unique_ptr
  *
  * @note, std::unique_ptr is available after C++14, it is not
@@ -71,6 +79,28 @@ auto makeInvestment3(const double val) {
     };
 
     std::unique_ptr<UniInvestment, decltype(CusDelInvmt2)> p(nullptr, CusDelInvmt2);
+
+    if (val < 0) {
+        p.reset(new UniInvestment(val));
+    } else if (val > 100) {
+        p.reset(new UniStock(val));
+    } else if (val > 50) {
+        p.reset(new UniBond(val));
+    } else {
+        p.reset(new UniRealEstate(val));
+    }
+
+    return p;
+}
+
+
+/**
+ * @brief A factory method to return a std::unique_ptr, with a function as
+ *        a custom deleter
+ */
+std::unique_ptr<UniInvestment, void(*)(UniInvestment*)>
+makeInvestment4(const double val) {
+    std::unique_ptr<UniInvestment, void(*)(UniInvestment*)> p(nullptr, CusDelInvmt3);
 
     if (val < 0) {
         p.reset(new UniInvestment(val));
@@ -155,8 +185,13 @@ void test_factory_method_return_unique_ptr_custom_deleter_cxx14() {
 /**
  * If the std::unique_ptr has a default deleter (which is delete operator),
  * then the size of it equals to a raw pointer.
- * But if the std::unique_ptr has a customized deleter, then the size of it
- * increases from 1 word to 2 words.
+ * But if the std::unique_ptr has a customized deleter, cases are different,
+ * (1) If the customized deleter is a lambda w/o any capture, then the size
+ *     of it is still equal to a raw pointer
+ * (2) If the customized deleter is a lambda w/ any capture, then the size
+ *     of it increases
+ * (3) If the customized deleter is a function pointer, then the size of it
+ *     increases from 1 word to 2 words.
  */
 void test_size_of_unique_ptr() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
@@ -164,15 +199,19 @@ void test_size_of_unique_ptr() {
     // A pointer with a default deleter
     auto p0 = makeInvestment(10);
 
-    // A pointer with a customized deleter
+    // A pointer with a lambda deleter w/o capture
     auto p1 = makeInvestment2(10);
 
-    // A pointer with a customized deleter
+    // A pointer with a lambda deleter w/o capture
     auto p2 = makeInvestment3(10);
+
+    // A pointer with a function as a deleter
+    auto p3 = makeInvestment4(10);
 
     fprintf(stdout, "size of p0 = %d\n", sizeof p0);
     fprintf(stdout, "size of p1 = %d\n", sizeof p1);
     fprintf(stdout, "size of p2 = %d\n", sizeof p2);
+    fprintf(stdout, "size of p3 = %d\n", sizeof p3);
 
 }
 
@@ -184,7 +223,6 @@ void test_all() {
     test_factory_method_return_unique_ptr_custom_deleter_cxx11();
 
     test_factory_method_return_unique_ptr_custom_deleter_cxx14();
-
 
     test_size_of_unique_ptr();
 }

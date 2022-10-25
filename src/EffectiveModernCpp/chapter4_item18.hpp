@@ -137,10 +137,20 @@ void test_factory_method_return_unique_ptr_custom_deleter_cxx14();
 /**
  * If the std::unique_ptr has a default deleter (which is delete operator),
  * then the size of it equals to a raw pointer.
- * But if the std::unique_ptr has a customized deleter, then the size of it
- * increases from 1 word to 2 words.
+ * But if the std::unique_ptr has a customized deleter, cases are different,
+ * (1) If the customized deleter is a lambda w/o any capture, then the size
+ *     of it is still equal to a raw pointer
+ * (2) If the customized deleter is a lambda w/ any capture, then the size
+ *     of it increases
+ * (3) If the customized deleter is a function pointer, then the size of it
+ *     increases from 1 word to 2 words.
  */
 void test_size_of_unique_ptr();
+
+/**
+ * A function deleter for std::unique_ptr
+ */
+void CusDelInvmt3(UniInvestment *p);
 
 
 void test_all();
