@@ -134,6 +134,14 @@ void test_factory_method_return_unique_ptr_custom_deleter_cxx11();
  */
 void test_factory_method_return_unique_ptr_custom_deleter_cxx14();
 
+/**
+ * If the std::unique_ptr has a default deleter (which is delete operator),
+ * then the size of it equals to a raw pointer.
+ * But if the std::unique_ptr has a customized deleter, then the size of it
+ * increases from 1 word to 2 words.
+ */
+void test_size_of_unique_ptr();
+
 
 void test_all();
 

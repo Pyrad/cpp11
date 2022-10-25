@@ -152,6 +152,30 @@ void test_factory_method_return_unique_ptr_custom_deleter_cxx14() {
     p3->echo();
 }
 
+/**
+ * If the std::unique_ptr has a default deleter (which is delete operator),
+ * then the size of it equals to a raw pointer.
+ * But if the std::unique_ptr has a customized deleter, then the size of it
+ * increases from 1 word to 2 words.
+ */
+void test_size_of_unique_ptr() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    // A pointer with a default deleter
+    auto p0 = makeInvestment(10);
+
+    // A pointer with a customized deleter
+    auto p1 = makeInvestment2(10);
+
+    // A pointer with a customized deleter
+    auto p2 = makeInvestment3(10);
+
+    fprintf(stdout, "size of p0 = %d\n", sizeof p0);
+    fprintf(stdout, "size of p1 = %d\n", sizeof p1);
+    fprintf(stdout, "size of p2 = %d\n", sizeof p2);
+
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
@@ -160,6 +184,9 @@ void test_all() {
     test_factory_method_return_unique_ptr_custom_deleter_cxx11();
 
     test_factory_method_return_unique_ptr_custom_deleter_cxx14();
+
+
+    test_size_of_unique_ptr();
 }
 
 
