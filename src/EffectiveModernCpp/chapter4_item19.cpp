@@ -14,7 +14,8 @@ uint32_t Foo::id_cnt = 0;
 /**
  * The size of a std::shared_ptr is 2 size of a raw ptr.
  * That's because it has 2 (raw) pointers, a pointer to the address of the object,
- * and the other pointer to a reference count.
+ * and the other pointer to a reference count (indeed it is a pointer to a control
+ * block).
  *
  * A reference count is indeed a word (4 bytes for 32-bit machine, or 8 bytes for
  * 64-bit machine), thus a shared_ptr is 8 bytes for 32-bit machine (4 bytes by 2
@@ -85,6 +86,28 @@ void test_diff_custom_deleter_one_shared_ptr() {
     std::vector<std::shared_ptr<Foo>> vpw{sp0, sp1};
 }
 
+/**
+ * As showed in function test_size_of_shared_ptr, a std::shared_ptr has 2 pointer,
+ * one for object itself, the other is actually a pointer to a control block, which
+ * contains reference count, weak count, custom deleter and other data.
+ *
+ * So the size of a shared_ptr is always 2 words (16 bytes in 64bit machine), even
+ * it has a custom deleter
+ */
+void test_size_of_shared_ptr_custom_deleter() {
+    auto del_foo_C = [](Foo *p) {
+        if (!p) { return ; }
+        fprintf(stdout, "(Type C) Deleting a Foo object(ID = %u)\n", p->id());
+        delete p;
+    };
+
+    std::shared_ptr<Foo> sp0(new Foo);
+    std::shared_ptr<Foo> sp1(new Foo, del_foo_C);
+
+    fprintf(stdout, "Size of sp0 (shared_ptr) = %d\n", sizeof sp0); // Result is 16
+    fprintf(stdout, "Size of sp1 (shared_ptr) = %d\n", sizeof sp1); // Result is 16
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
@@ -93,6 +116,8 @@ void test_all() {
     test_diff_custom_deleter_for_shared_unique();
 
     test_diff_custom_deleter_one_shared_ptr();
+
+    test_size_of_shared_ptr_custom_deleter();
 }
 
 
