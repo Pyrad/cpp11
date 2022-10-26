@@ -55,6 +55,13 @@ void test_size_of_shared_ptr();
  */
 void test_diff_custom_deleter_for_shared_unique();
 
+/**
+ * Since the customized deleter for a shared_ptr appears in its arguments list,
+ * thus they (shared_ptr) are a same type, which can be assigned to each other,
+ * act as the elements in a same container, for a same function's argument.
+ */
+void test_diff_custom_deleter_one_shared_ptr();
+
 void test_all();
 
 } // namespace item_19

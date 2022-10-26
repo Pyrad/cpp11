@@ -1,6 +1,7 @@
 #include "chapter4_item19.hpp"
 #include <memory>
 #include <stdio.h>
+#include <vector>
 
 namespace effective_mordern_cpp {
 
@@ -57,12 +58,41 @@ void test_diff_custom_deleter_for_shared_unique() {
     std::shared_ptr<Foo> sp(new Foo, del_foo);
 }
 
+/**
+ * Since the customized deleter for a shared_ptr appears in its arguments list,
+ * thus they (shared_ptr) are a same type, which can be assigned to each other,
+ * act as the elements in a same container, for a same function's argument.
+ */
+void test_diff_custom_deleter_one_shared_ptr() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    auto del_foo_A = [](Foo *p) {
+        if (!p) { return ; }
+        fprintf(stdout, "(Type A) Deleting a Foo object(ID = %u)\n", p->id());
+        delete p;
+    };
+    auto del_foo_B = [](Foo *p) {
+        if (!p) { return ; }
+        fprintf(stdout, "(Type B) Deleting a Foo object(ID = %u)\n", p->id());
+        delete p;
+    };
+
+    std::shared_ptr<Foo> sp0(new Foo, del_foo_A);
+    std::shared_ptr<Foo> sp1(new Foo, del_foo_B);
+    std::shared_ptr<Foo> sp2(new Foo, del_foo_B);
+    sp2 = sp1; // Though diff deleter, can assign to sp2
+
+    std::vector<std::shared_ptr<Foo>> vpw{sp0, sp1};
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_size_of_shared_ptr();
 
     test_diff_custom_deleter_for_shared_unique();
+
+    test_diff_custom_deleter_one_shared_ptr();
 }
 
 
