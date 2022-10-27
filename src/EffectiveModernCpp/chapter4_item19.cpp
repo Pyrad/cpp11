@@ -1,6 +1,8 @@
 #include "chapter4_item19.hpp"
 #include <memory>
+#include <stdint.h>
 #include <stdio.h>
+#include <unordered_set>
 #include <vector>
 
 namespace effective_mordern_cpp {
@@ -126,6 +128,40 @@ void test_size_of_shared_ptr_custom_deleter() {
     fprintf(stdout, "Size of sp1 (shared_ptr) = %d\n", sizeof sp1); // Result is 16
 }
 
+/**
+ * There are a few rules when creating a std::shared_ptr
+ *
+ * (1) When created by std::make_shared, always create a control block
+ * (2) When created by a unique-owned pointer(e.g., unique_ptr),
+ *     create a control block.
+ * (3) When created by a raw pointer, create a control block.
+ *     So if to create another shared_ptr with an object which already has
+ *     a control, USE std::shared_ptr or std::weak_ptr, NOT raw pointer
+ */
+void test_control_block_rules() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    auto del_foo_D = [](Foo *p) {
+        if (!p) { return ; }
+        fprintf(stdout, "(Type D) Deleting a Foo object(ID = %u)\n", p->id());
+        delete p;
+    };
+
+    // !!!NOTE!!!
+    // This is just for demo use, as we should avoid creating multiple std:shared_ptr
+    // with a same raw pointer!
+    //
+    // auto p = new Foo("sky");
+    // std::shared_ptr<Foo> spw1(p, del_foo_D);
+    // std::shared_ptr<Foo> spw2(p, del_foo_D);
+    //
+    // Instead, use a existing shared_ptr to creat another shared_ptr
+
+    std::shared_ptr<Foo> spw1(new Foo("sky"), del_foo_D);
+    std::shared_ptr<Foo> spw2(spw1);
+}
+
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
@@ -136,6 +172,8 @@ void test_all() {
     test_diff_custom_deleter_one_shared_ptr();
 
     test_size_of_shared_ptr_custom_deleter();
+
+    test_control_block_rules();
 }
 
 

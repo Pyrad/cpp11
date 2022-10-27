@@ -91,6 +91,18 @@ void test_diff_custom_deleter_one_shared_ptr();
  */
 void test_size_of_shared_ptr_custom_deleter();
 
+/**
+ * There are a few rules when creating a std::shared_ptr
+ *
+ * (1) When created by std::make_shared, always create a control block
+ * (2) When created by a unique-owned pointer(e.g., unique_ptr),
+ *     create a control block.
+ * (3) When created by a raw pointer, create a control block.
+ *     So if to create another shared_ptr with an object which already has
+ *     a control, USE std::shared_ptr or std::weak_ptr, NOT raw pointer
+ */
+void test_control_block_rules();
+
 void test_all();
 
 } // namespace item_19
