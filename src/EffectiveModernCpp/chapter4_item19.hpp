@@ -69,7 +69,25 @@ void test_diff_custom_deleter_one_shared_ptr();
  * contains reference count, weak count, custom deleter and other data.
  *
  * So the size of a shared_ptr is always 2 words (16 bytes in 64bit machine), even
- * it has a custom deleter
+ * it has a custom deleter.
+ *
+ * Below is a figure of a std::shared_ptr
+ *
+ * A std::shared_ptr
+ * +------------------------+            +------------------------+
+ * |       Ptr to T         | -------->  |       T Object         |
+ * +------------------------+            +------------------------+
+ * | Ptr to Control Block   | -----+        Control Block
+ * +------------------------+      |     +------------------------+
+ *                                 +---> |   Reference count      |
+ *                                       +------------------------+
+ *                                       |      Weak count        |
+ *                                       +------------------------+
+ *                                       |      Other data        |
+ *                                       | (e.g custom deleter,   |
+ *                                       |    allocator, etc)     |
+ *                                       +------------------------+
+ *
  */
 void test_size_of_shared_ptr_custom_deleter();
 
