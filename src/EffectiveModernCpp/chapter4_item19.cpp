@@ -12,6 +12,12 @@ namespace chapter_4 {
 namespace item_19 {
 
 uint32_t Foo::id_cnt = 0;
+uint32_t FooShared::id_cnt = 0;
+
+void FooShared::process(std::vector<std::shared_ptr<FooShared>> &fvec) {
+    m_name += "_processed";
+    fvec.emplace_back(this->shared_from_this());
+}
 
 /**
  * The size of a std::shared_ptr is 2 size of a raw ptr.
@@ -161,6 +167,44 @@ void test_control_block_rules() {
     std::shared_ptr<Foo> spw2(spw1);
 }
 
+/**
+ * (Same comments for class FooShared)
+ *
+ * Why enable_shared_from_this?
+ * ----------------------------
+ *   If we want to create a shared_ptr inside a class method, normally we don't
+ * create a shared_ptr directly by contructing it.
+ * The reason is that it always create a new control block, but we don't know
+ *   if there is any other shared_ptr has already been created using this object
+ * (this).
+ *   Thus if we create it directly, very likely we will create a duplicated control
+ * block, then we have troubles.
+ *   So the answer is using enable_shared_from_this (inherit it as a parent class),
+ * then use this->shared_from_this() function in that class method.
+ *
+ * Prerequisite to use shared_from_this function?
+ * ----------------------------------------------
+ *   In order to use "this->shared_from_this()", we should make sure there must be
+ * an existing std::shared_ptr pointing to current object (*this). If not, undefined
+ * behavoir happens (normally shared_from_this() function throws an exception).
+ *   So usually we create a public factory method to create an object of this class,
+ * and move the constructor to private scope.
+ */
+void test_shared_from_this() {
+
+    std::vector<std::shared_ptr<FooShared>> fvec;
+    auto fp = FooShared::create("cloud");
+    fp->echo();
+    fp->process(fvec);
+
+    fp = FooShared::create("moon");
+    fp->echo();
+    fp->process(fvec);
+
+    for (const auto &val : fvec) {
+        val->echo();
+    }
+}
 
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
@@ -174,6 +218,8 @@ void test_all() {
     test_size_of_shared_ptr_custom_deleter();
 
     test_control_block_rules();
+
+    test_shared_from_this();
 }
 
 
