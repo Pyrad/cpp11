@@ -29,7 +29,7 @@ private:
 };
 
 /**
- * Why weak_pt?
+ * Why weak_ptr?
  * -------------------------------------------------------------------
  * Because sometimes a shared_ptr might point to an object which has
  * already been released, while shared_ptr doesn't know that. In this
@@ -41,6 +41,20 @@ private:
  * A weak_ptr can neither be dereferenced nor be checked for null.
  */
 void test_create_weak_ptr();
+
+/**
+ * Why weak_ptr doesn't have dereference operator?
+ * -------------------------------------------------------------------
+ * Because data racing might happen, which is that if it has a dereference
+ * operator, after dereference, it still can be released by other threads,
+ * that lead to a bad situation for this thread.
+ *
+ * Create shared_ptr by a weak_ptr
+ * -------------------------------------------------------------------
+ * (1) Use member function weak_ptr::lock
+ * (2) Use a weak_ptr to initialize a shared_ptr
+ */
+void test_create_shared_ptr_by_weak_ptr();
 
 void test_all();
 
