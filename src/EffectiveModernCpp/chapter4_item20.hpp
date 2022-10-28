@@ -31,6 +31,8 @@ private:
     std::string m_name = "unknown";
 };
 
+// The following 3 classes are to show how to resolve circular dependency issue
+// by using weak_ptr
 class CirB; // Forward declaration
 class CirA {
 public:
@@ -55,6 +57,71 @@ public:
     ~CirC(){ fprintf(stdout, "Destructiong a CirC object\n"); }
 public:
     std::weak_ptr<CirB> m_p;
+};
+
+/**
+ * The class MyObserver, MySubject and function test_subject_observer_pattern below
+ * show how to use weak_ptr to realize the subject-observer design pattern
+ */
+class MyObserver {
+public:
+    MyObserver() : m_id(0) { }
+    MyObserver(const int32_t id) : m_id(id) { }
+    ~MyObserver() { }
+
+public:
+    void signal(const int32_t id) const {
+        fprintf(stdout, "MyObserver object ID = %d received signal "
+                "from MyObserver object ID = %d\n", m_id, id);
+    }
+
+private:
+    int32_t m_id;
+};
+
+class MySubject {
+public:
+    MySubject() : m_id(0) { }
+    MySubject(const int32_t id) : m_id(id) { }
+    ~MySubject() { }
+
+private:
+    void notify_observers() {
+        auto p0 = m_obs0.lock();
+        if (p0) {
+            p0->signal(m_id);
+        } else {
+            fprintf(stdout, "MySubject found observer 0 has been released\n");
+        }
+
+        auto p1 = m_obs1.lock();
+        if (p1) {
+            p1->signal(m_id);
+        } else {
+            fprintf(stdout, "MySubject found observer 1 has been released\n");
+        }
+
+        auto p2 = m_obs2.lock();
+        if (p2) {
+            p2->signal(m_id);
+        } else {
+            fprintf(stdout, "MySubject found observer 2 has been released\n");
+        }
+    }
+public:
+    void change_happens() {
+        fprintf(stdout, "Making changes for MySubject...\n");
+        fprintf(stdout, "Making changes done\n");
+        fprintf(stdout, "Notify observers...\n");
+        notify_observers();
+        fprintf(stdout, "Done\n");
+    }
+
+public:
+    int32_t m_id;
+    std::weak_ptr<MyObserver> m_obs0;
+    std::weak_ptr<MyObserver> m_obs1;
+    std::weak_ptr<MyObserver> m_obs2;
 };
 
 
@@ -101,6 +168,11 @@ std::shared_ptr<const Foo> loadFooFast(const uint32_t id);
  * Use loadFooFast function to show how an object is cached by using weak_ptr
  */
 void test_use_weak_ptr_for_cache();
+
+/**
+ * Subject-observer design pattern using weak_ptr
+ */
+void test_subject_observer_pattern();
 
 /**
  * Suppose CirA has a pointer to CirB, CirC also has a pointer to CirB,

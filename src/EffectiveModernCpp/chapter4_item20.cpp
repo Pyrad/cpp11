@@ -13,7 +13,7 @@ namespace item_20 {
 uint32_t Foo::id_cnt = 0;
 
 /**
- * Why weak_pt?
+ * Why weak_ptr?
  * -------------------------------------------------------------------
  * Because sometimes a shared_ptr might point to an object which has
  * already been released, while shared_ptr doesn't know that. In this
@@ -179,6 +179,30 @@ void test_weak_ptr_resolve_circular_dependency() {
     }
 }
 
+/**
+ * Subject-observer design pattern using weak_ptr
+ */
+void test_subject_observer_pattern() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    // Create a subject which might change itself later
+    MySubject ms(29);
+    // Create some observers which need to observe the subject ms
+    auto obs0 = std::make_shared<MyObserver>(100);
+    auto obs1 = std::make_shared<MyObserver>(101);
+    auto obs2 = std::make_shared<MyObserver>(102);
+    // Connect the observers to the subject
+    ms.m_obs0 = obs0;
+    ms.m_obs1 = obs1;
+    ms.m_obs2 = obs2;
+    // Subject changes for the 1st time
+    ms.change_happens();
+    // Release obs1 to mimic as if it is broken down
+    obs1 = nullptr;
+    // Subject changes for the 2nd time
+    ms.change_happens();
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
@@ -189,6 +213,8 @@ void test_all() {
     test_use_weak_ptr_for_cache();
 
     test_weak_ptr_resolve_circular_dependency();
+
+    test_subject_observer_pattern();
 }
 
 
