@@ -122,6 +122,9 @@ std::shared_ptr<const Foo> loadFooFast(const uint32_t id) {
     return objPtr;
 }
 
+/**
+ * Use loadFooFast function to show how an object is cached by using weak_ptr
+ */
 void test_use_weak_ptr_for_cache() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 

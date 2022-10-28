@@ -69,6 +69,9 @@ std::unique_ptr<const Foo> loadFoo(const uint32_t id);
  */
 std::shared_ptr<const Foo> loadFooFast(const uint32_t id);
 
+/**
+ * Use loadFooFast function to show how an object is cached by using weak_ptr
+ */
 void test_use_weak_ptr_for_cache();
 
 void test_all();
