@@ -147,6 +147,38 @@ void test_use_weak_ptr_for_cache() {
     sp2->echo();
 }
 
+/**
+ * Suppose CirA has a pointer to CirB, CirC also has a pointer to CirB,
+ * and they are both shared_ptr.
+ *
+ * If CirB should have a pointer to CirA, which kind of pointer should
+ * it have?
+ * Answer is weak_ptr
+ *
+ *  +--------+   shared_ptr      +--------+   shared_ptr    +--------+
+ *  |  CirA  | -------------->   |  CirB  | <-------------- |  CirC  |
+ *  +--------+                   +--------+                 +--------+
+ *      /\                            |
+ *      |         weak_ptr            |
+ *      +-----------------------------+
+ *
+ */
+void test_weak_ptr_resolve_circular_dependency() {
+    std::shared_ptr<CirA> ca = std::make_shared<CirA>();
+    std::shared_ptr<CirB> cb = std::make_shared<CirB>();
+    std::shared_ptr<CirC> cc = std::make_shared<CirC>();
+
+    ca->m_p = cb; // Now ca has a shared_ptr to cb
+    cc->m_p = cb; // Now cc has a shared_ptr to cb
+    cb->m_p = std::weak_ptr<CirA>(ca); // Now cb has a weak_ptr to ca
+
+    // Release ca(CirA)
+    ca = nullptr;
+    if (!cb->m_p.lock()) {
+        fprintf(stdout, "cb (CirB) found ca (CirA) was released\n");
+    }
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
@@ -155,6 +187,8 @@ void test_all() {
     test_create_shared_ptr_by_weak_ptr();
 
     test_use_weak_ptr_for_cache();
+
+    test_weak_ptr_resolve_circular_dependency();
 }
 
 

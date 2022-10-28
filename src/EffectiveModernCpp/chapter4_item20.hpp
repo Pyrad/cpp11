@@ -4,6 +4,7 @@
 #include "../utilities/utilities.hpp"
 #include <memory>
 #include <stdint.h>
+#include <stdio.h>
 
 namespace effective_mordern_cpp {
 
@@ -29,6 +30,33 @@ private:
     uint32_t m_id = 0;
     std::string m_name = "unknown";
 };
+
+class CirB; // Forward declaration
+class CirA {
+public:
+    CirA() { fprintf(stdout, "Constructing a CirA object\n"); }
+    ~CirA(){ fprintf(stdout, "Destructiong a CirA object\n"); }
+
+public:
+    std::shared_ptr<CirB> m_p;
+};
+
+class CirB {
+public:
+    CirB() { fprintf(stdout, "Constructing a CirB object\n"); }
+    ~CirB(){ fprintf(stdout, "Destructiong a CirB object\n"); }
+public:
+    std::weak_ptr<CirA> m_p;
+};
+
+class CirC {
+public:
+    CirC() { fprintf(stdout, "Constructing a CirC object\n"); }
+    ~CirC(){ fprintf(stdout, "Destructiong a CirC object\n"); }
+public:
+    std::weak_ptr<CirB> m_p;
+};
+
 
 /**
  * Why weak_ptr?
@@ -73,6 +101,24 @@ std::shared_ptr<const Foo> loadFooFast(const uint32_t id);
  * Use loadFooFast function to show how an object is cached by using weak_ptr
  */
 void test_use_weak_ptr_for_cache();
+
+/**
+ * Suppose CirA has a pointer to CirB, CirC also has a pointer to CirB,
+ * and they are both shared_ptr.
+ *
+ * If CirB should have a pointer to CirA, which kind of pointer should
+ * it have?
+ * Answer is weak_ptr
+ *
+ *  +--------+   shared_ptr      +--------+   shared_ptr    +--------+
+ *  |  CirA  | -------------->   |  CirB  | <-------------- |  CirC  |
+ *  +--------+                   +--------+                 +--------+
+ *      /\                            |
+ *      |         weak_ptr            |
+ *      +-----------------------------+
+ *
+ */
+void test_weak_ptr_resolve_circular_dependency();
 
 void test_all();
 
