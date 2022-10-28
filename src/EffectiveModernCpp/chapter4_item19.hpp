@@ -60,10 +60,19 @@ public:
     static uint32_t id_cnt;
 
 public:
+#if 0
     // A factory method to create a FooShared object
     static std::shared_ptr<FooShared> create(const std::string &n) {
         std::shared_ptr<FooShared> p(new FooShared(n));
         // return std::make_shared<FooShared>(n);
+        return p;
+    }
+#endif // 0
+
+    // A factory method with universal reference to create a FooShared object
+    template<typename T, typename ... Ts>
+    static std::shared_ptr<FooShared> create_from(Ts && ... params) {
+        std::shared_ptr<FooShared> p(new FooShared(std::forward<Ts>(params)...));
         return p;
     }
 

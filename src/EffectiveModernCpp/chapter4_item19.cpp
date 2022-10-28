@@ -193,11 +193,11 @@ void test_control_block_rules() {
 void test_shared_from_this() {
 
     std::vector<std::shared_ptr<FooShared>> fvec;
-    auto fp = FooShared::create("cloud");
+    auto fp = FooShared::create_from<std::string>("cloud");
     fp->echo();
     fp->process(fvec);
 
-    fp = FooShared::create("moon");
+    fp = FooShared::create_from<std::string>("moon");
     fp->echo();
     fp->process(fvec);
 
