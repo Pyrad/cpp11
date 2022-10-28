@@ -1,4 +1,8 @@
 #include "chapter4_item20.hpp"
+#include <memory>
+#include <stdint.h>
+#include <stdio.h>
+#include <unordered_map>
 
 namespace effective_mordern_cpp {
 
@@ -85,12 +89,69 @@ void test_create_shared_ptr_by_weak_ptr() {
     }
 }
 
+/**
+ * This mimics a heavy loading operation which might cost a lot of time
+ */
+std::unique_ptr<const Foo> loadFoo(const uint32_t id) {
+    return std::make_unique<const Foo>(std::to_string(id) + "_heavy");
+}
+
+/**
+ * This takes advantage of std::weak_ptr to cache the Foo object loaded by
+ * a heavy but basic operation which cost a lot of time
+ */
+std::shared_ptr<const Foo> loadFooFast(const uint32_t id) {
+    static std::unordered_map<uint32_t, std::weak_ptr<const Foo>> cache_map;
+
+    // objPtr is a std::shared_ptr to cache an object. It also might be
+    // a nullptr if this id has no cache in the map
+    auto objPtr = cache_map[id].lock();
+    if (!objPtr) {
+        fprintf(stdout, "Object of ID=%u is not cached, cache it now\n", id);
+        // loadFoo() returns a unique_ptr, here it is assigned to a shared_ptr,
+        // which transfers the ownership to objPtr
+        objPtr = loadFoo(id);
+        // Since objPtr is a shared_ptr, so it can be used to initialize a 
+        // std::weak_ptr, which is exactly what this map stores for its key
+        // value
+        cache_map[id] = objPtr;
+    } else {
+        fprintf(stdout, "Object of ID=%u is already in the cache, use it\n", id);
+    }
+
+    return objPtr;
+}
+
+void test_use_weak_ptr_for_cache() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    // Load id 0 for the first time
+    uint32_t id = 0;
+    fprintf(stdout, "Load ID = %u for the 1st time\n", id);
+    auto sp0 = loadFooFast(id);
+    sp0->echo();
+
+    fprintf(stdout, "Load ID = %u for the 2nd time\n", id);
+    auto sp1 = loadFooFast(id);
+    sp1->echo();
+
+    fprintf(stdout, "Destroied object ID = %u\n", id);
+    sp0 = nullptr;
+    sp1 = nullptr;
+
+    fprintf(stdout, "Load ID = %u for the 3rd time\n", id);
+    auto sp2 = loadFooFast(id);
+    sp2->echo();
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_create_weak_ptr();
 
     test_create_shared_ptr_by_weak_ptr();
+
+    test_use_weak_ptr_for_cache();
 }
 
 

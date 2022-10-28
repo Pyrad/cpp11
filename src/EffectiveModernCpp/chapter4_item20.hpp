@@ -2,6 +2,8 @@
 #define EFFECTIVE_MODERN_CPP_CHAPTER4_ITEM20
 
 #include "../utilities/utilities.hpp"
+#include <memory>
+#include <stdint.h>
 
 namespace effective_mordern_cpp {
 
@@ -55,6 +57,19 @@ void test_create_weak_ptr();
  * (2) Use a weak_ptr to initialize a shared_ptr
  */
 void test_create_shared_ptr_by_weak_ptr();
+
+/**
+ * This mimics a basic heavy loading operation which might cost a lot of time
+ */
+std::unique_ptr<const Foo> loadFoo(const uint32_t id);
+
+/**
+ * This takes advantage of std::weak_ptr to cache the Foo object loaded by
+ * a heavy but basic operation which cost a lot of time
+ */
+std::shared_ptr<const Foo> loadFooFast(const uint32_t id);
+
+void test_use_weak_ptr_for_cache();
 
 void test_all();
 
