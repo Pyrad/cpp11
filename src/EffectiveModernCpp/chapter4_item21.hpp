@@ -57,6 +57,16 @@ void process_foo_obj(std::shared_ptr<Foo> sp, int32_t priority);
  */
 void test_use_std_make_funcs();
 
+/**
+ * There are a few cases in which std::make_* functions would not be used
+ * ------------------------------------------------------------------------
+ * (1) When a smart pointer needs a custom deleter
+ * (2) If a class has contructors for parathesis and curly braces at the same time
+ * (3) If operator "new" and "delete"" are overloaded by a class 
+ * (4) If a weak_ptr is still in use
+ */
+void test_not_use_std_make_funcs();
+
 void test_all();
 
 } // namespace item_21

@@ -1,6 +1,7 @@
 #include "chapter4_item21.hpp"
 #include <memory>
 #include <stdio.h>
+#include <vector>
 
 namespace effective_mordern_cpp {
 
@@ -98,12 +99,73 @@ void test_use_std_make_funcs() {
     auto spw4(std::make_shared<Foo>());
 }
 
+/**
+ * There are a few cases in which std::make_* functions would not be used
+ * ------------------------------------------------------------------------
+ * (1) When a smart pointer needs a custom deleter
+ * (2) If a class has contructors for parathesis and curly braces at the same time
+ * (3) If operator "new" and "delete" are overloaded by a class 
+ * (4) If a weak_ptr is still in use (be referenced)
+ */
+void test_not_use_std_make_funcs() {
+
+    // -------------------------------
+    // (1) When a smart pointer needs a custom deleter
+    // -------------------------------
+    auto del_foo = [](Foo *p) {
+        if (!p) { return ; }
+        fprintf(stdout, "Delete a Foo object by del_foo\n");
+        delete p;
+    };
+    std::unique_ptr<Foo, decltype(del_foo)> up(new Foo, del_foo);
+    std::shared_ptr<Foo> sp(new Foo, del_foo);
+
+    // -------------------------------
+    // (2) If a class has contructors for parathesis and curly braces at the same time
+    // -------------------------------
+    // std::vector has a constructor of parathesis and curly braces at the same time,
+    // but if to use std::make_*, compiler decides to use parathesis ctor, not curly
+    // braces ctor.
+    // Actually braced initializers can not be perfectly forwarded, while std::make_*
+    // use perfect forwarding, so braced initializers are not applicable here.
+    auto upv = std::make_unique<std::vector<int>>(10, 20);
+    auto spv = std::make_shared<std::vector<int>>(10, 20);
+    fprintf(stdout, "upv->size() = %lu\n", upv->size());
+    fprintf(stdout, "spv->size() = %lu\n", spv->size());
+    // But there's a workaround to use braced initializers, which is to create a
+    // std::initializer_list, and the pass that variable to std::make_* functions
+    auto ilist = {10, 20};
+    auto spv1 = std::make_shared<std::vector<int>>(ilist);
+    fprintf(stdout, "spv1->size() = %lu\n", spv1->size());
+
+    // -------------------------------
+    // (3) If operator "new" and "delete" are overloaded by a class
+    // -------------------------------
+    // If operator "new" and "delete" are overloaded by a class, usaully that means
+    // this it wants to allocate memory of just the size of its own, but std::make_*
+    // would also allocate memory for the control blocks too
+
+    // -------------------------------
+    // (4) If a weak_ptr is still in use (be referenced)
+    // -------------------------------
+    // Besides the reference count in a std::shared_ptr's control block, a second 
+    // reference count (i.e. weak count) is used to track the count of weak_ptrs
+    // referred to current object.
+    // So, if a shared_ptr is created by std::make_*, then the control block is created
+    // at the same time the T object itself is allocated, thus this second reference count
+    // will be there too. As a result, only after the final shared_ptr and the final weak_ptr
+    // are released, the memory for the T object is released.
+    // But if this object requires a lot of memory, then it's a potential issue.
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_std_make_funcs();
 
     test_use_std_make_funcs();
+
+    test_not_use_std_make_funcs();
 }
 
 
