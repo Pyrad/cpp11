@@ -2,6 +2,8 @@
 #define EFFECTIVE_MODERN_CPP_CHAPTER4_ITEM21
 
 #include "../utilities/utilities.hpp"
+#include <memory>
+#include <stdint.h>
 
 namespace effective_mordern_cpp {
 
@@ -37,6 +39,23 @@ private:
  * The difference between (1) and (3) is that (3) accepts a custom allocator.
  */
 void test_std_make_funcs();
+
+/**
+ * Mimics a process to get a priority by a heavy computation
+ */
+int32_t compute_priority();
+/**
+ * Just a function to show a potential mem leak might happen
+ */
+void process_foo_obj(std::shared_ptr<Foo> sp, int32_t priority);
+/**
+ * Why using std::make_* functions?
+ * ------------------------------------
+ * (1) Avoid code duplication
+ * (2) Avoid memory leak risk
+ * (3) Help compiler generate smaller, faster and leaner data structures.
+ */
+void test_use_std_make_funcs();
 
 void test_all();
 
