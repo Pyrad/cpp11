@@ -43,7 +43,7 @@ FooPImplRawPtr(const std::string &n) : m_pimpl(new FooPImpl(n)) { }
 /**
  * Implementation of the dtor
  */
-FooPImplRawPtr::~FooPImplRawPtr() { }
+FooPImplRawPtr::~FooPImplRawPtr() { delete m_pimpl; }
 
 uint32_t FooPImplRawPtr::id() const { return m_pimpl->id(); }
 
