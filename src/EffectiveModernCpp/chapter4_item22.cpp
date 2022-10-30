@@ -1,5 +1,7 @@
 #include "chapter4_item22.hpp"
+#include <limits>
 #include <memory>
+#include <stdint.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -58,14 +60,39 @@ FooPImplRawPtr::
 FooPImplRawPtr(const FooPImplRawPtr &other) :
     m_pimpl(new FooPImpl(other.ptr())) { }
 
+
+/**
+ * Move ctor
+ */
+FooPImplRawPtr::
+FooPImplRawPtr(FooPImplRawPtr &&other) :
+    m_pimpl(other.ptr()) { other.reset_ptr(); }
+
 /**
  * Implementation of the dtor
  */
-FooPImplRawPtr::~FooPImplRawPtr() { delete m_pimpl; }
+FooPImplRawPtr::~FooPImplRawPtr() {
+    // Must check the ptr, because move ctor exists
+    if (m_pimpl) {
+        delete m_pimpl;
+    }
+}
 
-uint32_t FooPImplRawPtr::id() const { return m_pimpl->id(); }
+uint32_t FooPImplRawPtr::id() const {
+    if (m_pimpl) {
+        return m_pimpl->id();
+    } else {
+        return std::numeric_limits<uint32_t>::max();
+    }
+}
 
-void FooPImplRawPtr::echo() const { fprintf(stdout, "[FooPImplRawPtr] A foo (ID = %u)\n", m_pimpl->id()); }
+void FooPImplRawPtr::echo() const {
+    if (m_pimpl) {
+        fprintf(stdout, "[FooPImplRawPtr] A foo (ID = %u)\n", m_pimpl->id());
+    } else {
+        fprintf(stdout, "[FooPImplRawPtr] A foo has already been reset/moved\n");
+    }
+}
 
 
 uint32_t FooPImplUniquePtr::id_cnt = 0;
@@ -108,11 +135,21 @@ FooPImplUniquePtr::
 FooPImplUniquePtr(const std::string &n) : m_pimpl(std::make_unique<FooPImpl>(n)) { }
 
 /**
- * Implementation of the custom ctor
+ * Implementation of the copy ctor
  */
 FooPImplUniquePtr::
 FooPImplUniquePtr(const FooPImplUniquePtr &other) :
     m_pimpl(std::make_unique<FooPImpl>(other.ptr())) {}
+
+/**
+ * Implementation of the move ctor.
+ * In this function, other.ptr() needs to be an rvalue, because std::unique_ptr
+ * only has move ctor, no copy ctor, so other.ptr() must have an overload which
+ * returns an rvalue reference.
+ */
+FooPImplUniquePtr::
+FooPImplUniquePtr(FooPImplUniquePtr &&other) :
+    m_pimpl(other.ptr()) { }
 
 /**
  * The dtor implementation is in source file
@@ -137,10 +174,21 @@ FooPImplUniquePtr(const FooPImplUniquePtr &other) :
  */
 FooPImplUniquePtr::~FooPImplUniquePtr() { }
 
-uint32_t FooPImplUniquePtr::id() const { return m_pimpl->id(); }
+uint32_t FooPImplUniquePtr::id() const {
+    if (m_pimpl) {
+        return m_pimpl->id();
+    } else {
+        return std::numeric_limits<uint32_t>::max();
+    }
+}
 
-void FooPImplUniquePtr::echo() const { fprintf(stdout, "[FooPImplUniquePtr] A foo (ID = %u)\n", m_pimpl->id()); }
-
+void FooPImplUniquePtr::echo() const {
+    if (m_pimpl) {
+        fprintf(stdout, "[FooPImplUniquePtr] A foo (ID = %u)\n", m_pimpl->id());
+    } else {
+        fprintf(stdout, "[FooPImplUniquePtr] A foo has already been reset/moved\n");
+    }
+}
 
 void test_pimpl_use_raw_ptr() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
@@ -148,10 +196,12 @@ void test_pimpl_use_raw_ptr() {
     FooPImplRawPtr fobj0;        // Use default ctor
     FooPImplRawPtr fobj1("sky"); // Use custom ctor
     FooPImplRawPtr fobj2(fobj1); // Use copy ctor
+    FooPImplRawPtr fobj3(std::move(fobj0)); // Use move ctor
 
     fprintf(stdout, "An object of class FooPImplRawPtr(ID = %u)\n", fobj0.id());
     fprintf(stdout, "An object of class FooPImplRawPtr(ID = %u)\n", fobj1.id());
     fprintf(stdout, "An object of class FooPImplRawPtr(ID = %u)\n", fobj2.id());
+    fprintf(stdout, "An object of class FooPImplRawPtr(ID = %u)\n", fobj3.id());
 
 }
 
@@ -162,10 +212,12 @@ void test_pimpl_use_unique_ptr() {
     FooPImplUniquePtr fobj0;        // Use default ctor
     FooPImplUniquePtr fobj1("sky"); // Use custom ctor
     FooPImplUniquePtr fobj2(fobj1); // Use copy ctor
+    FooPImplUniquePtr fobj3(fobj0); // Use move ctor
 
     fprintf(stdout, "An object of class FooPImplUniquePtr(ID = %u)\n", fobj0.id());
     fprintf(stdout, "An object of class FooPImplUniquePtr(ID = %u)\n", fobj1.id());
     fprintf(stdout, "An object of class FooPImplUniquePtr(ID = %u)\n", fobj2.id());
+    fprintf(stdout, "An object of class FooPImplUniquePtr(ID = %u)\n", fobj3.id());
 }
 
 

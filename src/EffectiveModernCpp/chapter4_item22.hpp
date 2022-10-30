@@ -40,9 +40,13 @@ public:
     /* Copy ctor implementation is in source file */
     FooPImplRawPtr(const FooPImplRawPtr &other);
 
+    /* Move ctor implementation is in source file */
+    FooPImplRawPtr(FooPImplRawPtr &&other);
+
 public:
     uint32_t id() const;
     void echo() const;
+    void reset_ptr() { m_pimpl = nullptr; }
 
 private:
     /**
@@ -78,7 +82,10 @@ public:
     FooPImplUniquePtr(const std::string &n);
 
     /* Copy ctor implementation is in source file */
-    FooPImplUniquePtr(const FooPImplUniquePtr &p);
+    FooPImplUniquePtr(const FooPImplUniquePtr &other);
+
+    /* Move ctor implementation is in source file */
+    FooPImplUniquePtr(FooPImplUniquePtr &&other);
 
     /**
      * The dtor implementation is in source file
@@ -115,6 +122,7 @@ private:
 
 public:
     const std::unique_ptr<FooPImpl> & ptr() const { return m_pimpl; }
+    std::unique_ptr<FooPImpl> && ptr() { return std::move(m_pimpl); }
 
 private:
     /**
