@@ -37,14 +37,26 @@ public:
     /* The dtor implementation is in source file */
     ~FooPImplRawPtr();
 
+    /* Copy ctor implementation is in source file */
+    FooPImplRawPtr(const FooPImplRawPtr &other);
+
 public:
     uint32_t id() const;
     void echo() const;
 
 private:
+    /**
+     * An implementation class which has different data members
+     */
     class FooPImpl;
 
+public:
+    FooPImpl *ptr() const { return m_pimpl; }
+
 private:
+    /**
+     * This class has only one data member, which is a (raw) pointer
+     */
     FooPImpl *m_pimpl;
 }; // end class FooPImplRawPtr
 
@@ -64,6 +76,9 @@ public:
 
     /* Custom ctor implementation is in source file */
     FooPImplUniquePtr(const std::string &n);
+
+    /* Copy ctor implementation is in source file */
+    FooPImplUniquePtr(const FooPImplUniquePtr &p);
 
     /**
      * The dtor implementation is in source file
@@ -93,9 +108,18 @@ public:
     void echo() const;
 
 private:
+    /**
+     * An implementation class which has different data members
+     */
     class FooPImpl;
 
+public:
+    const std::unique_ptr<FooPImpl> & ptr() const { return m_pimpl; }
+
 private:
+    /**
+     * This class has only one data member, which is a unique_ptr
+     */
     std::unique_ptr<FooPImpl> m_pimpl;
 
 }; // end class FooPImplUniquePtr

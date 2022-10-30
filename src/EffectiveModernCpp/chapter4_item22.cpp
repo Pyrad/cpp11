@@ -1,6 +1,7 @@
 #include "chapter4_item22.hpp"
 #include <memory>
 #include <stdio.h>
+#include <string>
 #include <vector>
 
 namespace effective_mordern_cpp {
@@ -16,12 +17,20 @@ uint32_t FooPImplRawPtr::id_cnt = 0;
  */
 class FooPImplRawPtr::FooPImpl {
 public:
+    // default ctor
     FooPImpl() : m_id(FooPImplRawPtr::id_cnt++), m_name("unknown") { }
+    // custom ctor
     FooPImpl(const std::string &n) : m_id(FooPImplRawPtr::id_cnt++), m_name(n) { }
-    ~FooPImpl() { }
+    // custom ctor for deep copy
+    FooPImpl(const FooPImpl *p) :
+        m_id(FooPImplRawPtr::id_cnt++),
+        m_name(p ? p->name() : "unknown"),
+        m_ivec(p ? p->vec() : std::vector<int>()) { }
 
 public:
     uint32_t id() const { return m_id; }
+    const std::string & name() const { return m_name; }
+    const std::vector<int> & vec() const { return m_ivec; }
 
 public:
     uint32_t m_id = 0;
@@ -40,6 +49,14 @@ FooPImplRawPtr() : m_pimpl(new FooPImpl()) { }
  */
 FooPImplRawPtr::
 FooPImplRawPtr(const std::string &n) : m_pimpl(new FooPImpl(n)) { }
+
+
+/**
+ * Copy ctor of deep copy
+ */
+FooPImplRawPtr::
+FooPImplRawPtr(const FooPImplRawPtr &other) :
+    m_pimpl(new FooPImpl(other.ptr())) { }
 
 /**
  * Implementation of the dtor
@@ -60,10 +77,17 @@ class FooPImplUniquePtr::FooPImpl {
 public:
     FooPImpl() : m_id(FooPImplUniquePtr::id_cnt++), m_name("unknown") { }
     FooPImpl(const std::string &n) : m_id(FooPImplUniquePtr::id_cnt++), m_name(n) { }
+    // custom ctor for deep copy
+    FooPImpl(const std::unique_ptr<FooPImpl> &p) :
+        m_id(FooPImplUniquePtr::id_cnt++),
+        m_name(p ? p->name() : "unknown"),
+        m_ivec(p ? p->vec() : std::vector<int>()) { }
     ~FooPImpl() { }
 
 public:
     uint32_t id() const { return m_id; }
+    const std::string & name() const { return m_name; }
+    const std::vector<int> & vec() const { return m_ivec; }
 
 public:
     uint32_t m_id = 0;
@@ -82,6 +106,13 @@ FooPImplUniquePtr() : m_pimpl(std::make_unique<FooPImpl>()) { }
  */
 FooPImplUniquePtr::
 FooPImplUniquePtr(const std::string &n) : m_pimpl(std::make_unique<FooPImpl>(n)) { }
+
+/**
+ * Implementation of the custom ctor
+ */
+FooPImplUniquePtr::
+FooPImplUniquePtr(const FooPImplUniquePtr &other) :
+    m_pimpl(std::make_unique<FooPImpl>(other.ptr())) {}
 
 /**
  * The dtor implementation is in source file
@@ -111,15 +142,16 @@ uint32_t FooPImplUniquePtr::id() const { return m_pimpl->id(); }
 void FooPImplUniquePtr::echo() const { fprintf(stdout, "[FooPImplUniquePtr] A foo (ID = %u)\n", m_pimpl->id()); }
 
 
-
 void test_pimpl_use_raw_ptr() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
-    FooPImplRawPtr fobj0;
-    FooPImplRawPtr fobj1("sky");
+    FooPImplRawPtr fobj0;        // Use default ctor
+    FooPImplRawPtr fobj1("sky"); // Use custom ctor
+    FooPImplRawPtr fobj2(fobj1); // Use copy ctor
 
     fprintf(stdout, "An object of class FooPImplRawPtr(ID = %u)\n", fobj0.id());
     fprintf(stdout, "An object of class FooPImplRawPtr(ID = %u)\n", fobj1.id());
+    fprintf(stdout, "An object of class FooPImplRawPtr(ID = %u)\n", fobj2.id());
 
 }
 
@@ -127,12 +159,13 @@ void test_pimpl_use_raw_ptr() {
 void test_pimpl_use_unique_ptr() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
-    FooPImplUniquePtr fobj0;
-    FooPImplUniquePtr fobj1("sky");
+    FooPImplUniquePtr fobj0;        // Use default ctor
+    FooPImplUniquePtr fobj1("sky"); // Use custom ctor
+    FooPImplUniquePtr fobj2(fobj1); // Use copy ctor
 
     fprintf(stdout, "An object of class FooPImplUniquePtr(ID = %u)\n", fobj0.id());
     fprintf(stdout, "An object of class FooPImplUniquePtr(ID = %u)\n", fobj1.id());
-
+    fprintf(stdout, "An object of class FooPImplUniquePtr(ID = %u)\n", fobj2.id());
 }
 
 
