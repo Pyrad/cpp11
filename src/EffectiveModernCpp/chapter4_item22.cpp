@@ -171,6 +171,9 @@ FooPImplUniquePtr(FooPImplUniquePtr &&other) :
  * So the solution to this issue it to declare the destructor in the header
  * file and then implementate it in the source file.
  * Anothe convenient solution is to just declare it as "=default"
+ *
+ * Another implementation of this kind of PImpl class is to use std::shared_ptr,
+ * thus it can allow incomplete when using special member functions.
  */
 FooPImplUniquePtr::~FooPImplUniquePtr() { }
 
