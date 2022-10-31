@@ -4,6 +4,7 @@
 #include "../utilities/utilities.hpp"
 #include <stdio.h>
 #include <type_traits>
+#include <utility>
 
 namespace effective_mordern_cpp {
 
@@ -107,6 +108,27 @@ void test_my_own_version_move();
  * This function show that, if to move thing, don't declare it as "const"
  */
 void test_std_move_can_not_move_something();
+
+// lvalue and rvalue overloads
+void process_foo(const Foo &f);
+void process_foo(Foo &&f);
+
+/**
+ * In this function, we'd like to pass the "param" to the lvalue overload of
+ * function "process_foo" if "param" is an lvalue, and pass the "param" to the
+ * rvalue overload of function "process_foo" if "param" is an rvalue.
+ *
+ * Since param is an lvalue reference, we'd like to keep its lvalue-ness if it
+ * is bound to an lvalue, and convert it to an rvalue if it is bound to an rvalue,
+ * thus we use std::forward, it converts a parameter on condition.
+ */
+template<typename T>
+void load_and_process(T &&param) {
+    fprintf(stdout, "Load and processing...\n");
+    process_foo(std::forward<T>(param));
+}
+
+void test_std_forwad();
 
 void test_all();
 
