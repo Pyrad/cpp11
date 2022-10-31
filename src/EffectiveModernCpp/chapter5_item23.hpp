@@ -103,6 +103,8 @@ void test_my_own_version_move();
  * not the move constructor.
  *
  * This function shows this, see Annotation's ctor for details
+ *
+ * This function show that, if to move thing, don't declare it as "const"
  */
 void test_std_move_can_not_move_something();
 
