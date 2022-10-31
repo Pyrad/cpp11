@@ -49,6 +49,22 @@ void myf(Foo &&f);
  * (1) It can be bound to either an lvalue or an rvalue
  * (2) It can be bound to either const value or non-const value
  * (3) It can be bound to either volatile value or non-volatile value
+ *
+ * Generally, a universal reference "T&&" appears in the following 2 cases,
+ * (1) Function template parameters
+ * (2) auto declaration
+ *
+ * Universal reference "T&&" is still a reference, it can be either an lvalue
+ * reference or an rvalue reference, on condition that it is initialized with
+ * an lvalue or an rvalue,
+ * (1) Using an lvalue to initialize a universal reference, it is bound to an lvalue,
+ *     thus it is an lvalue reference
+ * (2) Using an rvalue to initialize a universal reference, it is bound to an vvalue,
+ *     thus it is an rvalue reference
+ *
+ * 2 conditions that "T&&" is a universal reference,
+ * (1) There is a type deduction
+ * (2) The form must be "T&&"
  */
 void test_rvalue_ref_and_universal_ref();
 
