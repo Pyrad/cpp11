@@ -40,6 +40,33 @@ private:
 };
 
 /**
+ * @brief A class to show that std::move can't move something
+ */
+class Annotation {
+public:
+    /**
+     * Since the argument here is an lvalue "const Foo" type, after std::move,
+     * it becomes an rvalue "const Foo" type, but Foo's constructor doesn't
+     * have a overload with "const Foo" type (just ctor with const lvalue reference,
+     * and rvalue reference), so here the const rvalue will be bound to the const lvalue
+     * reference, thus the Foo's copy constructor is called, not the move constructor.
+     *
+     * Function test_std_move_can_not_move_something() shows this.
+     */
+    Annotation(const Foo f) : m_foo(std::move(f)) {
+        fprintf(stdout, "Constructing Annotation object\n");
+    }
+
+public:
+    void echo() const {
+        fprintf(stdout, "Annotation has object Foo id = %u\n", m_foo.id());
+    }
+
+private:
+    Foo m_foo;
+};
+
+/**
  * std::move move a lot of things, but it still can't move something.
  * It's just a cast, and it doesn't do anything at runtime.
  * It doesn't create any code, not even a byte.
@@ -62,7 +89,22 @@ decltype(auto) my_move_cxx14(T &&param) {
     return static_cast<ReturnType>(param);
 }
 
+/**
+ * Use my own version of std::move to move something
+ */
 void test_my_own_version_move();
+
+/**
+ * Since the argument of the Annotation's ctor is an lvalue "const Foo" type,
+ * after std::move, it becomes an rvalue "const Foo" type, but Foo's constructor
+ * doesn't have a overload with "const Foo" type (just ctor with const lvalue
+ * reference, and rvalue reference), so here the const rvalue will be bound to
+ * the const lvalue reference, thus the Foo's copy constructor is called,
+ * not the move constructor.
+ *
+ * This function shows this, see Annotation's ctor for details
+ */
+void test_std_move_can_not_move_something();
 
 void test_all();
 
