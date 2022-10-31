@@ -2,6 +2,8 @@
 #define EFFECTIVE_MODERN_CPP_CHAPTER5_ITEM24
 
 #include "../utilities/utilities.hpp"
+#include <stdint.h>
+#include <stdio.h>
 
 namespace effective_mordern_cpp {
 
@@ -67,6 +69,16 @@ void myf(Foo &&f);
  * (2) The form must be "T&&"
  */
 void test_rvalue_ref_and_universal_ref();
+
+/**
+ * Just a function for generic lambda (C++14) use
+ */
+void demo_time_start(uint32_t i, const std::string &n);
+
+/**
+ * Shows the usage of "auto &&" works as an universal reference
+ */
+void test_universal_ref_in_auto();
 
 void test_all();
 

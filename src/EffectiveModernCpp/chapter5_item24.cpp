@@ -1,6 +1,8 @@
 #include "chapter5_item24.hpp"
 #include <boost/type_index.hpp>
 #include <stdint.h>
+#include <stdio.h>
+#include <utility>
 
 namespace effective_mordern_cpp {
 
@@ -59,10 +61,38 @@ void test_rvalue_ref_and_universal_ref() {
 
 }
 
+/**
+ * Just a function for generic lambda (C++14) use
+ */
+void demo_time_start(uint32_t i, const std::string &n) {
+    fprintf(stdout, "[demo_time_start] Integer = %u, string = %s\n", i, n.c_str());
+}
+
+/**
+ * Shows the usage of "auto &&" works as an universal reference
+ */
+void test_universal_ref_in_auto() {
+    // A generic lambda of C++14 style, here there're 2 universal references,
+    // (1) "auto &&func" is the 1st one, which is a function
+    // (2) "auto &&... params" is the 2nd one, which is the function's arguments
+    auto timeFuncInvocation = [](auto &&func, auto &&... params) {
+        // Time start
+        fprintf(stdout, "timeFuncInvocation start\n");
+        std::forward<decltype(func)>(func)( std::forward<decltype(params)>(params)... );
+        fprintf(stdout, "timeFuncInvocation end\n");
+    };
+
+    uint32_t i = 10;
+    std::string name("sky");
+    timeFuncInvocation(demo_time_start, i, name);
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_rvalue_ref_and_universal_ref();
+
+    test_universal_ref_in_auto();
 }
 
 
