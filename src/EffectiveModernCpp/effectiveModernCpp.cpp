@@ -24,6 +24,7 @@
 #include "chapter4_item21.hpp"
 #include "chapter4_item22.hpp"
 #include "chapter5_item23.hpp"
+#include "chapter5_item24.hpp"
 #include "../utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
@@ -54,6 +55,7 @@ void test_all() {
     chapter_4::item_21::test_all();
     chapter_4::item_22::test_all();
     chapter_5::item_23::test_all();
+    chapter_5::item_24::test_all();
 
     fprintf(stdout, "----- END of function effective_mordern_cpp::%s -----\n\n", __FUNCTION__);
 
