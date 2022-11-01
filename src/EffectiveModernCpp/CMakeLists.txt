@@ -27,6 +27,7 @@ add_library(EffectiveModernCpp
     chapter4_item22.cpp
     chapter5_item23.cpp
     chapter5_item24.cpp
+    chapter5_item25.cpp
     )
 
 # Remember INTERFACE means things that consumers 
