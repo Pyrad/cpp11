@@ -46,6 +46,13 @@ public:
     }
 
 public:
+    // Just a simple function to show RVO (copy elision)
+    Foobar naive_copy() const {
+        Foobar fobj(name());
+        return fobj;
+    }
+
+public:
     void echo() const {
         fprintf(stdout, "A foo (ID = %u, name = %s)\n", m_id, m_name.c_str());
     }
@@ -130,6 +137,31 @@ void test_some_rules_of_move_forward_univ_ref();
  *     reference passed in is returned.
  */
 void test_use_move_forward_on_return_values();
+
+/**
+ * RVO = Return Value Optimization (sometimes called unnamed RVO)
+ * NRVO = Named Return Value Optimization
+ *
+ * C++ Standard Committee considered this very early.
+ *
+ * When returning a local variable inside a function, don't use std::move
+ * or std::forward, because compiler will directly construct the object
+ * needed on the return address, other than copy-construction or move-construction,
+ * and this is called "Copy Elision".
+ *
+ * Sometimes compiler might not do the copy elision, in this circumstances, C++ Standard
+ * Committee required that the return value must be treated as an rvalue, i.e, compiler
+ * must use std::move itself. So this means in this case we should NOT use std::move either,
+ * as compiler will help us do it.
+ *
+ * When does this RVO happen?
+ * ------------------------------------
+ * This particular blessing says that compilers may elide the copying (or moving) of a
+ * local object in a function that returns by value if
+ * (1) the type of the local object is the same as that returned by the function and
+ * (2) the local object is what’s being returned.
+ */
+void test_do_not_use_move_forward_on_RVO();
 
 void test_all();
 
