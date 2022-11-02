@@ -39,6 +39,23 @@ void test_use_universal_ref_mutiple_times() {
 }
 
 /**
+ * std::move, std::forward and universal reference
+ *
+ * 1. Don't use std::forward on an rvalue
+ *    Indeed it can be use, but it is redundant and not necessary...
+ * 2. Don't use std::move on an universal reference
+ *    Because you might move an lvalue! That sometimes is not expected.
+ * 3. Don't use overloading functions to replace universal references
+ *    Reason (1), more code, not a convention
+ *    Reason (2), potential performance degradation
+ *    Reason (3), it's impossible to accomadate variadic argument, but universal reference
+ *    can be used in this circumstances.
+ */
+void test_some_rules_of_move_forward_univ_ref() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+}
+
+/**
  * See function Foobar::add_name
  *
  * When to use std::move on function's return value?
@@ -62,6 +79,8 @@ void test_all() {
     test_std_move_on_rvalue_ref_std_forward_on_universal_ref();
 
     test_use_universal_ref_mutiple_times();
+
+    test_some_rules_of_move_forward_univ_ref();
 
     test_use_move_forward_on_return_values();
 }

@@ -118,6 +118,7 @@ void test_use_universal_ref_mutiple_times();
  *    Reason (3), it's impossible to accomadate variadic argument, but universal reference
  *    can be used in this circumstances.
  */
+void test_some_rules_of_move_forward_univ_ref();
 
 /**
  * See function Foobar::add_name
