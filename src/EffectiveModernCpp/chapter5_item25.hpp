@@ -31,9 +31,26 @@ public:
     ~Foobar() { }
 
 public:
+    /**
+     * When to use std::move on function's return value?
+     * -------------------------------------------------
+     * (1) The form is return-by-value
+     * (2) An rvalue reference is returned, or the universal
+     *     reference passed in is returned.
+     */
+    static Foobar add_name(Foobar &&lhs, const Foobar &rhs) {
+        fprintf(stdout, "[Foobar::add_name] Start adding name of 2 Foobar objects\n");
+        lhs.check_set_name(lhs.name() + "_" + rhs.name());
+        fprintf(stdout, "[Foobar::add_name] Added name to LeftHandSide Foobar object\n");
+        return std::move(lhs);
+    }
+
+public:
     void echo() const {
         fprintf(stdout, "A foo (ID = %u, name = %s)\n", m_id, m_name.c_str());
     }
+    
+    const std::string &name() const { return m_name; }
 
     bool check_name(const std::string &name) {
         if (name.empty()) {
@@ -87,6 +104,31 @@ void test_std_move_on_rvalue_ref_std_forward_on_universal_ref();
  * A function to show how to use a universal reference mutiple times
  */
 void test_use_universal_ref_mutiple_times();
+
+/**
+ * std::move, std::forward and universal reference
+ *
+ * 1. Don't use std::forward on an rvalue
+ *    Indeed it can be use, but it is redundant and not necessary...
+ * 2. Don't use std::move on an universal reference
+ *    Because you might move an lvalue! That sometimes is not expected.
+ * 3. Don't use overloading functions to replace universal references
+ *    Reason (1), more code, not a convention
+ *    Reason (2), potential performance degradation
+ *    Reason (3), it's impossible to accomadate variadic argument, but universal reference
+ *    can be used in this circumstances.
+ */
+
+/**
+ * See function Foobar::add_name
+ *
+ * When to use std::move on function's return value?
+ * -------------------------------------------------
+ * (1) The form is return-by-value
+ * (2) An rvalue reference is returned, or the universal
+ *     reference passed in is returned.
+ */
+void test_use_move_forward_on_return_values();
 
 void test_all();
 

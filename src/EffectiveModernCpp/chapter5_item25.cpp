@@ -38,12 +38,32 @@ void test_use_universal_ref_mutiple_times() {
     fb.echo();
 }
 
+/**
+ * See function Foobar::add_name
+ *
+ * When to use std::move on function's return value?
+ * -------------------------------------------------
+ * (1) The form is return-by-value
+ * (2) An rvalue reference is returned, or the universal
+ *     reference passed in is returned.
+ */
+void test_use_move_forward_on_return_values() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    // Foobar fa("sun");
+    Foobar fb("sea");
+    Foobar fc(Foobar::add_name(Foobar("sun"), fb));
+    fc.echo();
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_std_move_on_rvalue_ref_std_forward_on_universal_ref();
 
     test_use_universal_ref_mutiple_times();
+
+    test_use_move_forward_on_return_values();
 }
 
 
