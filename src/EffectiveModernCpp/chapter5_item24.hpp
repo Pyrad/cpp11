@@ -30,7 +30,48 @@ public:
     uint32_t id() const { return m_id; }
 
     const std::string & name() const { return m_name; }
-    std::string && name() { return std::move(m_name); }
+
+    /**
+     * Should we return a type without rvalue reference or rvalue reference?
+     *
+     * See
+     * https://www.appsloveworld.com/cplus/100/51/return-value-or-rvalue-reference
+     *
+     * -----------------------------------------------------------------
+     * DataType data() && { return std::move(values); } // why DataType instead of DataType&& ?
+     * auto values = makeWidget().data();
+     * -----------------------------------------------------------------
+     *
+     * The temporary that holds the return value will be initialized through the
+     * move-constructor, copy-initialized from move(values).
+     * 
+     * Then that temporary initializes values, but since makeWidget().data() is an
+     * rvalue (prvalue to be precise) the move-constructor is called again - with the
+     * temporary as its argument.
+     * 
+     * Now consider copy-elision:
+     * 
+     * When a nameless temporary, not bound to any references, would be moved or copied
+     * into an object of the same cv-unqualified type, the copy/move is omitted. When
+     * that temporary is constructed, it is constructed directly in the storage where it
+     * would otherwise be moved or copied to. When the nameless temporary is the argument
+     * of a return statement, this variant of copy elision is known as RVO,
+     * "return value optimization".
+     * 
+     * So the second move will (presumably) be completely elided, and only one is left -
+     * the one we would have had anyway, had the return type been the rvalue reference.
+     * 
+     * The problem with returning an rvalue reference is that if we write,
+     * 
+     * -----------------------------------------------------------------
+     * auto&& values = makeWidget().data();
+     * -----------------------------------------------------------------
+     *
+     * values will be dangling as binding an xvalue to a reference doesn't extend anythings
+     * lifetime. When we return the object type, the temporaries lifetime is extended.
+     */
+    // Don't use "std::string && name() { return std::move(m_name); }"
+    std::string name() { return std::move(m_name); }
 
     void echo() const { fprintf(stdout, "A foo (ID = %u)\n", m_id); }
 
