@@ -3,6 +3,7 @@
 
 #include "../utilities/utilities.hpp"
 #include <stdint.h>
+#include <stdio.h>
 #include <string>
 #include <utility>
 
@@ -11,6 +12,30 @@ namespace effective_mordern_cpp {
 namespace chapter_5 {
 
 namespace item_26 {
+
+/**
+ * Just a demo function to show index to string convertion
+ */
+std::string name_from_index(int idx);
+
+class Person {
+public:
+    template<typename T>
+    explicit Person(T &&n) : m_name(std::forward<T>(n)) {
+        fprintf(stdout, "[Class Person] ctor with universal ref is called\n");
+    }
+
+    explicit Person(int idx) : m_name(name_from_index(idx)) {
+        fprintf(stdout, "[Class Person] ctor with integer is called\n");
+    }
+
+    void echo() const {
+        fprintf(stdout, "[Class Person] name = %s\n", m_name.c_str());
+    }
+
+private:
+    std::string m_name;
+};
 
 /**
  * A normal function to accept a name
@@ -41,6 +66,12 @@ void test_use_univ_ref_to_optimize_3_calls();
  * error
  */
 void test_overloading_univ_ref_causes_error();
+
+/**
+ * Overloading a ctor with an universal reference might cause unexpected
+ * error too
+ */
+void test_overloading_univ_ref_ctor_causes_error();
 
 void test_all();
 

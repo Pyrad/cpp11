@@ -13,6 +13,13 @@ namespace chapter_5 {
 namespace item_26 {
 
 /**
+ * Just a demo function to show index to string convertion
+ */
+std::string name_from_index(int idx) {
+    return (idx > 0) ? "Jim" : "Smith";
+}
+
+/**
  * A global variable to hold names
  */
 static std::unordered_set<std::string> name_set;
@@ -112,6 +119,8 @@ void test_overloading_univ_ref_causes_error() {
     // instantiation is called, and it finally tries to insert an integer into a
     // std::unordered_set<std::string>, while std::string has no constructor function
     // accepting an integer, so it fails at last.
+    // Here short can be replaced with std::size_t, long and etc, all of them cause
+    // this kind of compile errors
     // ----------------------------------------------------------------
 #if 0
     short name_idx = 0;
@@ -127,12 +136,50 @@ void test_overloading_univ_ref_causes_error() {
 
 } // test_overloading_univ_ref_causes_error
 
+/**
+ * Overloading a ctor with an universal reference might cause unexpected
+ * error too
+ */
+void test_overloading_univ_ref_ctor_causes_error() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+    
+    // Following 2 lines cause same errors as decribed in function
+    // test_overloading_univ_ref_causes_error().
+    // -------------
+    // short name_idx = 0;
+    // Person p(name_idx);
+
+    // Even worse, the following leads compile errors too, why?
+    // ----------------
+    // Because even after the ctor, which is template function with a universal reference,
+    // is instantiated, a ctor similar to copy-ctor is created, compiler still help create
+    // copy ctor and move ctor as : "Person(const Person &p)" and "Person(Person &&p)".
+    // While the copy-like ctor created by the template function is "Person(Person &p)".
+    // Since in the following code "a" is an lvalue, so the move ctor doesn't fit, at the same
+    // time, "Person(Person &p)" wins over "Person(const Person &p)", because "a" is non-const,
+    // finally "Person(Person &p)" is called, but inside this instantiated template function body
+    // it tries to forward a Person object to a std::string object, which is obviously wrong.
+    // ----------------
+    // Person a("Jack");
+    // Person b(a);
+    // b.echo();
+
+    // If change the code above to the following, code compiles
+    // Why? see the notes above, because now "a" is a const Person object
+    const Person a("Jack");
+    Person b(a);
+    b.echo();
+
+} // test_overloading_univ_ref_ctor_causes_error
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_use_univ_ref_to_optimize_3_calls();
 
     test_overloading_univ_ref_causes_error();
+
+    test_overloading_univ_ref_ctor_causes_error();
 }
 
 
