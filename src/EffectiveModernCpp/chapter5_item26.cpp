@@ -90,12 +90,49 @@ void test_use_univ_ref_to_optimize_3_calls() {
     // (template after instantiation is as good as an overloading normal function), the normal
     // function wins.
     log_and_add_new(22);
-}
+} // end function test_use_univ_ref_to_optimize_3_calls
+
+/**
+ * Overloading a function with an universal reference might cause unexpected
+ * error
+ */
+void test_overloading_univ_ref_causes_error() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    // The following lines cause a compile error, but why?
+    // ----------------------------------------------------------------
+    // Because "log_and_add_new" is a overloading function, and one of those
+    // overloadings is a template function with a universal reference.
+    // For the following function call, this template function will be instantiated
+    // as "log_and_add_new(short &&)", while the other overloading function which
+    // is a normal function, "log_and_add_new(int)".
+    // If to invoke "log_and_add_new(int)", then this "name_idx" should be promoted
+    // from "short" type to "int" type, but this kind of promotion is not needed for
+    // the instantiated function "log_and_add_new(short &&)", thus this function
+    // instantiation is called, and it finally tries to insert an integer into a
+    // std::unordered_set<std::string>, while std::string has no constructor function
+    // accepting an integer, so it fails at last.
+    // ----------------------------------------------------------------
+#if 0
+    short name_idx = 0;
+    log_and_add_new(name_idx);
+#endif // 0
+
+    // Why does the following work?
+    // ----------------------------------------------------------------
+    // See the analysis above, pay attention to "name_idx", which now is an integer, not
+    // a short integer
+    int name_idx = 0;
+    log_and_add_new(name_idx);
+
+} // test_overloading_univ_ref_causes_error
 
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_use_univ_ref_to_optimize_3_calls();
+
+    test_overloading_univ_ref_causes_error();
 }
 
 

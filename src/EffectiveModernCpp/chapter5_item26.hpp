@@ -36,6 +36,12 @@ void log_and_add_new(int32_t idx);
  */
 void test_use_univ_ref_to_optimize_3_calls();
 
+/**
+ * Overloading a function with an universal reference might cause unexpected
+ * error
+ */
+void test_overloading_univ_ref_causes_error();
+
 void test_all();
 
 } // namespace item_26
