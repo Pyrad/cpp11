@@ -18,6 +18,10 @@ namespace item_26 {
  */
 std::string name_from_index(int idx);
 
+/**
+ * @brief A class to show overloading a ctor with a universal reference
+ *        might cause more compile errros
+ */
 class Person {
 public:
     template<typename T>
@@ -35,7 +39,31 @@ public:
 
 private:
     std::string m_name;
-};
+
+}; // end class Person
+
+/**
+ * @brief A class to show inheritting a class which overloads a ctor with a
+ *        universal reference might cause more compile errros
+ * @note, this code can't compile, because the move ctor of the SpecialPerson
+ *        forwards "rhs" to Person's ctor, which finally tries to assign a
+ *        SpecialPerson object to the parent class's data member "m_name",
+ *        which is obviously not correct, thus compile fails.
+ */
+#if 0
+class SpecialPerson : public Person {
+public:
+    // copy ctor; calls base class forwarding ctor!
+	SpecialPerson(const SpecialPerson& rhs) : Person(rhs) {
+        fprintf(stdout, "[Class SpecialPerson] copy ctor is called\n");
+    }
+	// move ctor; calls base class forwarding ctor!
+    SpecialPerson(SpecialPerson&& rhs) : Person(std::move(rhs)) {
+        fprintf(stdout, "[Class SpecialPerson] move ctor is called\n");
+    }
+
+}; // end class SpecialPerson
+#endif // 0
 
 /**
  * A normal function to accept a name

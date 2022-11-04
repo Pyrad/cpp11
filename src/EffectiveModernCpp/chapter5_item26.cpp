@@ -170,6 +170,9 @@ void test_overloading_univ_ref_ctor_causes_error() {
     Person b(a);
     b.echo();
 
+    // See a class SpecialPerson defined in header, if it defines a copy ctor
+    // and a move ctor like that, it leads to same errors like discussed above
+
 } // test_overloading_univ_ref_ctor_causes_error
 
 void test_all() {
