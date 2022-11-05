@@ -48,7 +48,40 @@ void log_and_add_impl(int idx, std::true_type /* no_use_arg */);
  */
 class Person {
 public:
-    template<typename T>
+    /**
+     * Following is the C++11 style, if using C++14, use the following style
+     *
+     * C++14 style
+     * ----------------------
+     * template<typename T,
+     *          typename = std::enable_if_t<
+     *                        !std::is_base_of<Person, std::decay_t<T>>::value
+     *                        && 
+     *                        !std::is_integral<std::remove_reference_t<T>>::value
+     *                     >
+     *          >
+     * explicit Person(T &&n);
+     *
+     *
+     * C++11 style
+     * ----------------------
+     * template<typename T,
+     *          typename = typename std::enable_if<
+     *                                 !std::is_base_of<Person, typename std::decay<T>::type>::value
+     *                                 && 
+     *                                 !std::is_integral<typename std::remove_reference<T>::type>::value
+     *                     >::type
+     *          >
+     *
+     * As we can see, C++14 is more simple.
+     */
+    template<typename T,
+             typename = std::enable_if_t<
+                           !std::is_base_of<Person, std::decay_t<T>>::value
+                           && 
+                           !std::is_integral<std::remove_reference_t<T>>::value
+                        >
+             >
     explicit Person(T &&n) : m_name(std::forward<T>(n)) {
         fprintf(stdout, "[Class Person] ctor with universal ref is called\n");
     }
@@ -76,6 +109,15 @@ private:
  * (5) Constraining templates for certain types.
  */
 void test_tag_dispatch_workaround_overloading_univ_ref_issue();
+
+/**
+ * @brief Constraining template types for a template function with
+ *        a universal reference can be useful sometimes, because it
+ *        tells the compiler not to use the instantiations of that
+ *        template function for a specified template types, thus
+ *        avoiding some issues caused by unexpected function overloading
+ */
+void test_contraining_template_type_taking_univ_ref();
 
 void test_all();
 

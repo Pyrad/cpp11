@@ -78,7 +78,8 @@ void log_and_add_impl(int idx, std::true_type /* no_use_arg */) {
  * (1) No overloading. For example, use different function names.
  * (2) Pass by "const T&". But this will always lead to copy, which we don't expect.
  * (3) Pass by value. See EffectiveModernCpp item 41.
- * (4) Use tag dispatch. As functiony "log_and_add" shown here.
+ * (4) Use tag dispatch. As functiony "log_and_add" shown here. But this can fix the
+ *     issue caused by overloading a ctor with universal reference
  * (5) Constraining templates for certain types.
  */
 void test_tag_dispatch_workaround_overloading_univ_ref_issue() {
@@ -99,10 +100,37 @@ void test_tag_dispatch_workaround_overloading_univ_ref_issue() {
 
 } // test_tag_dispatch_workaround_overloading_univ_ref_issue
 
+/**
+ * @brief Constraining template types for a template function with
+ *        a universal reference can be useful sometimes, because it
+ *        tells the compiler not to use the instantiations of that
+ *        template function for a specified template types, thus
+ *        avoiding some issues caused by unexpected function overloading
+ *
+ * @note, see Person's ctor with a universal reference for how it achieved this.
+ */
+void test_contraining_template_type_taking_univ_ref() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    // Since the template type was constrained by std::enable_if, thus
+    // the template function wit a universal reference won't take effect
+    // for this call with an short integer
+    short name_idx = 0;
+    Person p(name_idx);
+    p.echo();
+
+    // Same reason as above, similar issue happens in item26 won't happen here.
+    Person a("Jack");
+    Person b(a);
+    b.echo();
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_tag_dispatch_workaround_overloading_univ_ref_issue();
+
+    test_contraining_template_type_taking_univ_ref();
 }
 
 
