@@ -26,6 +26,9 @@ static std::unordered_set<std::string> name_set;
  * A function that uses a tag dispatch to forward argument to
  * propriet overloading functions, including the a template function
  * with a universal reference
+ *
+ * Why using std::remove_reference?
+ * Because "int" and "int&" are different types.
  */
 template<typename T>
 void log_and_add(T &&name) {
