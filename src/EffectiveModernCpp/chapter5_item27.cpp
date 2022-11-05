@@ -29,6 +29,10 @@ static std::unordered_set<std::string> name_set;
  *
  * Why using std::remove_reference?
  * Because "int" and "int&" are different types.
+ *
+ * Why using std::false_type and std::true_type? not true or false?
+ * Because we want compiler to decide which one to use at compile stage,
+ * not runtime.
  */
 template<typename T>
 void log_and_add(T &&name) {
