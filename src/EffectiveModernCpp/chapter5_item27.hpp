@@ -2,6 +2,7 @@
 #define EFFECTIVE_MODERN_CPP_CHAPTER5_ITEM27
 
 #include "../utilities/utilities.hpp"
+#include <string>
 #include <type_traits>
 
 namespace effective_mordern_cpp {
@@ -83,6 +84,14 @@ public:
                         >
              >
     explicit Person(T &&n) : m_name(std::forward<T>(n)) {
+        // Use a static_assert to test if the T type object can be used to construct
+        // a std::string object, otherwise compiler won't know that T object can't
+        // be used to construct a std::string until that T object finally got passed to the
+        // final function, at this circumstances, a very very very long message will
+        // be thrown to you, and you will get quite confused on what happened...
+        static_assert(std::is_constructible<std::string, T>::value,
+                      "Parameter n can't be used to construct a std::string");
+
         fprintf(stdout, "[Class Person] ctor with universal ref is called\n");
     }
 
