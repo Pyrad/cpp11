@@ -29,6 +29,11 @@ private:
  * ---------------------
  * (1) If an lvalue is passed in, type "T" is deduced as lvalue reference
  * (2) If an rvalue is passed in, type "T" is deduced as non-reference type
+ *
+ * Rules of reference collapsing
+ * ------------------------------
+ * If any one of them is lvalue-reference, the result is an lvalue-reference.
+ * Otherwise, the result is an rvalue-reference.
  */
 template<typename T>
 void encode_mechanism_func(T &&param);
