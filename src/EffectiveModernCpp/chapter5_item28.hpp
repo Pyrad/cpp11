@@ -9,6 +9,10 @@ namespace chapter_5 {
 
 namespace item_28 {
 
+/**
+ * @brief A sample class for type identification use
+ *        (lvalue-reference or rvalue-reference)
+ */
 class Foobar {
 public:
     Foobar() = default;
@@ -22,7 +26,7 @@ public:
 
 private:
     std::string m_name = "unkown";
-};
+}; // end class Foobar
 
 /**
  * The encode mechanism
@@ -42,7 +46,29 @@ void encode_mechanism_func(T &&param);
  * @brief Shows the deduced types of the parameter passed into a function with
  *        a universal reference
  */
-void show_deduced_types_of_universal_ref();
+void test_show_deduced_types_of_universal_ref();
+
+/**
+ * @brief My own implemenation of std::forward, i.e., custom forward
+ */
+template<typename T>
+T&& my_forward(typename std::remove_reference<T>::type &param) {
+    return static_cast<T&&>(param);
+}
+
+/**
+ * @brief Perfect forwarding by a custom forward
+ */
+template<typename T>
+void show_type_with_my_forward(T &&param) {
+    utilities::show_boost_type_index_with_cvr(my_forward<T>(param));
+}
+
+/**
+ * @brief Using a custom forward to perfect forwarding a parameter to
+ *        other functions.
+ */
+void test_show_deduced_types_of_universal_ref_by_my_forward();
 
 void test_all();
 

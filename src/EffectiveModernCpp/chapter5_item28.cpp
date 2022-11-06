@@ -27,7 +27,7 @@ void encode_mechanism_func(T &&param) {
  * @brief Shows the deduced types of the parameter passed into a function with
  *        a universal reference
  */
-void show_deduced_types_of_universal_ref() {
+void test_show_deduced_types_of_universal_ref() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     Foobar fobj("sky");
@@ -40,10 +40,27 @@ void show_deduced_types_of_universal_ref() {
     utilities::show_boost_type_index_with_cvr(Foobar::make("sun"));
 }
 
+/**
+ * @brief Using a custom forward to perfect forwarding a parameter to
+ *        other functions.
+ */
+void test_show_deduced_types_of_universal_ref_by_my_forward() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    Foobar fobj("sky");
+    fprintf(stdout, "\nPassing in an lvalue to a func with universal reference\n");
+    show_type_with_my_forward(fobj);
+
+    fprintf(stdout, "\nPassing in an rvalue to a func with universal reference\n");
+    show_type_with_my_forward(Foobar::make("sun"));
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
-    show_deduced_types_of_universal_ref();
+    test_show_deduced_types_of_universal_ref();
+
+    test_show_deduced_types_of_universal_ref_by_my_forward();
 }
 
 
