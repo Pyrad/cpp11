@@ -29,6 +29,23 @@ private:
 }; // end class Foobar
 
 /**
+ * @brief A class to reference collapsing occurs in the places where
+ *        typedef is used
+ */
+template<typename T>
+class Widget {
+public:
+    typedef T&& TypeRvalueRef;
+    typedef T&  TypeLvalueRef;
+
+public:
+    /**
+     * @brief Show the real type after this template class is instantiated
+     */
+    void show_typedef_types();
+}; // end class Widget
+
+/**
  * The encode mechanism
  * ---------------------
  *
@@ -90,6 +107,12 @@ void test_show_deduced_types_of_universal_ref_by_my_forward();
  * (2) auto type variables
  */
 void test_type_deduction();
+
+/**
+ * @brief A function to show reference collapsing happens where the
+ *        "typedef" is used
+ */
+void test_typedef_ref_collapsing();
 
 void test_all();
 

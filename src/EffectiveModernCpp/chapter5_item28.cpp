@@ -8,6 +8,17 @@ namespace chapter_5 {
 namespace item_28 {
 
 /**
+ * @brief Show the real type after this template class is instantiated
+ */
+template<typename T>
+void Widget<T>::show_typedef_types() {
+    namespace bti = boost::typeindex;
+
+    fprintf(stdout, "TypeRvalueRef = %s\n", bti::type_id_with_cvr<TypeRvalueRef>().pretty_name().c_str());
+    fprintf(stdout, "TypeLvalueRef = %s\n", bti::type_id_with_cvr<TypeLvalueRef>().pretty_name().c_str());
+}
+
+/**
  * The encode mechanism
  * ---------------------
  *
@@ -99,6 +110,29 @@ void test_type_deduction() {
 
 } // test_type_deduction
 
+/**
+ * @brief A function to show reference collapsing happens where the
+ *        "typedef" is used
+ */
+void test_typedef_ref_collapsing() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    Widget<Foobar> w0;
+    Widget<Foobar&> w1; // Widget<Foobar&>::TypeRvalueRef is actually "Foobar&",
+                        // which is an lvalue reference (because reference
+                        // collapsing happened)
+    Widget<Foobar&&> w2;
+
+    fprintf(stdout, "Widget<T> Initialized with Foobar\n");
+    w0.show_typedef_types();
+
+    fprintf(stdout, "Widget<T> Initialized with Foobar&\n");
+    w1.show_typedef_types();
+
+    fprintf(stdout, "Widget<T> Initialized with Foobar&&\n");
+    w2.show_typedef_types();
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
@@ -107,6 +141,8 @@ void test_all() {
     test_show_deduced_types_of_universal_ref_by_my_forward();
 
     test_type_deduction();
+
+    test_typedef_ref_collapsing();
 }
 
 
