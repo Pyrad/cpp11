@@ -10,8 +10,14 @@ namespace item_28 {
 /**
  * The encode mechanism
  * ---------------------
+ *
+ * For template function with a universal reference
  * (1) If an lvalue is passed in, type "T" is deduced as lvalue reference
  * (2) If an rvalue is passed in, type "T" is deduced as non-reference type
+ *
+ * For auto type definition
+ * (1) If it is bound to an lvalue, "auto" is deduced as lvalue reference (T&)
+ * (2) If it is bound to an rvalue, "auto" is deduced as non-reference (T)
  *
  * Rules of reference collapsing
  * ------------------------------
@@ -55,12 +61,41 @@ void test_show_deduced_types_of_universal_ref_by_my_forward() {
     show_type_with_my_forward(Foobar::make("sun"));
 }
 
+/**
+ * Reference collapsing occurs in 4 cases
+ * ------------------------------------------
+ * (1) Template parameter type deduction
+ * (2) auto type deduction
+ * (3) typedef
+ * (4) decltype
+ *
+ * Universal reference exists in 2 places
+ * ------------------------------------------
+ * (1) Function template (function arguments)
+ * (2) auto type variables
+ */
+void test_type_deduction() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    namespace bti = boost::typeindex;
+
+    // Type deduction of "auto"
+    Foobar w("sky");
+    auto &&fobj0 = w; // Bound to lvalue
+    auto &&fobj1 = Foobar::make("sun"); // Bound to rvalue
+    fprintf(stdout, "type of 'fobj0' = %s\n", bti::type_id_with_cvr<decltype(fobj0)>().pretty_name().c_str());
+    fprintf(stdout, "type of 'fobj1' = %s\n", bti::type_id_with_cvr<decltype(fobj1)>().pretty_name().c_str());
+
+} // test_type_deduction
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_show_deduced_types_of_universal_ref();
 
     test_show_deduced_types_of_universal_ref_by_my_forward();
+
+    test_type_deduction();
 }
 
 

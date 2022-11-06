@@ -31,8 +31,14 @@ private:
 /**
  * The encode mechanism
  * ---------------------
+ *
+ * For template function with a universal reference
  * (1) If an lvalue is passed in, type "T" is deduced as lvalue reference
  * (2) If an rvalue is passed in, type "T" is deduced as non-reference type
+ *
+ * For auto type definition
+ * (1) If it is bound to an lvalue, "auto" is deduced as lvalue reference (T&)
+ * (2) If it is bound to an rvalue, "auto" is deduced as non-reference (T)
  *
  * Rules of reference collapsing
  * ------------------------------
@@ -69,6 +75,21 @@ void show_type_with_my_forward(T &&param) {
  *        other functions.
  */
 void test_show_deduced_types_of_universal_ref_by_my_forward();
+
+/**
+ * Reference collapsing occurs in 4 cases
+ * ------------------------------------------
+ * (1) Template parameter type deduction
+ * (2) auto type deduction
+ * (3) typedef
+ * (4) decltype
+ *
+ * Universal reference exists in 2 places
+ * ------------------------------------------
+ * (1) Function template (function arguments)
+ * (2) auto type variables
+ */
+void test_type_deduction();
 
 void test_all();
 
