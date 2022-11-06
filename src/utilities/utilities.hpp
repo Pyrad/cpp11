@@ -13,6 +13,7 @@
 #include <string>
 #include <cstdlib>
 #include <cassert>
+#include <boost/type_index.hpp>
 
 namespace utilities {
 
@@ -145,6 +146,18 @@ public:
 private:
     std::string m_funcname = "UnknownFunction";
 };
+
+
+/**
+ * @brief A function to show the type names for the deduced type of
+ *       the universal references and the argument
+ */
+template<typename T>
+void show_boost_type_index_with_cvr(T &&param) {
+    namespace bti = boost::typeindex;
+    std::cout << "T = " << bti::type_id_with_cvr<T>().pretty_name() << "\n";
+    std::cout << "param = " << bti::type_id_with_cvr<decltype(param)>().pretty_name() << "\n";
+}
 
 
 
