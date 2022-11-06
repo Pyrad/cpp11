@@ -81,10 +81,21 @@ void test_type_deduction() {
 
     // Type deduction of "auto"
     Foobar w("sky");
+    const Foobar cw("ocean");
     auto &&fobj0 = w; // Bound to lvalue
     auto &&fobj1 = Foobar::make("sun"); // Bound to rvalue
+    auto &&fobj2 = cw; // Bound to lvalue (const)
+
+    fprintf(stdout, "Type deduction of auto\n");
     fprintf(stdout, "type of 'fobj0' = %s\n", bti::type_id_with_cvr<decltype(fobj0)>().pretty_name().c_str());
     fprintf(stdout, "type of 'fobj1' = %s\n", bti::type_id_with_cvr<decltype(fobj1)>().pretty_name().c_str());
+    fprintf(stdout, "type of 'fobj2' = %s\n", bti::type_id_with_cvr<decltype(fobj2)>().pretty_name().c_str());
+
+    // Type deduction of template function with universal references
+    fprintf(stdout, "Type deduction of template func with univ ref\n");
+    encode_mechanism_func(w);
+    encode_mechanism_func(Foobar::make("sun"));
+    encode_mechanism_func(cw);
 
 } // test_type_deduction
 
