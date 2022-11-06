@@ -28,9 +28,11 @@ void show_deduced_types_of_universal_ref() {
     Foobar fobj("sky");
     fprintf(stdout, "\nPassing in an lvalue to a func with universal reference\n");
     encode_mechanism_func(fobj);
+    utilities::show_boost_type_index_with_cvr(fobj);
 
     fprintf(stdout, "\nPassing in an rvalue to a func with universal reference\n");
     encode_mechanism_func(Foobar::make("sun"));
+    utilities::show_boost_type_index_with_cvr(Foobar::make("sun"));
 }
 
 void test_all() {
