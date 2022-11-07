@@ -52,6 +52,27 @@ void test_perfect_forwarding_fail_cases() {
     fwd_show_type(0);
     fwd_show_type(NULL);
     fwd_show_type(nullptr);
+
+    // In general, "static const" integral types can be declared only in
+    // a class w/o definition, and compiler will help propagate the value of
+    // it to every occurrances.
+    //
+    // So actually it may have no memory, so no memory address for it. Thus
+    // if to pass it to a function of universal reference, a compiler error
+    // will occur, because a reference is actually a pointer, which needs
+    // memory address.
+    //
+    // But some compilers might support retrieving the address of it.
+    //
+    // Here we can see Foo::value is "static const int", which is just declared in
+    // class, w/o definition outside the class.
+    // While gcc12 supports retrieving the address of it, so no compiler error.
+    int value = Foo::value;
+    fwd_show_type(value);
+    fwd_show_type(Foo::value);
+
+
+
 } // test_perfect_forwarding_fail_cases
 
 void test_all() {

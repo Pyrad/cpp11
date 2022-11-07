@@ -10,6 +10,21 @@ namespace chapter_5 {
 
 namespace item_30 {
 
+class Foo {
+public:
+    // In general, "static const" integral types can be declared only in
+    // a class w/o definition, and compiler will help propagate the value of
+    // it to every occurrances.
+    //
+    // So actually it may have no memory, so no memory address for it. Thus
+    // if to pass it to a function of universal reference, a compiler error
+    // will occur, because a reference is actually a pointer, which needs
+    // memory address.
+    //
+    // But some compilers might support retrieving the address of it.
+    static const int value = 10;
+};
+
 /**
  * A basic perfect forwarding sample (only one parameter as universal reference)
  *
