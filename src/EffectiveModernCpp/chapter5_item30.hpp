@@ -55,6 +55,14 @@ void fwd_show_types(Ts && ...params) {
  */
 void test_perfect_forwarding_samples();
 
+/**
+ * @brief Shows different cases in which perfect forwarding might fail
+ *
+ * (1) Perfect forwarding fails on braced initializers
+ * (2) Perfect forwarding fails on 0 or NULL for pointer types
+ */
+void test_perfect_forwarding_fail_cases();
+
 void test_all();
 
 } // namespace item_30
