@@ -2,6 +2,7 @@
 #define EFFECTIVE_MODERN_CPP_CHAPTER5_ITEM30
 
 #include "../utilities/utilities.hpp"
+#include <cstddef>
 #include <utility>
 
 namespace effective_mordern_cpp {
@@ -9,6 +10,19 @@ namespace effective_mordern_cpp {
 namespace chapter_5 {
 
 namespace item_30 {
+
+/**
+ * @brief A bit field
+ */
+struct IPv4Header {
+    std::uint32_t version:4,    // first 4 bits
+                  IHL:4,        // 4 bits followed
+                  DSCP:6,       // 6 bits followed
+                  ECN:2,        // 2 bits followed
+                  totalLength:16;   // 16 remaining
+};
+
+void check_ipv4_header(std::size_t hdr);
 
 class Foo {
 public:
@@ -102,6 +116,11 @@ void test_perfect_forwarding_samples();
  * (2) Perfect forwarding fails on 0 or NULL for pointer types
  */
 void test_perfect_forwarding_fail_cases();
+
+/**
+ * @brief Shows how to pass a bit field to a perfect forwarding function
+ */
+void test_bitfield_as_arg();
 
 void test_all();
 

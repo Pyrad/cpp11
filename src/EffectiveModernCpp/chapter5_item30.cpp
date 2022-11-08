@@ -1,10 +1,16 @@
 #include "chapter5_item30.hpp"
+#include <cstdint>
+#include <stdio.h>
 
 namespace effective_mordern_cpp {
 
 namespace chapter_5 {
 
 namespace item_30 {
+
+void check_ipv4_header(std::size_t hdr) {
+    fprintf(stdout, "hdr is %u\n", hdr);
+}
 
 /**
  * @brief A simple function to be passed into other functions as an argument
@@ -143,12 +149,30 @@ void test_perfect_forwarding_fail_cases() {
 
 } // test_perfect_forwarding_fail_cases
 
+/**
+ * @brief Shows how to pass a bit field to a perfect forwarding function
+ */
+void test_bitfield_as_arg() {
+    IPv4Header h = {8, 6, 28, 1, 1023};
+    check_ipv4_header(h.totalLength);
+
+    // The following fails because a pointer or reference can't point
+    // to a bitfield. (The min unit a pointer/reference can point to is a char)
+    // ---------------------------------------
+    // fwd_show_type(h.totalLength); // fails
+
+    auto tlen = static_cast<std::uint16_t>(h.totalLength);
+    fwd_show_type(tlen); // works
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_perfect_forwarding_samples();
 
     test_perfect_forwarding_fail_cases();
+
+    test_bitfield_as_arg();
 }
 
 
