@@ -13,6 +13,16 @@ int arg_func(int k) {
     return k > 0 ? k + 100 : k + 200;
 }
 
+///< Overloading functions 1
+int func_process(int k) {
+    return k > 0 ? k + 100 : k + 200;
+}
+
+///< Overloading functions 2
+int func_process(int k, int priority) {
+    return k - priority > 0 ? k + 100 : k + 200;
+}
+
 ///< A function's argument is another function
 int func_arg_is_func_0(int (*af)(int), int val) {
     return val > 0 ? af(val + 300) : af(val - 300);
@@ -22,6 +32,16 @@ int func_arg_is_func_0(int (*af)(int), int val) {
 int func_arg_is_func_1(int af(int), int val) {
     // return val > 0 ? af(val + 300) : af(val - 300);
     return func_arg_is_func_0(af, val);
+}
+
+///< A function's argument is another overloading function
+int func_arg_is_func_2(int (*af)(int, int), int val) {
+    return af(val, val +100);
+}
+
+///< A function's argument is another overloading function (different format)
+int func_arg_is_func_3(int af(int, int), int val) {
+    return func_arg_is_func_2(af, val);
 }
 
 /**
@@ -94,6 +114,13 @@ void test_perfect_forwarding_fail_cases() {
     // function (pointer) as an argument
     func_arg_is_func_0(arg_func, 25);
     func_arg_is_func_1(arg_func, 25);
+
+    // Pass an overloading function (pointer) to a function, compiler will
+    // help us find the correct overloading function
+    func_arg_is_func_0(func_process, 25);
+    func_arg_is_func_1(func_process, 25);
+    func_arg_is_func_2(func_process, 25);
+    func_arg_is_func_3(func_process, 25);
 
 
 } // test_perfect_forwarding_fail_cases

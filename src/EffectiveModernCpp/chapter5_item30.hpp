@@ -28,11 +28,22 @@ public:
 ///< A simple function to be passed into other functions as an argument
 int arg_func(int k);
 
+///< Overloading functions 1
+int func_process(int k);
+///< Overloading functions 2
+int func_process(int k, int priority);
+
 ///< A function's argument is another function
 int func_arg_is_func_0(int (*af)(int), int val);
 
 ///< A function's argument is another function (different format)
 int func_arg_is_func_1(int af(int), int val);
+
+///< A function's argument is another overloading function
+int func_arg_is_func_2(int (*af)(int, int), int val);
+
+///< A function's argument is another overloading function (different format)
+int func_arg_is_func_3(int *af(int, int), int val);
 
 /**
  * A basic perfect forwarding sample (only one parameter as universal reference)
