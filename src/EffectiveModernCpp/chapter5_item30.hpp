@@ -25,6 +25,15 @@ public:
     static const int value = 10;
 };
 
+///< A simple function to be passed into other functions as an argument
+int arg_func(int k);
+
+///< A function's argument is another function
+int func_arg_is_func_0(int (*af)(int), int val);
+
+///< A function's argument is another function (different format)
+int func_arg_is_func_1(int af(int), int val);
+
 /**
  * A basic perfect forwarding sample (only one parameter as universal reference)
  *

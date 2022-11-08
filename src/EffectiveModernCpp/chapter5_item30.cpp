@@ -7,6 +7,24 @@ namespace chapter_5 {
 namespace item_30 {
 
 /**
+ * @brief A simple function to be passed into other functions as an argument
+ */
+int arg_func(int k) {
+    return k > 0 ? k + 100 : k + 200;
+}
+
+///< A function's argument is another function
+int func_arg_is_func_0(int (*af)(int), int val) {
+    return val > 0 ? af(val + 300) : af(val - 300);
+}
+
+///< A function's argument is another function (different format)
+int func_arg_is_func_1(int af(int), int val) {
+    // return val > 0 ? af(val + 300) : af(val - 300);
+    return func_arg_is_func_0(af, val);
+}
+
+/**
  * Perfect forwarding for a single argument and any number of arguments
  */
 void test_perfect_forwarding_samples() {
@@ -71,6 +89,11 @@ void test_perfect_forwarding_fail_cases() {
     fwd_show_type(value);
     fwd_show_type(Foo::value);
 
+
+    // Pass a function (pointer) to another function that accepts a
+    // function (pointer) as an argument
+    func_arg_is_func_0(arg_func, 25);
+    func_arg_is_func_1(arg_func, 25);
 
 
 } // test_perfect_forwarding_fail_cases
