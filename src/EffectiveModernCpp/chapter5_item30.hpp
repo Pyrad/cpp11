@@ -25,6 +25,11 @@ public:
     static const int value = 10;
 };
 
+template<typename T>
+T arg_func_template(T k) {
+    return k > 0 ? k + 100 : k + 200;
+}
+
 ///< A simple function to be passed into other functions as an argument
 int arg_func(int k);
 

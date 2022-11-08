@@ -122,6 +122,24 @@ void test_perfect_forwarding_fail_cases() {
     func_arg_is_func_2(func_process, 25);
     func_arg_is_func_3(func_process, 25);
 
+    // 'arg_func' is not an overloading function, so compiler will help use find
+    // it. But 'func_process' is an overloading function's name, passing it alone
+    // to the perfect forwarding function won't work, as compiler has nothing about
+    // its type to deduce, so we need to pass the function signature instead to let
+    // compiler deduce its type
+    fwd_show_type(arg_func); // works, as arg_func is not an overloading function
+    // fwd_show_type(func_process); // fails, as func_process is an overloading function
+    using ProcessFuncType = int (*)(int);
+    ProcessFuncType pf = func_process;
+    fwd_show_type(pf); // now works, as pf has signature info for compiler to deduce types
+
+    // Similar as above, arg_func_template is a function template, which means it can
+    // be instantiated to different functions, so it doesn't work just passing its
+    // name alone to another function as an argument, we must pass an instantiated function
+    // to it
+    // fwd_show_type(arg_func_template);// fails, as arg_func_template is a template, which means
+                                     // a lot functions, compiler doesn't know which one
+    fwd_show_type(static_cast<ProcessFuncType>(arg_func_template));// works
 
 } // test_perfect_forwarding_fail_cases
 
