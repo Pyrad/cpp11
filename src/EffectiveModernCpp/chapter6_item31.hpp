@@ -28,6 +28,20 @@ namespace item_31 {
  */
 void test_what_is_lambda_and_closure();
 
+/**
+ * Lambda has 2 types of default capture mode
+ * (1) Capture by reference
+ * (2) Capture by value
+ * 
+ * Both capture mode can lead to the dangling issue. Why?
+ * Because lambda only captures the local variables or references, and these
+ * variables or references are defined where the lambda exists.
+ * It won't capture static variables or data members.
+ * In other words, if the life time of those local variables and references
+ * run out, the captured references or variables are dangling.
+ */
+void test_capture_by_ref_dangling();
+
 void test_all();
 
 } // namespace item_31

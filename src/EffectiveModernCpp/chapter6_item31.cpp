@@ -1,10 +1,16 @@
 #include "chapter6_item31.hpp"
+#include <functional>
+#include <vector>
 
 namespace effective_mordern_cpp {
 
 namespace chapter_6 {
 
 namespace item_31 {
+
+// Define a global filter whose elements are function objects
+using FilterContainer = std::vector<std::function<bool(int)>>;
+FilterContainer g_filters;
 
 /**
  * What is a lambda ?
@@ -38,10 +44,36 @@ void test_what_is_lambda_and_closure() {
 
 } // test_what_is_lambda_and_closure
 
+/**
+ * Lambda has 2 types of default capture mode
+ * (1) Capture by reference
+ * (2) Capture by value
+ * 
+ * Both capture mode can lead to the dangling issue. Why?
+ * Because lambda only captures the local variables or references, and these
+ * variables or references are defined where the lambda exists.
+ * It won't capture static variables or data members.
+ * In other words, if the life time of those local variables and references
+ * run out, the captured references or variables are dangling.
+ */
+void test_capture_by_ref_dangling() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    int var = 100;
+    // DANGER!
+    // A lambda that captures a reference of a local variable,
+    // and then it is stored in a global container.
+    // When it goes out of this function scope, that local variable
+    // no longer exists, thus dangling issue
+    g_filters.emplace_back([&](int value){ return value % var; });
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_what_is_lambda_and_closure();
+
+    test_capture_by_ref_dangling();
 }
 
 
