@@ -66,7 +66,13 @@ void test_capture_by_ref_dangling() {
     // When it goes out of this function scope, that local variable
     // no longer exists, thus dangling issue
     g_filters.emplace_back([&](int value){ return value % var; });
-}
+
+    // DANGER!
+    // Though captured explicitly, it still becomes invalid when using
+    // outside this function scope
+    g_filters.emplace_back([&var](int value){ return value % var; });
+
+} // test_capture_by_ref_dangling
 
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
