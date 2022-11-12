@@ -1,5 +1,6 @@
 #include "chapter6_item31.hpp"
 #include <functional>
+#include <memory>
 #include <vector>
 
 namespace effective_mordern_cpp {
@@ -11,6 +12,31 @@ namespace item_31 {
 // Define a global filter whose elements are function objects
 using FilterContainer = std::vector<std::function<bool(int)>>;
 FilterContainer g_filters;
+
+/**
+ * A class to show that lambda doesn't capture static variables and
+ * data members
+ */
+class WidgetCapByValueUB {
+public:
+    WidgetCapByValueUB() { }
+
+    void add_filter() const {
+        // Default capture by value, the following actually doesn't capture the
+        // data member 'divisor' (because lambda doesn't capture static variables
+        // and data members), indeed it captured 'this'
+        g_filters.emplace_back([=](int value) { return value % divisor == 0; });
+
+        // The following 2 won't compile, because lambda doesn't capture static variables
+        // and data members.
+        // -------------------------
+        // g_filters.emplace_back([](int value) { return value % divisor == 0; });
+        // g_filters.emplace_back([divisor](int value) { return value % divisor == 0; });
+    }
+
+private:
+    int divisor = 0;
+}; // end class WidgetCapByValueUB
 
 /**
  * What is a lambda ?
@@ -73,6 +99,28 @@ void test_capture_by_ref_dangling() {
     g_filters.emplace_back([&var](int value){ return value % var; });
 
 } // test_capture_by_ref_dangling
+
+/**
+ * @brief A function to show capture by value still might lead to dangling issue
+ */
+void test_capture_by_value_dangling() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    WidgetCapByValueUB val;
+    // See comments of function WidgetCapByValueUB::add_filter, that the lambda it
+    // stores actually captures 'this' pointer
+    val.add_filter();
+
+    // Since the lambda in WidgetCapByValueUB::add_filter actually captures 'this'
+    // pointer, thus after 'pw' is destroyed, the lambdas hold by the g_filters
+    // now dangles.
+    auto pw = std::make_unique<WidgetCapByValueUB>();
+    pw->add_filter();
+
+    // After reset 'pw', now dangling issue appears
+    pw = nullptr;
+    
+} // test_capture_by_value_dangling
 
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
