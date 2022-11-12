@@ -122,12 +122,28 @@ void test_capture_by_value_dangling() {
     
 } // test_capture_by_value_dangling
 
+/**
+ * @brief A function to show static variables can't be captured by lambda
+ */
+void test_not_capture_static_var() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    static int var = 10;
+    // Actually the lambda directly uses the static variable in this function,
+    // not capture it!
+    // So the next time it is called to use this static 'var', the value of it
+    // might have already changed!
+    g_filters.emplace_back([=](int value){ return value % var; });
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_what_is_lambda_and_closure();
 
     test_capture_by_ref_dangling();
+
+    test_not_capture_static_var();
 }
 
 

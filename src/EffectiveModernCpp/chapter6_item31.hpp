@@ -42,6 +42,16 @@ void test_what_is_lambda_and_closure();
  */
 void test_capture_by_ref_dangling();
 
+/**
+ * @brief A function to show capture by value still might lead to dangling issue
+ */
+void test_capture_by_value_dangling();
+
+/**
+ * @brief A function to show static variables can't be captured by lambda
+ */
+void test_not_capture_static_var();
+
 void test_all();
 
 } // namespace item_31
