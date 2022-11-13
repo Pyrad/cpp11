@@ -42,10 +42,27 @@ void test_cxx14_supports_move_capture() {
 
 } // test_cxx14_supports_move_capture
 
+/**
+ * The essence of a lambda is that have compiler create a class and create
+ * an object of that class by using an easy way.
+ *
+ * There's nothing you can do with a lambda that you can't do by hand.
+ */
+void test_cxx11_achieve_move_capture_by_class() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    auto pw = std::make_unique<Foobar>(10, "ocean");
+    auto func = IsValAndArch(std::move(pw));
+    fprintf(stdout, "Foobar is validated and archived? %s\n", func() ? "True" : "False");
+
+} // test_cxx11_achieve_move_capture_by_class
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_cxx14_supports_move_capture();
+
+    test_cxx11_achieve_move_capture_by_class();
 }
 
 

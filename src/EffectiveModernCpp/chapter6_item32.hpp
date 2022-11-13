@@ -26,6 +26,26 @@ private:
 }; // end class Foobar
 
 /**
+ * @brief To show C++11 can achieve move capture by a class
+ */
+class IsValAndArch { // "is validated and archived"
+public:
+    // Type alias
+	using DataType = std::unique_ptr<Foobar>;
+
+	// Use of std::move
+    explicit IsValAndArch(DataType&& ptr) : pw(std::move(ptr)) {}
+
+    // Define a callable operator
+	bool operator()() const { return pw->is_validated() && pw->is_archived(); }
+
+private:
+    // A data member for capture
+	DataType pw;
+
+}; // end class IsValAndArch
+
+/**
  * As we know, C++11 doesn't support move capture, C++14 enhanced this
  * and C++14 now support move capture.
  *
@@ -44,6 +64,14 @@ private:
  * (2) An expression initializing the data members
  */
 void test_cxx14_supports_move_capture();
+
+/**
+ * The essence of a lambda is that have compiler create a class and create
+ * an object of that class by using an easy way.
+ *
+ * There's nothing you can do with a lambda that you can't do by hand.
+ */
+void test_cxx11_achieve_move_capture_by_class();
 
 void test_all();
 
