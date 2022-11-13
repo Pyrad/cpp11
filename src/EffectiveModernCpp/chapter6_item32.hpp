@@ -73,6 +73,11 @@ void test_cxx14_supports_move_capture();
  */
 void test_cxx11_achieve_move_capture_by_class();
 
+/**
+ * Using std::bind in C++11 to achieve move capture
+ */
+void test_cxx11_achieve_move_capture_by_std_bind();
+
 void test_all();
 
 } // namespace item_32

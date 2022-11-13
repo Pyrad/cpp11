@@ -1,6 +1,9 @@
 #include "chapter6_item32.hpp"
+#include <functional>
 #include <memory>
 #include <stdio.h>
+#include <utility>
+#include <vector>
 
 namespace effective_mordern_cpp {
 
@@ -57,12 +60,36 @@ void test_cxx11_achieve_move_capture_by_class() {
 
 } // test_cxx11_achieve_move_capture_by_class
 
+/**
+ * Using std::bind in C++11 to achieve move capture
+ */
+void test_cxx11_achieve_move_capture_by_std_bind() {
+    utilities::ShowStartEndMsg smsg(__FUNCTION__);
+
+    std::vector<int> ivec{0, 1, 2, 3, 4};
+    fprintf(stdout, "[Before move capture] Size of ivec = %lu\n", ivec.size());
+
+    // C++11 emulation of init capture
+    auto func = std::bind([](const std::vector<int> &data) {
+                            for (auto i : data) { fprintf(stdout, "i = %d\n", i); }
+                          },
+                          std::move(ivec));
+
+    fprintf(stdout, "[After move capture] Size of ivec = %lu\n", ivec.size());
+
+    // Use func to access the data it moved 'data' into it
+    func();
+
+} // test_cxx11_achieve_move_capture_by_std_bind
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_cxx14_supports_move_capture();
 
     test_cxx11_achieve_move_capture_by_class();
+
+    test_cxx11_achieve_move_capture_by_std_bind();
 }
 
 
