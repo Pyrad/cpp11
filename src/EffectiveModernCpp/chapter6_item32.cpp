@@ -70,15 +70,40 @@ void test_cxx11_achieve_move_capture_by_std_bind() {
     fprintf(stdout, "[Before move capture] Size of ivec = %lu\n", ivec.size());
 
     // C++11 emulation of init capture
+    // (1) A so-called "bind" object will be created by std::bind
+    // (2) The first argument of std::bind is a callable object, and the following arguments
+    //     are the arguments for that callable object
+    // (3) The arguments copied to the bind object created by std::bind are either copy
+    //     constructed if lvalue, or move constructed if rvalue.
+    // (4) When the bind object is called, the callable object stored in this bind object
+    //     will be called, and the arguments will be passed to it in sequence.
+    // (5) The member function "operator()()" created by lambda expression is "const", i.e.,
+    //     "operator()() const", so the closure created by the lambda expression has constant
+    //     data members (const).
+    // (6) If declaring the lambda expression as "mutable", then the member function "operator()()"
+    //     created by it won't be "const" anymore, i.e., it is "operator()()", not "operator()() const".
+    //     For example,
     auto func = std::bind([](const std::vector<int> &data) {
                             for (auto i : data) { fprintf(stdout, "i = %d\n", i); }
                           },
                           std::move(ivec));
-
     fprintf(stdout, "[After move capture] Size of ivec = %lu\n", ivec.size());
 
     // Use func to access the data it moved 'data' into it
     func();
+
+
+    std::vector<int> ivec2{0, 1, 2, 3, 4};
+    fprintf(stdout, "[Before move capture] Size of ivec2 = %lu\n", ivec2.size());
+    // (6) If declaring the lambda expression as "mutable", then the member function "operator()()"
+    //     created by it won't be "const" anymore, i.e., it is "operator()()", not "operator()() const".
+    //     For example,
+    auto func2 = std::bind([](std::vector<int> &data) mutable {
+                            for (auto i : data) { fprintf(stdout, "i = %d\n", i); }
+                          },
+                          std::move(ivec2));
+    fprintf(stdout, "[After move capture] Size of ivec2 = %lu\n", ivec2.size());
+
 
 } // test_cxx11_achieve_move_capture_by_std_bind
 
