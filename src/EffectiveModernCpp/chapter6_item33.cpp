@@ -10,6 +10,7 @@ namespace chapter_6 {
 
 namespace item_33 {
 
+///< Just a helper function to show generic lambda usage in C++14
 template<typename T>
 bool fwd_show_type(T &&param) {
     utilities::show_boost_type_index_with_cvr(std::forward<T>(param));
@@ -17,6 +18,7 @@ bool fwd_show_type(T &&param) {
     return std::is_integral<typename std::remove_reference<T>::type>();
 }
 
+///< Just a helper function to show generic lambda usage in C++14
 std::string is_intgeral_test(bool is_str) {
     std::string s(is_str ? "IS_INTEGRAL" : "IS_NOT_INTEGRAL");
     return s;
@@ -31,8 +33,25 @@ void test_generic_lambda_cxx14() {
 
     // Since the x's type is declared as 'auto', so it's a generic lambda
     // (since C++14)
+    //
     // This generic lambda is capture-by-value
+    //
+    // This equals to a following template member function which is created
+    // by the compiler
+    // ------------------------------------------------------
+    // class SomeCompilerGeneratedClassName {
+    // public:
+    // 	template<typename T> // see Item 3 for auto return type (C++14)
+    // 	auto operator()(T x) const { return func(normalize(x)); }
+    // 	/* ... */ // other closure class functionality
+    // };
+    // ------------------------------------------------------
     auto f = [](auto x) { return is_intgeral_test(fwd_show_type(x)); };
+    fprintf(stdout, "generic lambda test is int = %s\n", f("sky").c_str());
+
+    // Usage universal reference if needed
+    // This will keep the lvalue-ness or rvalue-ness
+    auto ff = [](auto &&x) { return is_intgeral_test(fwd_show_type(std::forward<decltype(x)>(x))); };
     fprintf(stdout, "generic lambda test is int = %s\n", f("sky").c_str());
 
 } // test_generic_lambda_cxx14
