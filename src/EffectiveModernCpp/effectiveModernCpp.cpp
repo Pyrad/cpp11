@@ -34,6 +34,7 @@
 #include "chapter6_item31.hpp"
 #include "chapter6_item32.hpp"
 #include "chapter6_item33.hpp"
+#include "chapter6_item34.hpp"
 #include "../utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
@@ -73,6 +74,7 @@ void test_all() {
     chapter_5::item_30::test_all();
     chapter_6::item_32::test_all();
     chapter_6::item_33::test_all();
+    chapter_6::item_34::test_all();
 
     fprintf(stdout, "----- END of function effective_mordern_cpp::%s -----\n\n", __FUNCTION__);
 
