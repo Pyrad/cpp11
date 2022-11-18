@@ -24,6 +24,8 @@ void setAlarm(Time t, Sound s, Duration d);
 
 void test_alarm_lambda();
 
+void test_alarm_std_bind();
+
 void test_all();
 
 } // namespace item_34

@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <iostream>
 #include <ctime>
+#include <functional>
 
 namespace effective_mordern_cpp {
 
@@ -44,6 +45,7 @@ void setAlarm(Time t, Sound s, Duration d) {
 /**
  * An alarm lasts for 30 seconds, 1 hour later after it is set.
  * To show it's more readable using a lambda than std::bind
+ * Using a lambda expression
  */
 void test_alarm_lambda() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
@@ -61,10 +63,28 @@ void test_alarm_lambda() {
     setSoundL(Sound::Beep);
 }
 
+/**
+ * An alarm lasts for 30 seconds, 1 hour later after it is set.
+ * To show it's more readable using a lambda than std::bind
+ * Using a std::bind object
+ */
+void test_alarm_std_bind() {
+    using namespace std::literals;
+
+    auto setSoundB = std::bind(setAlarm, // "B" for "bind"
+                                std::chrono::steady_clock::now() + 1h, // incorrect indeed!
+                                std::placeholders::_1,
+                                30s);
+
+    setSoundB(Sound::Beep);
+}
+
 void test_all() {
     utilities::ShowStartEndMsg smsg(__FUNCTION__);
 
     test_alarm_lambda();
+
+    test_alarm_std_bind();
 }
 
 
