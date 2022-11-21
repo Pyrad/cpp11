@@ -71,6 +71,11 @@ void test_alarm_lambda() {
 void test_alarm_std_bind() {
     using namespace std::literals;
 
+
+    // Why here "std::chrono::steady_clock::now() + 1h" is not right?
+    // --------------------------------------------------------------
+    // Because it takes effect 1h later after std::bind is set, while
+    // we'd like it to take effect 1h later after this bind object is called!
     auto setSoundB = std::bind(setAlarm, // "B" for "bind"
                                 std::chrono::steady_clock::now() + 1h, // incorrect indeed!
                                 std::placeholders::_1,
