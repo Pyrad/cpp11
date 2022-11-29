@@ -183,7 +183,7 @@ target_link_libraries(${MY_CUR_PROJ_NAME} PUBLIC ${LIB_LIST})
 # list(APPEND LINK_DIRS "./boosttest/")
 # list(APPEND LINK_DIRS "./EffectiveModernCpp/")
 # list(APPEND LINK_DIRS "./cppfeatures/")
-target_link_directories(${MY_CUR_PROJ_NAME} PUBLIC ${MYCPP11TEST_BINARY_DIR}/EffectiveModernCpp )
+#target_link_directories(${MY_CUR_PROJ_NAME} PUBLIC ${MYCPP11TEST_BINARY_DIR}/EffectiveModernCpp )
 
 # The name '${MY_CUR_PROJ_NAME}' MUST have been declared by add_executable() or add_library()
 target_include_directories(${MY_CUR_PROJ_NAME} PUBLIC "${PROJECT_BINARY_DIR}")
