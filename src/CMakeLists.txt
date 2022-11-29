@@ -123,6 +123,24 @@ set(LIB_UTILITIES "utilities")
 add_subdirectory(${LIB_UTILITIES})
 list(APPEND LIB_LIST ${LIB_UTILITIES})
 
+# Define a macro to enable testing for normal C++ functionalities testing (src/normal)
+option(ENB_NORMAL "Testing c++ functionalities" ON)
+# add the normal library on condition that ENB_NORMAL is turned ON
+set(LIB_NORMAL "normal")
+if(ENB_NORMAL)
+    add_subdirectory(${LIB_NORMAL})
+    list(APPEND LIB_LIST ${LIB_NORMAL})
+endif()
+
+# Define a macro to enable testing for boost testing (src/boosttest)
+option(ENB_BOOSTTEST "Testing boost functionalities" ON)
+# add the boosttest library on condition that ENB_BOOSTTEST is turned ON
+set(LIB_BOOSTTEST "boosttest")
+if(ENB_BOOSTTEST)
+    add_subdirectory(${LIB_BOOSTTEST})
+    list(APPEND LIB_LIST ${LIB_BOOSTTEST})
+endif()
+
 # Define a macro to enable testing for CPP feature testing (src/cppfeatures)
 option(ENB_CPP_FEATURES "Testing cpp features" ON)
 # add the Cpp features library at all time
@@ -150,7 +168,7 @@ configure_file(projectconfig.h.in projectconfig.h)
 
 AUX_SOURCE_DIRECTORY(./ MY_DIR_SRC)
 
-# Set the project name 
+# Set the binary/executable name 
 set(MY_CUR_PROJ_NAME "mymainrun")
 
 # Add the executable
@@ -159,7 +177,13 @@ ADD_EXECUTABLE(${MY_CUR_PROJ_NAME} ${MY_DIR_SRC})
 # Set link library
 target_link_libraries(${MY_CUR_PROJ_NAME} PUBLIC ${LIB_LIST})
 
-#target_link_directories(${MY_CUR_PROJ_NAME} PUBLIC ${MYCPP11TEST_BINARY_DIR})
+# # Create a directory list to append path for linking
+# set(LINK_DIRS "")
+# list(APPEND LINK_DIRS "./normal/")
+# list(APPEND LINK_DIRS "./boosttest/")
+# list(APPEND LINK_DIRS "./EffectiveModernCpp/")
+# list(APPEND LINK_DIRS "./cppfeatures/")
+target_link_directories(${MY_CUR_PROJ_NAME} PUBLIC ${MYCPP11TEST_BINARY_DIR}/EffectiveModernCpp )
 
 # The name '${MY_CUR_PROJ_NAME}' MUST have been declared by add_executable() or add_library()
 target_include_directories(${MY_CUR_PROJ_NAME} PUBLIC "${PROJECT_BINARY_DIR}")

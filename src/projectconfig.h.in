@@ -3,5 +3,8 @@
 #define CPP11_VERSION_MINOR @CPP11_VERSION_MINOR@
 
 // Define the macros to enable different modules
+#cmakedefine ENB_NORMAL
+#cmakedefine ENB_BOOSTTEST
 #cmakedefine ENB_CPP_FEATURES
 #cmakedefine ENB_EFFECTIVE_MODERN_CPP
+
