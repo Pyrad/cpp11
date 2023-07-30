@@ -169,24 +169,34 @@ configure_file(projectconfig.h.in projectconfig.h)
 AUX_SOURCE_DIRECTORY(./ MY_DIR_SRC)
 
 # Set the binary/executable name 
-set(MY_CUR_PROJ_NAME "mymainrun")
+set(MY_EXEC_NAME "mymainrun")
 
 # Add the executable
-ADD_EXECUTABLE(${MY_CUR_PROJ_NAME} ${MY_DIR_SRC})
+ADD_EXECUTABLE(${MY_EXEC_NAME} ${MY_DIR_SRC})
 
 # Set link library
-target_link_libraries(${MY_CUR_PROJ_NAME} PUBLIC ${LIB_LIST})
+target_link_libraries(${MY_EXEC_NAME} PUBLIC ${LIB_LIST})
 
 # # Create a directory list to append path for linking
-# set(LINK_DIRS "")
-# list(APPEND LINK_DIRS "./normal/")
-# list(APPEND LINK_DIRS "./boosttest/")
-# list(APPEND LINK_DIRS "./EffectiveModernCpp/")
-# list(APPEND LINK_DIRS "./cppfeatures/")
-#target_link_directories(${MY_CUR_PROJ_NAME} PUBLIC ${MYCPP11TEST_BINARY_DIR}/EffectiveModernCpp )
+set(LINK_DIRS "")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/normal/")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/boosttest/")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/EffectiveModernCpp/")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/cppfeatures/")
+MESSAGE(STATUS "[PYRAD] LINK_DIRS = ${LINK_DIRS}")
+#target_link_directorie${PROJECT_BINARY_DIR}s(${MY_EXEC_NAME} PUBLIC ${MYCPP11TEST_BINARY_DIR}/EffectiveModernCpp )
+target_link_directories(${MY_EXEC_NAME} PUBLIC ${LINK_DIRS} )
 
-# The name '${MY_CUR_PROJ_NAME}' MUST have been declared by add_executable() or add_library()
-target_include_directories(${MY_CUR_PROJ_NAME} PUBLIC "${PROJECT_BINARY_DIR}")
+# The name '${MY_EXEC_NAME}' MUST have been declared by add_executable() or add_library()
+#target_include_directories(${MY_EXEC_NAME} PUBLIC "${PROJECT_BINARY_DIR}")
+set(INC_DIRS "")
+list(APPEND INC_DIRS "${PROJECT_BINARY_DIR}")
+list(APPEND INC_DIRS "${PROJECT_BINARY_DIR}/normal/")
+list(APPEND INC_DIRS "${PROJECT_BINARY_DIR}/boosttest/")
+list(APPEND INC_DIRS "${PROJECT_BINARY_DIR}/EffectiveModernCpp/")
+list(APPEND INC_DIRS "${PROJECT_BINARY_DIR}/cppfeatures/")
+MESSAGE(STATUS "[PYRAD] INC_DIRS = ${INC_DIRS}")
+target_include_directories(${MY_EXEC_NAME} PUBLIC ${INC_DIRS})
 
 
 

@@ -1,6 +1,6 @@
 MESSAGE(STATUS "[PYRAD] [DIR boosttest] CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_library(boosttest boosttest.cpp)
+add_library(boosttest SHARED boosttest.cpp)
 
 # Remember INTERFACE means things that consumers 
 # require but the producer doesn't. 
