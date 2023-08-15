@@ -34,6 +34,8 @@ origin  git@github.com:Pyrad/cpp11.git (push)
 
 ## How to build?
 
+### Build as usual
+
 - Create a directory named `build` in current folder, then change directory to `build` just created
 
 - Run CMake to generate Makefile
@@ -60,10 +62,26 @@ origin  git@github.com:Pyrad/cpp11.git (push)
   $ cmake --build .
   ```
 
-  
-
 - Since currently I set the target name as `mymainrun`, so after compilation, a binary named `mymainrun` is created.
 
+
+### Build with option settings in command line
+
+If some cmake macro variables are defined by `option` command in CMakeList.txt, and then they are defined in a configure file as `#cmakedefine ENB_BOOSTTEST`, then they can be set in command line with different values.
+
+For example, if an option named `ENB_NORMAL` is defined in CMakeList as following,
+
+```cmake
+option(ENB_NORMAL "Testing c++ functionalities" ON)
+```
+
+it's value is set to `ON` by default, while we can set it to `OFF` when generating a Makefile, as below,
+
+```shell
+cmake -G Ninja ../src -DENB_NORMAL=OFF
+```
+
+Then this macro will be disabled after compilation, even though it is turned ON when defined.
 
 
 ## Dynamic Linkage

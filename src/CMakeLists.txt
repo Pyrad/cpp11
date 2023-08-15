@@ -123,6 +123,12 @@ set(LIB_UTILITIES "utilities")
 add_subdirectory(${LIB_UTILITIES})
 list(APPEND LIB_LIST ${LIB_UTILITIES})
 
+###############################################################################
+# Define a few macros, these macro can be set at commad line when building
+###############################################################################
+############################
+# Macro 1: ENB_NORMAL
+############################
 # Define a macro to enable testing for normal C++ functionalities testing (src/normal)
 option(ENB_NORMAL "Testing c++ functionalities" ON)
 # add the normal library on condition that ENB_NORMAL is turned ON
@@ -132,6 +138,9 @@ if(ENB_NORMAL)
     list(APPEND LIB_LIST ${LIB_NORMAL})
 endif()
 
+############################
+# Macro 2: ENB_BOOSTTEST
+############################
 # Define a macro to enable testing for boost testing (src/boosttest)
 option(ENB_BOOSTTEST "Testing boost functionalities" ON)
 # add the boosttest library on condition that ENB_BOOSTTEST is turned ON
@@ -141,6 +150,9 @@ if(ENB_BOOSTTEST)
     list(APPEND LIB_LIST ${LIB_BOOSTTEST})
 endif()
 
+############################
+# Macro 3: ENB_CPP_FEATURES
+############################
 # Define a macro to enable testing for CPP feature testing (src/cppfeatures)
 option(ENB_CPP_FEATURES "Testing cpp features" ON)
 # add the Cpp features library at all time
@@ -150,6 +162,9 @@ if(ENB_CPP_FEATURES)
     list(APPEND LIB_LIST ${LIB_CPPFEATURES})
 endif()
 
+####################################
+# Macro 4: ENB_EFFECTIVE_MODERN_CPP
+####################################
 # Define a macro to enable testing for the reading minutes of EffectiveModernCpp (src/EffectiveModernCpp)
 option(ENB_EFFECTIVE_MODERN_CPP "Reading minutes of EffectiveModernCpp" ON)
 # add the EffectiveModernCpp library
