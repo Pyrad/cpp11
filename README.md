@@ -32,6 +32,14 @@ origin  git@github.com:Pyrad/cpp11.git (push)
 
 
 
+## Dependencies
+
+Currently only it only depends on`boost` library.
+
+- `boost` library
+
+
+
 ## How to build?
 
 ### Build as usual
@@ -67,9 +75,9 @@ origin  git@github.com:Pyrad/cpp11.git (push)
 
 ### Build with option settings in command line
 
-If some cmake macro variables are defined by `option` command in CMakeList.txt, and then they are defined in a configure file as `#cmakedefine ENB_BOOSTTEST`, then they can be set in command line with different values.
+If some cmake macro variables are defined by `option` command in `CMakeList.txt`, and then they are defined in a configure file as `#cmakedefine ENB_BOOSTTEST`, then they can be set in command line with different values.
 
-For example, if an option named `ENB_NORMAL` is defined in CMakeList as following,
+For example, if an option named `ENB_NORMAL` is defined in `CMakeList.txt`as following,
 
 ```cmake
 option(ENB_NORMAL "Testing c++ functionalities" ON)
