@@ -23,6 +23,9 @@
 #ifdef ENB_EFFECTIVE_MODERN_CPP
 #include "./EffectiveModernCpp/effectiveModernCpp.hpp"
 #endif // ENB_EFFECTIVE_MODERN_CPP
+
+#include "./normal/maintest.hpp"
+
 // ------------------------------------------------------
 // Headers included conditionally end
 // ------------------------------------------------------

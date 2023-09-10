@@ -10,6 +10,8 @@
 #include <utility>
 #include <stdexcept>
 #include <type_traits>
+#include <iostream>
+#include <sstream>
 
 
 namespace T1 {
