@@ -33,6 +33,7 @@ MESSAGE(STATUS "[PYRAD]                         UNIX = " ${UNIX})
 MESSAGE(STATUS "[PYRAD]                 CMAKE_SYSTEM = " ${CMAKE_SYSTEM})
 MESSAGE(STATUS "[PYRAD]            CMAKE_SYSTEM_NAME = " ${CMAKE_SYSTEM_NAME})
 MESSAGE(STATUS "[PYRAD]       CMAKE_SYSTEM_PROCESSOR = " ${CMAKE_SYSTEM_PROCESSOR})
+MESSAGE(STATUS "[PYRAD]  CMAKE_HOST_SYSTEM_PROCESSOR = " ${CMAKE_HOST_SYSTEM_PROCESSOR})
 MESSAGE(STATUS "[PYRAD]            CMAKE_HOST_SYSTEM = " ${CMAKE_HOST_SYSTEM})
 MESSAGE(STATUS "[PYRAD]       CMAKE_HOST_SYSTEM_NAME = " ${CMAKE_HOST_SYSTEM_NAME})
 MESSAGE(STATUS "[PYRAD]           PROJECT_BINARY_DIR = " ${PROJECT_BINARY_DIR})
@@ -40,12 +41,34 @@ MESSAGE(STATUS "[PYRAD]           PROJECT_SOURCE_DIR = " ${PROJECT_SOURCE_DIR})
 
 ### Print out some host information
 ### Looks nothing got on Windows?
+MESSAGE(STATUS "[PYRAD]")
+MESSAGE(STATUS "[PYRAD] ===== Some info got by cmake_host_system_information =====")
 cmake_host_system_information(RESULT PRETTY_NAME QUERY DISTRIB_PRETTY_NAME)
-message(STATUS "[PYRAD] PRETTY_NAME:" ${PRETTY_NAME})
+MESSAGE(STATUS "[PYRAD] PRETTY_NAME: ${PRETTY_NAME}")
 cmake_host_system_information(RESULT DISTRO QUERY DISTRIB_INFO)
 foreach(VAR IN LISTS DISTRO)
-  message(STATUS "[PYRAD]   ${VAR}=`${${VAR}}`")
+    MESSAGE(STATUS "[PYRAD]   [DISTRO] ${VAR} = `${${VAR}}`")
 endforeach()
+
+cmake_host_system_information(RESULT val_NUMBER_OF_LOGICAL_CORES QUERY NUMBER_OF_LOGICAL_CORES)
+MESSAGE(STATUS "[PYRAD] NUMBER_OF_LOGICAL_CORES: ${val_NUMBER_OF_LOGICAL_CORES}")
+
+# Create a list of keys for query host system information
+set(QueryKeyList NUMBER_OF_PHYSICAL_CORES HOSTNAME FQDN TOTAL_VIRTUAL_MEMORY
+                 AVAILABLE_VIRTUAL_MEMORY TOTAL_PHYSICAL_MEMORY AVAILABLE_PHYSICAL_MEMORY
+                 IS_64BIT HAS_FPU HAS_MMX HAS_MMX_PLUS HAS_SSE HAS_SSE2 HAS_SSE_FP
+                 HAS_SSE_MMX HAS_AMD_3DNOW HAS_AMD_3DNOW_PLUS HAS_IA64 HAS_SERIAL_NUMBER
+                 PROCESSOR_SERIAL_NUMBER PROCESSOR_NAME PROCESSOR_DESCRIPTION OS_NAME
+                 OS_RELEASE OS_VERSION OS_PLATFORM DISTRIB_INFO)
+# Query each key and then print the information about the system
+LIST(LENGTH QueryKeyList klen)
+MESSAGE(STATUS "[PYRAD] Query key list length: ${klen}")
+foreach( cur_val ${QueryKeyList})
+    CMAKE_HOST_SYSTEM_INFORMATION(RESULT qval QUERY ${cur_val})
+    MESSAGE(STATUS "[PYRAD] [QueryKeyList]  ${cur_val} : ${qval}")
+endforeach()
+
+MESSAGE(STATUS "[PYRAD] ==========================================================")
 
 
 
