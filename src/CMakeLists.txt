@@ -39,6 +39,15 @@ MESSAGE(STATUS "[PYRAD]       CMAKE_HOST_SYSTEM_NAME = " ${CMAKE_HOST_SYSTEM_NAM
 MESSAGE(STATUS "[PYRAD]           PROJECT_BINARY_DIR = " ${PROJECT_BINARY_DIR})
 MESSAGE(STATUS "[PYRAD]           PROJECT_SOURCE_DIR = " ${PROJECT_SOURCE_DIR})
 
+# A portable way to check if 32-bit or 64-bit platform
+# If it is 4, the platform is 32-bit; if it is 8, the platform is 64-bit
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    SET(bstring "64-bit platform")
+else()
+    SET(bstring "32-bit platform")
+endif()
+MESSAGE(STATUS "[PYRAD]          CMAKE_SIZEOF_VOID_P = ${CMAKE_SIZEOF_VOID_P} (${bstring})")
+
 ### Print out some host information
 ### Looks nothing got on Windows?
 MESSAGE(STATUS "[PYRAD]")
