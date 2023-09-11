@@ -186,14 +186,16 @@ In order to let the executable find them, checks which directories are need by t
 
 ```shell
 Pyrad@SSEA MINGW64 /d/Gitee/cpp11 $ ldd ./build/mymainrun.exe
-        ntdll.dll => /c/Windows/SYSTEM32/ntdll.dll (0x77000000)
-        kernel32.dll => /c/Windows/system32/kernel32.dll (0x76ca0000)
-        KERNELBASE.dll => /c/Windows/system32/KERNELBASE.dll (0x7fefcba0000)
+        ntdll.dll => /c/Windows/SYSTEM32/ntdll.dll (0x76fd0000)
+        kernel32.dll => /c/Windows/system32/kernel32.dll (0x76d70000)
+        KERNELBASE.dll => /c/Windows/system32/KERNELBASE.dll (0x7fefc9c0000)
         libcppfeatures.dll => not found
-        libgcc_s_seh-1.dll => /mingw64/bin/libgcc_s_seh-1.dll (?)
-        msvcrt.dll => /c/Windows/system32/msvcrt.dll (?)
-        libstdc++-6.dll => /mingw64/bin/libstdc++-6.dll (?)
+        libgcc_s_seh-1.dll => /mingw64/bin/libgcc_s_seh-1.dll (0x7feef5a0000)
+        msvcrt.dll => /c/Windows/system32/msvcrt.dll (0x7fefdf40000)
+        libwinpthread-1.dll => /mingw64/bin/libwinpthread-1.dll (0x7feeeee0000)
+        libstdc++-6.dll => /mingw64/bin/libstdc++-6.dll (0x7fed5de0000)
         libEffectiveModernCpp.dll => not found
+        libnormal.dll => not found
 ```
 
 Here it says `libcppfeatures.dll` and `libEffectiveModernCpp.dll` are not found, thus we add the paths to let it find it, as below,
@@ -203,6 +205,7 @@ Add library paths for `libcppfeatures.dll` and `libEffectiveModernCpp.dll`,
 ```shell
 export PATH="$PATH:/d/Gitee/cpp11/build/cppfeatures"
 export PATH="$PATH:/d/Gitee/cpp11/build/EffectiveModernCpp"
+export PATH="$PATH:/d/Gitee/cpp11/build/normal"
 ```
 
 After adding 2 library paths, now `PATH` is,
@@ -227,17 +230,17 @@ $ echo $PATH | awk -F: '{for (i = 1; i <= NF; ++i) print i, $i}'
 Now it's OK to run the executable, as they can be found now as below,
 
 ```shell
-Pyrad@SSEA MINGW64 /d/Gitee/cpp11
-$ ldd ./build/mymainrun.exe
-        ntdll.dll => /c/Windows/SYSTEM32/ntdll.dll (0x77000000)
-        kernel32.dll => /c/Windows/system32/kernel32.dll (0x76ca0000)
-        KERNELBASE.dll => /c/Windows/system32/KERNELBASE.dll (0x7fefcba0000)
-        libcppfeatures.dll => /d/Gitee/cpp11/build/cppfeatures/libcppfeatures.dll (0x7fef3c50000)
-        libgcc_s_seh-1.dll => /mingw64/bin/libgcc_s_seh-1.dll (0x7fef3c00000)
-        msvcrt.dll => /c/Windows/system32/msvcrt.dll (0x7fefe4e0000)
-        libwinpthread-1.dll => /mingw64/bin/libwinpthread-1.dll (0x7fef3be0000)
-        libstdc++-6.dll => /mingw64/bin/libstdc++-6.dll (0x7fed0a30000)
-        libEffectiveModernCpp.dll => /d/Gitee/cpp11/build/EffectiveModernCpp/libEffectiveModernCpp.dll (0x7fecdbb0000)
+Pyrad@SSEA MINGW64 /d/Gitee/cpp11 $ ldd ./build/mymainrun.exe
+        ntdll.dll => /c/Windows/SYSTEM32/ntdll.dll (0x76fd0000)
+        kernel32.dll => /c/Windows/system32/kernel32.dll (0x76d70000)
+        KERNELBASE.dll => /c/Windows/system32/KERNELBASE.dll (0x7fefc9c0000)
+        libcppfeatures.dll => /d/Gitee/cpp11/build/cppfeatures/libcppfeatures.dll (0x7fed3bf0000)
+        libgcc_s_seh-1.dll => /mingw64/bin/libgcc_s_seh-1.dll (0x7feef5a0000)
+        msvcrt.dll => /c/Windows/system32/msvcrt.dll (0x7fefdf40000)
+        libwinpthread-1.dll => /mingw64/bin/libwinpthread-1.dll (0x7feeeee0000)
+        libstdc++-6.dll => /mingw64/bin/libstdc++-6.dll (0x7fed5de0000)
+        libEffectiveModernCpp.dll => /d/Gitee/cpp11/build/EffectiveModernCpp/libEffectiveModernCpp.dll (0x7fed60f0000)
+        libnormal.dll => /d/Gitee/cpp11/build/normal/libnormal.dll (0x7fed3a30000)
 ```
 
 
@@ -249,6 +252,7 @@ Variable `LD_LIBRARY_PATH` should set to include the paths for those shared libr
 ```shell
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/d/Gitee/cpp11/build/cppfeatures"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/d/Gitee/cpp11/build/EffectiveModernCpp"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/d/Gitee/cpp11/build/normal"
 ```
 
 Then it's OK to run it as usual.
