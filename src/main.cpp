@@ -1,5 +1,5 @@
 #include "main.hpp"
-#include "template.hpp"
+#include "./normal/template.hpp"
 #include <memory>
 
 #include "projectconfig.h"
