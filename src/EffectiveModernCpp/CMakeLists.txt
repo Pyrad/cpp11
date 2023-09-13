@@ -1,4 +1,5 @@
-MESSAGE(STATUS "[PYRAD] [DIR EffectiveModernCpp] CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR})
+MESSAGE(STATUS "[PYRAD]   ------------- [SUB DIR EffectiveModernCpp] -------------") 
+MESSAGE(STATUS "[PYRAD]   CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR})
 
 # This is the CMakeLists.txt file for folder EffectiveModernCpp
 add_library(EffectiveModernCpp SHARED
@@ -44,3 +45,5 @@ add_library(EffectiveModernCpp SHARED
 target_include_directories(EffectiveModernCpp
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
         )
+
+MESSAGE(STATUS "[PYRAD]   ------------- [SUB DIR EffectiveModernCpp] [END] -------------") 

@@ -1,4 +1,5 @@
-MESSAGE(STATUS "[PYRAD] [DIR normal] CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR})
+MESSAGE(STATUS "[PYRAD]   ------------- [SUB DIR normal] -------------") 
+MESSAGE(STATUS "[PYRAD]   ----- CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR} -----") 
 
 add_library(normal SHARED normal.cpp maintest.cpp)
 
@@ -7,3 +8,5 @@ add_library(normal SHARED normal.cpp maintest.cpp)
 target_include_directories(normal
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
         )
+
+MESSAGE(STATUS "[PYRAD]   ------------- [SUB DIR normal] [END] -------------") 

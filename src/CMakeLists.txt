@@ -6,6 +6,11 @@
 ###
 #############################################################################################
 
+
+MESSAGE(STATUS "[PYRAD] ============= ============= ============= ==============") 
+MESSAGE(STATUS "[PYRAD] ============= [Main CMakeLists.txt starts] =============") 
+MESSAGE(STATUS "[PYRAD] ============= ============= ============= ==============") 
+
 # Set the minimun version of CMake
 CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 
@@ -245,5 +250,9 @@ list(APPEND INC_DIRS "${PROJECT_BINARY_DIR}/cppfeatures/")
 MESSAGE(STATUS "[PYRAD] INC_DIRS = ${INC_DIRS}")
 target_include_directories(${MY_EXEC_NAME} PUBLIC ${INC_DIRS})
 
+
+MESSAGE(STATUS "[PYRAD] ============= ============= ============ =============") 
+MESSAGE(STATUS "[PYRAD] ============= [Main CMakeLists.txt ends] =============") 
+MESSAGE(STATUS "[PYRAD] ============= ============= ============ =============") 
 
 
