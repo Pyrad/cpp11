@@ -4,8 +4,11 @@ set(CurSharedLibName "pyrun")
 MESSAGE(STATUS "[PYRAD]   ------------- [SUB DIR ${CurSharedLibName}] -------------") 
 MESSAGE(STATUS "[PYRAD]   CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR})
 
+# The following 4 variables are artifacts specification
+# They can be found in https://cmake.org/cmake/help/latest/module/FindPython3.html
 set(Python3_INCLUDE_DIRS "D:/procs/python38/include")
 set(Python3_LIBRARIES "D:/procs/python38/python38.dll")
+set(Python3_LIBRARY "D:/procs/python38")
 set(PYTHON_EXECUTABLE "D:/procs/python38/python.exe")
 
 # This is the CMakeLists.txt file for folder pyrun
@@ -19,7 +22,7 @@ target_include_directories(${CurSharedLibName}
         )
 
 target_link_libraries(${CurSharedLibName} ${Python3_LIBRARIES})
-target_link_directories(${CurSharedLibName} PUBLIC "D:/procs/python38")
+target_link_directories(${CurSharedLibName} PUBLIC ${Python3_LIBRARY})
 
 # After compiled, when to run, remember set PATH (on Windows) or LIBRARA_PATH (on linux)
 # to make sure this shared object after compiled can find the python38.dll it needs.
