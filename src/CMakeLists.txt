@@ -211,6 +211,18 @@ if(ENB_EFFECTIVE_MODERN_CPP)
     list(APPEND LIB_LIST ${LIB_EFFECTIVE_MODERN_CPP})
 endif()
 
+####################################
+# Macro 5: ENB_PYRUN_CPP
+####################################
+# Define a macro to enable testing for the pyrun related code (src/pyrun)
+option(ENB_PYRUN_CPP "Python code related" ON)
+# add the pyrun library
+set(LIB_PYRUN_CPP "pyrun")
+if(ENB_PYRUN_CPP)
+    add_subdirectory(${LIB_PYRUN_CPP})
+    list(APPEND LIB_LIST ${LIB_PYRUN_CPP})
+endif()
+
 # DEBUG: Show the value of the LIB_LIST
 MESSAGE(STATUS "[PYRAD] LIB_LIST = ${LIB_LIST}")
 
@@ -235,6 +247,7 @@ list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/normal/")
 list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/boosttest/")
 list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/EffectiveModernCpp/")
 list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/cppfeatures/")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/pyrun/")
 MESSAGE(STATUS "[PYRAD] LINK_DIRS = ${LINK_DIRS}")
 #target_link_directorie${PROJECT_BINARY_DIR}s(${MY_EXEC_NAME} PUBLIC ${MYCPP11TEST_BINARY_DIR}/EffectiveModernCpp )
 target_link_directories(${MY_EXEC_NAME} PUBLIC ${LINK_DIRS} )
@@ -247,6 +260,7 @@ list(APPEND INC_DIRS "${PROJECT_BINARY_DIR}/normal/")
 list(APPEND INC_DIRS "${PROJECT_BINARY_DIR}/boosttest/")
 list(APPEND INC_DIRS "${PROJECT_BINARY_DIR}/EffectiveModernCpp/")
 list(APPEND INC_DIRS "${PROJECT_BINARY_DIR}/cppfeatures/")
+list(APPEND INC_DIRS "${PROJECT_BINARY_DIR}/pyrun/")
 MESSAGE(STATUS "[PYRAD] INC_DIRS = ${INC_DIRS}")
 target_include_directories(${MY_EXEC_NAME} PUBLIC ${INC_DIRS})
 

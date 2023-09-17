@@ -7,4 +7,5 @@
 #cmakedefine ENB_BOOSTTEST
 #cmakedefine ENB_CPP_FEATURES
 #cmakedefine ENB_EFFECTIVE_MODERN_CPP
+#cmakedefine ENB_PYRUN_CPP
 

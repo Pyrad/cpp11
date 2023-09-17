@@ -24,6 +24,10 @@
 #include "./EffectiveModernCpp/effectiveModernCpp.hpp"
 #endif // ENB_EFFECTIVE_MODERN_CPP
 
+#ifdef ENB_PYRUN_CPP
+#include "./pyrun/pyrun.hpp"
+#endif // ENB_PYRUN_CPP
+
 #include "./normal/maintest.hpp"
 
 // ------------------------------------------------------
@@ -79,6 +83,13 @@ int main() {
 #ifdef ENB_EFFECTIVE_MODERN_CPP
     effective_mordern_cpp::test_all();
 #endif // ENB_EFFECTIVE_MODERN_
+
+    std::cout << "Running before ENB_PYRUN_CPP\n";
+#ifdef ENB_PYRUN_CPP
+    std::cout << "Running ENB_PYRUN_CPP\n";
+    pyrun::test_all();
+#endif // ENB_PYRUN_CPP
+    std::cout << "Running after ENB_PYRUN_CPP\n";
 
     std::cout << "\n\n---end of function main---\n" << std::endl;
 
