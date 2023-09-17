@@ -266,3 +266,166 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/d/Gitee/cpp11/build/normal"
 ```
 
 Then it's OK to run it as usual.
+
+
+
+## How to build with Python library?
+
+In MSYS2 environment, take folder `pyrun` as an example
+
+### 1 Create a folder
+
+This means it will be compiled to a shared object to link to a Python library.
+
+In this project, we create `pyrun` folder, and link all the objects compiled to a Python library.
+
+
+
+### 2 Setup `CMakeLists.txt` file
+
+```cmake
+# Set the name of current shared library
+set(CurSharedLibName "pyrun")
+
+set(Python3_INCLUDE_DIRS "D:/procs/python38/include")
+set(Python3_LIBRARIES "D:/procs/python38/python38.dll")
+set(PYTHON_EXECUTABLE "D:/procs/python38/python.exe")
+
+# This is the CMakeLists.txt file for folder pyrun
+add_library(${CurSharedLibName} SHARED pyrun.cpp)
+
+# Remember INTERFACE means things that consumers
+# require but the producer doesn't.
+target_include_directories(${CurSharedLibName}
+        INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+        PUBLIC ${Python3_INCLUDE_DIRS}
+        )
+
+target_link_libraries(${CurSharedLibName} ${Python3_LIBRARIES})
+target_link_directories(${CurSharedLibName} PUBLIC "D:/procs/python38")
+```
+
+Just like other folder's (i.e. sub modules), set a target name, here it is `pyrun`.
+
+Then 3 variables should be set accordingly, which are `Python3_INCLUDE_DIRS`, `Python3_LIBRARIES` and `PYTHON_EXECUTABLE`. These depend on the Python installed on current OS. In this project, we have Python3.8 installed on Windows 7.
+
+Next we notify `cmake` that we want to create a target as shared object, whose source file is `pyrun.cpp`. (Of course we could add more source files).
+
+Next we should notify compiler where to find the Python headers, for example, `Python.h`. Here we add `Python3_INCLUDE_DIRS` as include path by command `target_include_directories`.
+
+Then we let `cmake` aware that which Python library to link, and where to find it, we achieve this by using `target_link_libraries` and `target_link_directories` separately.
+
+
+
+### 3 Set `PATH` or `LD_LIBRARY_PATH` variables
+
+After it successfully compiled, we add the paths of these shared libraries after compiled, to `PATH` (for Windows) or `LD_LIBRARAY_PATH` (for Linux), then we check it with `ldd` and see all compiled libraries **can be found**, as below,
+
+```shell
+Pyrad@SSEA MINGW64 /d/Gitee/cpp11 $ ldd ./build/mymainrun.exe
+        ntdll.dll => /c/Windows/SYSTEM32/ntdll.dll (0x76eb0000)
+        kernel32.dll => /c/Windows/system32/kernel32.dll (0x76b50000)
+        KERNELBASE.dll => /c/Windows/system32/KERNELBASE.dll (0x7fefc880000)
+        libcppfeatures.dll => /d/Gitee/cpp11/build/cppfeatures/libcppfeatures.dll (0x7fed5490000)
+        libgcc_s_seh-1.dll => /mingw64/bin/libgcc_s_seh-1.dll (0x7fef4480000)
+        msvcrt.dll => /c/Windows/system32/msvcrt.dll (0x7fefeb20000)
+        libwinpthread-1.dll => /mingw64/bin/libwinpthread-1.dll (0x7fef2360000)
+        libstdc++-6.dll => /mingw64/bin/libstdc++-6.dll (0x7fed51c0000)
+        libEffectiveModernCpp.dll => /d/Gitee/cpp11/build/EffectiveModernCpp/libEffectiveModernCpp.dll (0x7fed30f0000)
+        libnormal.dll => /d/Gitee/cpp11/build/normal/libnormal.dll (0x7fed3040000)
+        libpyrun.dll => /d/Gitee/cpp11/build/pyrun/libpyrun.dll (0x7feee630000)
+```
+
+**BUT**, if we launch it to execute, it reports `libpyrun.dll` can not be found!!
+
+That's because we link `libpyrun.dll` to `python38.dll` in that sub folder, thus we must tell it where to find it when running as dynamic library. If we don't set it, we can see it can't find `python38.dll` as follows,
+
+```shell
+Pyrad@SSEA MINGW64 /d/Gitee/cpp11 $ ./build/mymainrun.exe
+D:/Gitee/cpp11/build/mymainrun.exe: error while loading shared libraries: libpyrun.dll: cannot open shared object file: No such file or directory
+```
+
+Though it reported `libpyrun.dll` can not be found (actually it does exist), it can not find `Python38.dll` indeed, as below,
+
+```shell
+Pyrad@SSEA MINGW64 /d/Gitee/cpp11 $ ldd ./build/pyrun/libpyrun.dll
+        ntdll.dll => /c/Windows/SYSTEM32/ntdll.dll (0x76eb0000)
+        kernel32.dll => /c/Windows/system32/kernel32.dll (0x76b50000)
+        KERNELBASE.dll => /c/Windows/system32/KERNELBASE.dll (0x7fefc880000)
+        msvcrt.dll => /c/Windows/system32/msvcrt.dll (0x7fefeb20000)
+        libpyrun.dll => /d/Gitee/cpp11/build/pyrun/libpyrun.dll (0x7feee630000)
+        libstdc++-6.dll => /mingw64/bin/libstdc++-6.dll (0x7fed51c0000)
+        libgcc_s_seh-1.dll => /mingw64/bin/libgcc_s_seh-1.dll (0x7fef4480000)
+        libwinpthread-1.dll => /mingw64/bin/libwinpthread-1.dll (0x7fef2360000)
+        python38.dll => not found
+```
+
+Thus we add `python38.dll`'s path to `PATH` (for Windows) or `LD_LIBRARAY_PATH` (for Linux) accordingly.
+
+```shell
+export PATH="$PATH:/d/procs/python38"
+```
+
+Then we check `libpyrun.dll` again, now it finds all the shared libraries it needs to link against.
+
+```shell
+Pyrad@SSEA MINGW64 /d/Gitee/cpp11 $ ldd ./build/pyrun/libpyrun.dll
+ntdll.dll => /c/Windows/SYSTEM32/ntdll.dll (0x76eb0000)
+kernel32.dll => /c/Windows/system32/kernel32.dll (0x76b50000)
+KERNELBASE.dll => /c/Windows/system32/KERNELBASE.dll (0x7fefc880000)
+msvcrt.dll => /c/Windows/system32/msvcrt.dll (0x7fefeb20000)
+libstdc++-6.dll => /mingw64/bin/libstdc++-6.dll (0x7fed51c0000)
+libgcc_s_seh-1.dll => /mingw64/bin/libgcc_s_seh-1.dll (0x7fef4480000)
+libwinpthread-1.dll => /mingw64/bin/libwinpthread-1.dll (0x7fef2360000)
+python38.dll => /d/procs/python38/python38.dll (0x7fed4c70000)
+VERSION.dll => /c/Windows/system32/VERSION.dll (0x7fefc530000)
+SHLWAPI.dll => /c/Windows/system32/SHLWAPI.dll (0x7fefebc0000)
+GDI32.dll => /c/Windows/system32/GDI32.dll (0x7fefd560000)
+USER32.dll => /c/Windows/system32/USER32.dll (0x76c70000)
+LPK.dll => /c/Windows/system32/LPK.dll (0x7fefcc80000)
+USP10.dll => /c/Windows/system32/USP10.dll (0x7fefd600000)
+WS2_32.dll => /c/Windows/system32/WS2_32.dll (0x7fefcc30000)
+RPCRT4.dll => /c/Windows/system32/RPCRT4.dll (0x7fefd8d0000)
+NSI.dll => /c/Windows/system32/NSI.dll (0x7fefd5f0000)
+ADVAPI32.dll => /c/Windows/system32/ADVAPI32.dll (0x7fefd310000)
+sechost.dll => /c/Windows/SYSTEM32/sechost.dll (0x7fefd5d0000)
+VCRUNTIME140.dll => /c/Windows/system32/VCRUNTIME140.dll (0x7fef5da0000)
+api-ms-win-crt-runtime-l1-1-0.dll => /c/Windows/system32/api-ms-win-crt-runtime-l1-1-0.dll (0x7fef5d90000)
+ucrtbase.DLL => /c/Windows/system32/ucrtbase.DLL (0x7fef5b00000)
+api-ms-win-core-timezone-l1-1-0.dll => /c/Windows/system32/api-ms-win-core-timezone-l1-1-0.dll (0x7fef5d80000)
+api-ms-win-core-file-l2-1-0.dll => /c/Windows/system32/api-ms-win-core-file-l2-1-0.dll (0x7fef5d70000)
+api-ms-win-core-localization-l1-2-0.dll => /c/Windows/system32/api-ms-win-core-localization-l1-2-0.dll (0x7fef5d60000)
+api-ms-win-core-synch-l1-2-0.dll => /c/Windows/system32/api-ms-win-core-synch-l1-2-0.dll (0x7fef8d80000)
+api-ms-win-core-processthreads-l1-1-1.dll => /c/Windows/system32/api-ms-win-core-processthreads-l1-1-1.dll (0x7fef5d50000)
+api-ms-win-core-file-l1-2-0.dll => /c/Windows/system32/api-ms-win-core-file-l1-2-0.dll (0x7fef5d40000)
+api-ms-win-crt-heap-l1-1-0.dll => /c/Windows/system32/api-ms-win-crt-heap-l1-1-0.dll (0x7fef5d30000)
+api-ms-win-crt-string-l1-1-0.dll => /c/Windows/system32/api-ms-win-crt-string-l1-1-0.dll (0x7fef5af0000)
+api-ms-win-crt-stdio-l1-1-0.dll => /c/Windows/system32/api-ms-win-crt-stdio-l1-1-0.dll (0x7fef5ae0000)
+api-ms-win-crt-convert-l1-1-0.dll => /c/Windows/system32/api-ms-win-crt-convert-l1-1-0.dll (0x7fef5ad0000)
+api-ms-win-crt-math-l1-1-0.dll => /c/Windows/system32/api-ms-win-crt-math-l1-1-0.dll (0x7fef5a80000)
+api-ms-win-crt-locale-l1-1-0.dll => /c/Windows/system32/api-ms-win-crt-locale-l1-1-0.dll (0x7fef5ac0000)
+api-ms-win-crt-time-l1-1-0.dll => /c/Windows/system32/api-ms-win-crt-time-l1-1-0.dll (0x7fef5aa0000)
+api-ms-win-crt-environment-l1-1-0.dll => /c/Windows/system32/api-ms-win-crt-environment-l1-1-0.dll (0x7fef5a90000)
+api-ms-win-crt-process-l1-1-0.dll => /c/Windows/system32/api-ms-win-crt-process-l1-1-0.dll (0x7fef8420000)
+api-ms-win-crt-conio-l1-1-0.dll => /c/Windows/system32/api-ms-win-crt-conio-l1-1-0.dll (0x7fef5a50000)
+api-ms-win-crt-filesystem-l1-1-0.dll => /c/Windows/system32/api-ms-win-crt-filesystem-l1-1-0.dll (0x7fef5ab0000)
+IMM32.DLL => /c/Windows/system32/IMM32.DLL (0x7fefd1e0000)
+MSCTF.dll => /c/Windows/system32/MSCTF.dll (0x7fefd3f0000)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
