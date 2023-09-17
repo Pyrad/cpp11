@@ -43,4 +43,17 @@ target_link_directories(${CurSharedLibName} PUBLIC ${Python3_LIBRARY})
 #         libwinpthread-1.dll => /mingw64/bin/libwinpthread-1.dll (0x7fef2360000)
 #         python38.dll => not found
 
+# Another shared library, but it doesn't have to be linked to the main program,
+# as it can be used stand alone for Python import modules
+set(PyMod_cpp11runtest "cpp11runtest")
+add_library(${PyMod_cpp11runtest} SHARED cpp11runtest.cpp)
+target_include_directories(${PyMod_cpp11runtest}
+        INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+        PRIVATE ${Python3_INCLUDE_DIRS}
+        PRIVATE ${PROJECT_SOURCE_DIR}
+        )
+target_link_libraries(${PyMod_cpp11runtest} ${Python3_LIBRARIES})
+target_link_directories(${PyMod_cpp11runtest} PUBLIC ${Python3_LIBRARY})
+
+
 MESSAGE(STATUS "[PYRAD]   ------------- [SUB DIR ${CurSharedLibName}] [END] -------------") 

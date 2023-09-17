@@ -1,0 +1,4 @@
+#ifndef _CPP11RUNTEST_HPP
+#define _CPP11RUNTEST_HPP
+
+#endif // _CPP11RUNTEST_HPP
