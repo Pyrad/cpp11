@@ -15,7 +15,7 @@ add_library(${CurSharedLibName} SHARED pyrun.cpp)
 # require but the producer doesn't. 
 target_include_directories(${CurSharedLibName}
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-        PUBLIC ${Python3_INCLUDE_DIRS}
+        PRIVATE ${Python3_INCLUDE_DIRS}
         )
 
 target_link_libraries(${CurSharedLibName} ${Python3_LIBRARIES})
