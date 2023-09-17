@@ -40,6 +40,35 @@ Currently only it only depends on`boost` library.
 
 
 
+## Set include paths for header files
+
+If include paths are not correctly set, then it needs to specify the right path in a source file for `cmake` to find the header file, for example as below, in file `effectiveModernCpp.cpp`, we need the the following directive to specify the header we want to include,
+
+```cpp
+#include "../utilities/utilities.hpp"
+```
+
+Since `effectiveModernCpp.cpp` wants to include `utilities.hpp`, and that file is in a different directory, and `cmake` doesn't know where to find it, so we need to clearly declare that it is a subdirectory of the upper folder (i.e. `../utilities/`).
+
+But if we specify the include path as below in `CMakeLists.txt`, then `cmake` will know where to find these header files included in a source file,
+
+```cmake
+target_include_directories(EffectiveModernCpp
+        INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+        PRIVATE "${PROJECT_SOURCE_DIR}"
+        )
+```
+
+Here `${PROJECT_SOURCE_DIR}` is the source folder of current project, and there are a few sub folders in it, such as `utilities`, `normal`, `boosttest` and `EffectiveModernCpp`.
+
+After setting it, now we could just use the directive below to include a header file,
+
+```cpp
+#include "utilities/utilities.hpp"
+```
+
+
+
 ## How to build?
 
 ### Build as usual
