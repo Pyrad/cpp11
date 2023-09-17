@@ -22,7 +22,9 @@
 # For now, only 2 libs are needed when loading
 lib_0="libcppfeatures.dll"
 lib_1="libEffectiveModernCpp.dll"
-lib_array=($lib_0 $lib_1)
+lib_2="libpyrun.dll"
+lib_3="libnormal.dll"
+lib_array=($lib_0 $lib_1 $lib_2 $lib_3)
 
 cwd=`pwd`
 
