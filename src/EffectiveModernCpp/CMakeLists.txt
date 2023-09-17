@@ -42,8 +42,19 @@ add_library(EffectiveModernCpp SHARED
 
 # Remember INTERFACE means things that consumers 
 # require but the producer doesn't. 
+# --------
+# In order to include headers from other sub-folders, include the source
+# directory of current project
+# Here variable PROJECT_SOURCE_DIR is a built-in project name, it is
+# actually is "D:/Gitee/cpp11/src" in current project, and there are sub
+# folders (utilities EffectiveModernCpp normal boosttest) which contains
+# other headers, these headers then can be included in a source file as
+# below,
+# #include "utilities/utilities.hpp"
+# 2023-09-17
 target_include_directories(EffectiveModernCpp
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+        PRIVATE "${PROJECT_SOURCE_DIR}"
         )
 
 MESSAGE(STATUS "[PYRAD]   ------------- [SUB DIR EffectiveModernCpp] [END] -------------") 

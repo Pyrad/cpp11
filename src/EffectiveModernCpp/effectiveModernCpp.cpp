@@ -35,7 +35,17 @@
 #include "chapter6_item32.hpp"
 #include "chapter6_item33.hpp"
 #include "chapter6_item34.hpp"
-#include "../utilities/utilities.hpp"
+// 
+// In CMakeLists.txt of current folder, set target_include_directories
+// as below to let cmake aware of folders of other header files, so it
+// can directly use relative paths instead of absolute path, or specified
+// paths for header files
+// -------------------------------------------------------------------
+// target_include_directories(EffectiveModernCpp
+//         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+//         PRIVATE "${PROJECT_SOURCE_DIR}"
+// 2023-09-17
+#include "utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
 
