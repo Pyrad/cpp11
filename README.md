@@ -91,6 +91,16 @@ cmake -G Ninja ../src -DENB_NORMAL=OFF
 
 Then this macro will be disabled after compilation, even though it is turned ON when defined.
 
+After setting it in `CMakeList.txt`, it should be defined in a configure file (here in this project is `projectconfig.h.in`) as follows,
+
+```cpp
+#cmakedefine ENB_PYRUN_CPP
+```
+
+Thus it can be defined when compiling.
+
+
+
 
 ## Dynamic Linkage
 
