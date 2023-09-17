@@ -19,6 +19,7 @@ add_library(${CurSharedLibName} SHARED pyrun.cpp)
 target_include_directories(${CurSharedLibName}
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
         PRIVATE ${Python3_INCLUDE_DIRS}
+        PRIVATE ${PROJECT_SOURCE_DIR}
         )
 
 target_link_libraries(${CurSharedLibName} ${Python3_LIBRARIES})

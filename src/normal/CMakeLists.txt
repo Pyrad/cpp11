@@ -7,6 +7,7 @@ add_library(normal SHARED normal.cpp maintest.cpp)
 # require but the producer doesn't. 
 target_include_directories(normal
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+        PRIVATE ${PROJECT_SOURCE_DIR}
         )
 
 MESSAGE(STATUS "[PYRAD]   ------------- [SUB DIR normal] [END] -------------") 

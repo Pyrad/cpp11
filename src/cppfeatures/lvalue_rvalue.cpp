@@ -6,7 +6,7 @@
 #include <vector>
 #include <wchar.h>
 
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 #include "lvalue_rvalue.hpp"
 
 #define MSG_BAR function_msg_printer(__FUNCTION__)
