@@ -265,6 +265,13 @@ MESSAGE(STATUS "[PYRAD] INC_DIRS = ${INC_DIRS}")
 target_include_directories(${MY_EXEC_NAME} PUBLIC ${INC_DIRS})
 
 
+MESSAGE(STATUS "[PYRAD]  ====== Compiler Information ======")
+MESSAGE(STATUS "[PYRAD]  CMAKE_MAKE_PROGRAM : ${CMAKE_MAKE_PROGRAM}")
+MESSAGE(STATUS "[PYRAD]  CMAKE_C_COMPILER : ${CMAKE_C_COMPILER}")
+MESSAGE(STATUS "[PYRAD]  CMAKE_CXX_COMPILER : ${CMAKE_CXX_COMPILER}")
+MESSAGE(STATUS "[PYRAD]  CMAKE_C_COMPILER_VERSION : ${CMAKE_C_COMPILER_VERSION}")
+MESSAGE(STATUS "[PYRAD]  CMAKE_CXX_COMPILER_VERSION : ${CMAKE_CXX_COMPILER_VERSION}")
+
 MESSAGE(STATUS "[PYRAD] ============= ============= ============ =============") 
 MESSAGE(STATUS "[PYRAD] ============= [Main CMakeLists.txt ends] =============") 
 MESSAGE(STATUS "[PYRAD] ============= ============= ============ =============") 

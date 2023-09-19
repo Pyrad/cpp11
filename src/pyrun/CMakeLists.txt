@@ -11,6 +11,11 @@ set(Python3_LIBRARIES "D:/procs/python38/python38.dll")
 set(Python3_LIBRARY "D:/procs/python38")
 set(PYTHON_EXECUTABLE "D:/procs/python38/python.exe")
 
+#set(Python3_INCLUDE_DIRS "/mingw64/include/python3.10")
+#set(Python3_LIBRARIES "/mingw64/bin/libpython3.10.dll")
+#set(Python3_LIBRARY "/mingw64/bin")
+#set(PYTHON_EXECUTABLE "/mingw64/bin/python")
+
 # This is the CMakeLists.txt file for folder pyrun
 add_library(${CurSharedLibName} SHARED pyrun.cpp)
 
