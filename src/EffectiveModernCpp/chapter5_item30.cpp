@@ -8,6 +8,21 @@ namespace chapter_5 {
 
 namespace item_30 {
 
+// In general, "static const" integral types can be declared only in
+// a class w/o definition, and compiler will help propagate the value of
+// it to every occurrances.
+//
+// So actually it may have no memory, so no memory address for it. Thus
+// if to pass it to a function of universal reference, a compiler error
+// will occur, because a reference is actually a pointer, which needs
+// memory address.
+//
+// But some compilers might support retrieving the address of it.
+//
+// Added at 2023-10-01, looks g++ 9.3 on Ubuntu doesn't support retrieving
+// address of it
+const int Foo::value = 10;
+
 void check_ipv4_header(std::size_t hdr) {
     fprintf(stdout, "hdr is %u\n", hdr);
 }

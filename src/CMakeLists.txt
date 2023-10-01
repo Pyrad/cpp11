@@ -53,16 +53,16 @@ else()
 endif()
 MESSAGE(STATUS "[PYRAD]          CMAKE_SIZEOF_VOID_P = ${CMAKE_SIZEOF_VOID_P} (${bstring})")
 
-### Print out some host information
-### Looks nothing got on Windows?
-MESSAGE(STATUS "[PYRAD]")
-MESSAGE(STATUS "[PYRAD] ===== Some info got by cmake_host_system_information =====")
-cmake_host_system_information(RESULT PRETTY_NAME QUERY DISTRIB_PRETTY_NAME)
-MESSAGE(STATUS "[PYRAD] PRETTY_NAME: ${PRETTY_NAME}")
-cmake_host_system_information(RESULT DISTRO QUERY DISTRIB_INFO)
-foreach(VAR IN LISTS DISTRO)
-    MESSAGE(STATUS "[PYRAD]   [DISTRO] ${VAR} = `${${VAR}}`")
-endforeach()
+# ### Print out some host information
+# ### Looks nothing got on Windows?
+# MESSAGE(STATUS "[PYRAD]")
+# MESSAGE(STATUS "[PYRAD] ===== Some info got by cmake_host_system_information =====")
+# cmake_host_system_information(RESULT PRETTY_NAME QUERY DISTRIB_PRETTY_NAME)
+# MESSAGE(STATUS "[PYRAD] PRETTY_NAME: ${PRETTY_NAME}")
+# cmake_host_system_information(RESULT DISTRO QUERY DISTRIB_INFO)
+# foreach(VAR IN LISTS DISTRO)
+#     MESSAGE(STATUS "[PYRAD]   [DISTRO] ${VAR} = `${${VAR}}`")
+# endforeach()
 
 cmake_host_system_information(RESULT val_NUMBER_OF_LOGICAL_CORES QUERY NUMBER_OF_LOGICAL_CORES)
 MESSAGE(STATUS "[PYRAD] NUMBER_OF_LOGICAL_CORES: ${val_NUMBER_OF_LOGICAL_CORES}")
@@ -75,12 +75,12 @@ set(QueryKeyList NUMBER_OF_PHYSICAL_CORES HOSTNAME FQDN TOTAL_VIRTUAL_MEMORY
                  PROCESSOR_SERIAL_NUMBER PROCESSOR_NAME PROCESSOR_DESCRIPTION OS_NAME
                  OS_RELEASE OS_VERSION OS_PLATFORM DISTRIB_INFO)
 # Query each key and then print the information about the system
-LIST(LENGTH QueryKeyList klen)
-MESSAGE(STATUS "[PYRAD] Query key list length: ${klen}")
-foreach( cur_val ${QueryKeyList})
-    CMAKE_HOST_SYSTEM_INFORMATION(RESULT qval QUERY ${cur_val})
-    MESSAGE(STATUS "[PYRAD] [QueryKeyList]  ${cur_val} : ${qval}")
-endforeach()
+# LIST(LENGTH QueryKeyList klen)
+# MESSAGE(STATUS "[PYRAD] Query key list length: ${klen}")
+# foreach( cur_val ${QueryKeyList})
+#     CMAKE_HOST_SYSTEM_INFORMATION(RESULT qval QUERY ${cur_val})
+#     MESSAGE(STATUS "[PYRAD] [QueryKeyList]  ${cur_val} : ${qval}")
+# endforeach()
 
 MESSAGE(STATUS "[PYRAD] ==========================================================")
 
@@ -111,19 +111,41 @@ MESSAGE(STATUS "[PYRAD] ========================================================
 #		 |---<all *.dll.a files>
 #		 |---<all *.dll files>
 
+if (DEFINED ${MINGW})
+	MESSAGE(STATUS "[PYRAD] MinGW variable defined!")
+else()
+	MESSAGE(STATUS "[PYRAD] MinGW variable not defined!")
+    set(MINGW 0)
+endif()
+
+if (DEFINED ENV{DISTINGUISHED_NICKNAME})
+    MESSAGE(STATUS "[PYRAD] A customized env variable DISTINGUISHED_NICKNAME is defined to distinguish host machines!")
+    MESSAGE(STATUS "[PYRAD] DISTINGUISHED_NICKNAME = $ENV{DISTINGUISHED_NICKNAME}")
+    if ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_VBox_Ubuntu_20_04_LTS")
+	    set(MY_BOOST_HOME_DIR /home/pyrad/procs/boost_1_73_0)
+    endif()
+else()
+    MESSAGE(FATAL_ERROR "[PYRAD] DISTINGUISHED_NICKNAME must be set to distinguish host machines!")
+endif()
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" AND ${MINGW} EQUAL 1)
 	MESSAGE(STATUS "[PYRAD] Windows MinGW system!")
 	MESSAGE(STATUS "[PYRAD] Assume current is MSYS2")
 	set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0")
-	set(BOOST_ROOT ${MY_BOOST_HOME_DIR})
-	set(BOOST_INCLUDEDIR ${MY_BOOST_HOME_DIR}/include)
-	set(BOOST_LIBRARYDIR ${MY_BOOST_HOME_DIR}/lib)
-	set(Boost_USE_STATIC_LIBS OFF)
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    MESSAGE(STATUS "[PYRAD] Linux system!")
+    set(MY_BOOST_HOME_DIR /home/pyrad/procs/boost_1_73_0)
 elseif(${UNIX} STREQUAL "Unix")
 	MESSAGE(STATUS "[PYRAD] Unix system!")
-	set(BOOST_ROOT /home/pyrad/procs/boost_1_69_0)
+	set(MY_BOOST_HOME_DIR /home/pyrad/procs/boost_1_73_0)
+else()
+    MESSAGE(FATAL_ERROR "[PYRAD] Unknown system, can't compile, exit!")
 endif()
+
+set(BOOST_ROOT ${MY_BOOST_HOME_DIR})
+set(BOOST_INCLUDEDIR ${MY_BOOST_HOME_DIR}/include)
+set(BOOST_LIBRARYDIR ${MY_BOOST_HOME_DIR}/lib)
+set(Boost_USE_STATIC_LIBS OFF)
 
 # #set(Boost_LIB_PREFIX "lib")
 # #set(Boost_USE_STATIC_LIBS ON)

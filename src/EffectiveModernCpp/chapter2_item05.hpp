@@ -1,7 +1,6 @@
 #ifndef EFFECTIVE_MODERN_CPP_CHAPTER2_ITEM05
 #define EFFECTIVE_MODERN_CPP_CHAPTER2_ITEM05
 
-#include <corecrt.h>
 #include <functional>
 #include <iostream>
 #include <stdio.h>

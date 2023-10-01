@@ -36,7 +36,8 @@ public:
     // memory address.
     //
     // But some compilers might support retrieving the address of it.
-    static const int value = 10;
+    // static const int value = 10;
+    static const int value;
 };
 
 template<typename T>
