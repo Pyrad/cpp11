@@ -127,6 +127,10 @@ MESSAGE(STATUS "[PYRAD] ========================================================
 # PYTHON_EXECUTABLE, they can be found in https://cmake.org/cmake/help/latest/module/FindPython3.html
 ################################################################################
 if (NOT DEFINED ENV{DISTINGUISHED_NICKNAME})
+    MESSAGE(STATUS "[PYRAD] Currently (2023-10-02) DISTINGUISHED_NICKNAME must be the following.")
+    MESSAGE(STATUS "[PYRAD]   (1) Asus_Win7_MSYS2")
+    MESSAGE(STATUS "[PYRAD]   (2) Asus_Win7_VBox_OpenSUSE")
+    MESSAGE(STATUS "[PYRAD]   (3) Asus_Win7_VBox_Ubuntu_20_04_LTS")
     MESSAGE(FATAL_ERROR "[PYRAD] DISTINGUISHED_NICKNAME must be set to distinguish host machines!")
 endif()
 MESSAGE(STATUS "[PYRAD] A customized env variable DISTINGUISHED_NICKNAME is defined to distinguish host machines!")
@@ -150,7 +154,13 @@ else()
     MESSAGE(STATUS "[PYRAD]   (3) Asus_Win7_VBox_Ubuntu_20_04_LTS")
     MESSAGE(FATAL_ERROR "[PYRAD] Unknown system, because DISTINGUISHED_NICKNAME is not one of the above values.")
 endif()
-MESSAGE(STATUS "[PYRAD] MY_BOOST_HOME_DIR is set to: ${MY_BOOST_HOME_DIR}")
+
+MESSAGE(STATUS "[PYRAD] Platform dependent variables set:")
+MESSAGE(STATUS "[PYRAD]   MY_BOOST_HOME_DIR is set to: ${MY_BOOST_HOME_DIR}")
+MESSAGE(STATUS "[PYRAD]   Python3_INCLUDE_DIRS is set to: ${Python3_INCLUDE_DIRS}")
+MESSAGE(STATUS "[PYRAD]   Python3_LIBRARIES is set to: ${Python3_LIBRARIES}")
+MESSAGE(STATUS "[PYRAD]   Python3_LIBRARY is set to: ${Python3_LIBRARY}")
+MESSAGE(STATUS "[PYRAD]   PYTHON_EXECUTABLE is set to: ${PYTHON_EXECUTABLE}")
 
 # In case environmental variable MINGW is not defined on Linux platform
 if (DEFINED MINGW)
