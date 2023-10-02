@@ -72,6 +72,7 @@ target_link_directories(${CurSharedLibName} PUBLIC ${Python3_LIBRARY})
 # as it can be used stand alone for Python import modules
 set(PyMod_cpp11runtest "cpp11runtest")
 add_library(${PyMod_cpp11runtest} SHARED cpp11runtest.cpp)
+set_target_properties(${PyMod_cpp11runtest} PROPERTIES PREFIX "")
 target_include_directories(${PyMod_cpp11runtest}
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
         PRIVATE ${Python3_INCLUDE_DIRS}
