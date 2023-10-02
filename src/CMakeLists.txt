@@ -111,33 +111,65 @@ MESSAGE(STATUS "[PYRAD] ========================================================
 #		 |---<all *.dll.a files>
 #		 |---<all *.dll files>
 
-if (DEFINED ${MINGW})
+################################################################################
+# Environmental variable DISTINGUISHED_NICKNAME must be defined to check which
+# platform we are on, thus we could decide which boost version to use and where
+# to find it.
+#
+# Following variables will be set accoording to the platform:
+#   (1) MY_BOOST_HOME_DIR
+#   (2) Python3_INCLUDE_DIRS
+#   (3) Python3_LIBRARIES
+#   (4) Python3_LIBRARY
+#   (5) PYTHON_EXECUTABLE
+#
+# For variables Python3_INCLUDE_DIRS, Python3_LIBRARIES, Python3_LIBRARY and
+# PYTHON_EXECUTABLE, they can be found in https://cmake.org/cmake/help/latest/module/FindPython3.html
+################################################################################
+if (NOT DEFINED ENV{DISTINGUISHED_NICKNAME})
+    MESSAGE(FATAL_ERROR "[PYRAD] DISTINGUISHED_NICKNAME must be set to distinguish host machines!")
+endif()
+MESSAGE(STATUS "[PYRAD] A customized env variable DISTINGUISHED_NICKNAME is defined to distinguish host machines!")
+MESSAGE(STATUS "[PYRAD] DISTINGUISHED_NICKNAME = $ENV{DISTINGUISHED_NICKNAME}")
+if ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_VBox_Ubuntu_20_04_LTS")
+    set(MY_BOOST_HOME_DIR "/home/pyrad/procs/boost_1_73_0")
+    set(Python3_INCLUDE_DIRS "/home/pyrad/procs/Python-3.8.3/include/python3.8")
+    set(Python3_LIBRARIES "/home/pyrad/procs/Python-3.8.3/lib/libpython3.8.so")
+    set(Python3_LIBRARY "/home/pyrad/procs/Python-3.8.3/lib")
+    set(PYTHON_EXECUTABLE "/home/pyrad/procs/Python-3.8.3/bin/python3")
+elseif ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_MSYS2")
+    set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0")
+    set(Python3_INCLUDE_DIRS "D:/procs/python38/include")
+    set(Python3_LIBRARIES "D:/procs/python38/python38.dll")
+    set(Python3_LIBRARY "D:/procs/python38")
+    set(PYTHON_EXECUTABLE "D:/procs/python38/python.exe")
+else()
+    MESSAGE(STATUS "[PYRAD] Currently (2023-10-02) DISTINGUISHED_NICKNAME must be the following.")
+    MESSAGE(STATUS "[PYRAD]   (1) Asus_Win7_MSYS2")
+    MESSAGE(STATUS "[PYRAD]   (2) Asus_Win7_VBox_OpenSUSE")
+    MESSAGE(STATUS "[PYRAD]   (3) Asus_Win7_VBox_Ubuntu_20_04_LTS")
+    MESSAGE(FATAL_ERROR "[PYRAD] Unknown system, because DISTINGUISHED_NICKNAME is not one of the above values.")
+endif()
+MESSAGE(STATUS "[PYRAD] MY_BOOST_HOME_DIR is set to: ${MY_BOOST_HOME_DIR}")
+
+# In case environmental variable MINGW is not defined on Linux platform
+if (DEFINED MINGW)
 	MESSAGE(STATUS "[PYRAD] MinGW variable defined!")
 else()
 	MESSAGE(STATUS "[PYRAD] MinGW variable not defined!")
     set(MINGW 0)
 endif()
 
-if (DEFINED ENV{DISTINGUISHED_NICKNAME})
-    MESSAGE(STATUS "[PYRAD] A customized env variable DISTINGUISHED_NICKNAME is defined to distinguish host machines!")
-    MESSAGE(STATUS "[PYRAD] DISTINGUISHED_NICKNAME = $ENV{DISTINGUISHED_NICKNAME}")
-    if ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_VBox_Ubuntu_20_04_LTS")
-	    set(MY_BOOST_HOME_DIR /home/pyrad/procs/boost_1_73_0)
-    endif()
-else()
-    MESSAGE(FATAL_ERROR "[PYRAD] DISTINGUISHED_NICKNAME must be set to distinguish host machines!")
-endif()
-
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows" AND ${MINGW} EQUAL 1)
 	MESSAGE(STATUS "[PYRAD] Windows MinGW system!")
 	MESSAGE(STATUS "[PYRAD] Assume current is MSYS2")
-	set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0")
+    #set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0")
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     MESSAGE(STATUS "[PYRAD] Linux system!")
-    set(MY_BOOST_HOME_DIR /home/pyrad/procs/boost_1_73_0)
+    #set(MY_BOOST_HOME_DIR /home/pyrad/procs/boost_1_73_0)
 elseif(${UNIX} STREQUAL "Unix")
 	MESSAGE(STATUS "[PYRAD] Unix system!")
-	set(MY_BOOST_HOME_DIR /home/pyrad/procs/boost_1_73_0)
+    #set(MY_BOOST_HOME_DIR /home/pyrad/procs/boost_1_73_0)
 else()
     MESSAGE(FATAL_ERROR "[PYRAD] Unknown system, can't compile, exit!")
 endif()

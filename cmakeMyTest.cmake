@@ -61,6 +61,18 @@ foreach( cur_val ${QueryKeyList})
     MESSAGE(STATUS "[PYRAD] [QueryKeyList]  ${cur_val} : ${qval}")
 endforeach()
 
+#set(mymingwval $<IF:<DEFINED ENV{MINGW}>,1,0>)
+#set(mymingwval $<IF:<DEFINED ENV{MINGW}>,1,0>)
+#MESSAGE(STATUS "[PYRAD] mymingwval: ${mymingwval}")
+#
+#macro(ternary var boolean value1 value2)
+#    set(${var} $<${${boolean}}:${value1}>$<$<NOT:${${boolean}}>:${value2}>)
+#endmacro()
+#
+#set(mybool 0)
+#ternary(myvar mybool hello world)
+#MESSAGE(STATUS "[PYRAD] myvar: ${myvar}")
+
 
 # Set Python3_ROOT_DIR if Python is installed in a non-system path
 #set(Python3_ROOT_DIR "D:/procs/python38")
