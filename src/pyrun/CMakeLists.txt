@@ -100,7 +100,7 @@ target_include_directories(${BPY_run}
 # Boost.Python still needs python library, set it accoordingly.
 set(boost_pylib "unknown_placeholder")
 if ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_VBox_Ubuntu_20_04_LTS")
-    set(boost_pylib "unknown_placeholder")
+    set(boost_pylib "${BOOST_LIBRARYDIR}/libboost_python38.so")
 elseif ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_MSYS2")
     set(boost_pylib "${BOOST_LIBRARYDIR}/libboost_python38-mgw12-mt-x64-1_83.dll" "${Python3_LIBRARIES}")
 else()
