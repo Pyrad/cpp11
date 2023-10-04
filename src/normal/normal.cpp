@@ -17,6 +17,8 @@
 #include <boost/any.hpp>
 #include <boost/shared_ptr.hpp>
 #include <memory>
+#include <array>
+
 
 #include <boost/math/special_functions/relative_difference.hpp>
 #include <boost/math/special_functions/next.hpp>

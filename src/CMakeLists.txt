@@ -142,7 +142,9 @@ if ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_VBox_Ubuntu_20_04_LTS")
     set(Python3_LIBRARY "/home/pyrad/procs/Python-3.8.3/lib")
     set(PYTHON_EXECUTABLE "/home/pyrad/procs/Python-3.8.3/bin/python3")
 elseif ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_MSYS2")
-    set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0")
+    #set(MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0")
+    # (2023-10-04) Start to use boost_1_83_0 from today on
+    set(MY_BOOST_HOME_DIR "D:/procs/boost_1_83_0")
     set(Python3_INCLUDE_DIRS "D:/procs/python38/include")
     set(Python3_LIBRARIES "D:/procs/python38/python38.dll")
     set(Python3_LIBRARY "D:/procs/python38")
@@ -185,7 +187,7 @@ else()
 endif()
 
 set(BOOST_ROOT ${MY_BOOST_HOME_DIR})
-set(BOOST_INCLUDEDIR ${MY_BOOST_HOME_DIR}/include)
+set(BOOST_INCLUDEDIR ${MY_BOOST_HOME_DIR}/include/boost-1_83)
 set(BOOST_LIBRARYDIR ${MY_BOOST_HOME_DIR}/lib)
 set(Boost_USE_STATIC_LIBS OFF)
 
@@ -193,19 +195,21 @@ set(Boost_USE_STATIC_LIBS OFF)
 # #set(Boost_USE_STATIC_LIBS ON)
 # #set(Boost_USE_STATIC_RUNTIME ON)
 
-# Try to analyze boost library and look for headers & libs required
-find_package(Boost 1.65.0 REQUIRED COMPONENTS filesystem regex)
+include_directories(${BOOST_INCLUDEDIR})
 
-#check if boost was found
-if(Boost_FOUND)
-	include_directories(${Boost_INCLUDE_DIRS})
-    message(STATUS "[PYRAD] boost library is found")
-	message(STATUS "[PYRAD] Boost_INCLUDE_DIRS = ${Boost_INCLUDE_DIRS}.")
-    message(STATUS "[PYRAD] Boost_LIBRARIES = ${Boost_LIBRARIES}.")
-    message(STATUS "[PYRAD] Boost_LIB_VERSION = ${Boost_LIB_VERSION}.")
-else()
-    message (FATAL_ERROR "Cannot find Boost")
-endif()
+# # Try to analyze boost library and look for headers & libs required
+# find_package(Boost 1.65.0 REQUIRED COMPONENTS filesystem regex)
+#
+# #check if boost was found
+# if(Boost_FOUND)
+# 	include_directories(${Boost_INCLUDE_DIRS})
+#     message(STATUS "[PYRAD] boost library is found")
+# 	message(STATUS "[PYRAD] Boost_INCLUDE_DIRS = ${Boost_INCLUDE_DIRS}.")
+#     message(STATUS "[PYRAD] Boost_LIBRARIES = ${Boost_LIBRARIES}.")
+#     message(STATUS "[PYRAD] Boost_LIB_VERSION = ${Boost_LIB_VERSION}.")
+# else()
+#     message (FATAL_ERROR "Cannot find Boost")
+# endif()
 
 # Create a list to append libraries for linking
 set(LIB_LIST "")
