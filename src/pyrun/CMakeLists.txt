@@ -114,4 +114,83 @@ target_link_libraries(${BPY_run} ${boost_pylib})
 target_link_directories(${BPY_run} PUBLIC ${BOOST_LIBRARYDIR})
 
 
+#-------------------------------------------------------------------------------------
+# A shared library named "winmingwrun"
+# 
+# Usage of this lib "winmingwrun"
+
+# (1) cd directory: ${REPO_ROOT}/build
+# (2) Invoke python
+# (3) >>> import ctypes
+#     >>> dl = ctypes.windll.LoadLibrary
+#     >>> lib = dl('./pyrun/winmingwrun.dll')
+#     >>> lib.run_normal()
+#
+#     Use windll for Windows API and functions
+#     compiled with __stdcall, i.e., ctypes.windll.LoadLibrary
+#
+# (4) Now (2024-01-01) the following error occurs, and I haven't found the root cause,
+# 
+#     Pyrad@SSEA MINGW64 /d/Gitee/cpp11/build
+#     $ python
+#     Python 3.10.5 (main, Jun 18 2022, 01:16:30)  [GCC 12.1.0 64 bit (AMD64)] on win32
+#     Type "help", "copyright", "credits" or "license" for more information.
+#     >>> import ctypes
+#     >>> dl = ctypes.windll.LoadLibrary
+#     >>> lib = dl('./pyrun/winmingwrun.dll')
+#     Traceback (most recent call last):
+#       File "<stdin>", line 1, in <module>
+#       File "D:/procs/msys64/mingw64/lib/python3.10/ctypes/__init__.py", line 452, in LoadLibrary
+#         return self._dlltype(name)
+#       File "D:/procs/msys64/mingw64/lib/python3.10/ctypes/__init__.py", line 374, in __init__
+#         self._handle = _dlopen(self._name, mode)
+#     FileNotFoundError: Could not find module 'D:\Gitee\cpp11\build\pyrun\winmingwrun.dll' (or one of its dependencies). Try using the full path with constructor syntax.
+#     >>>
+#
+# (5) !!! Need to fix the issue above !!!
+#-------------------------------------------------------------------------------------
+set(winmingwrun "winmingwrun")
+add_library(${winmingwrun} SHARED winmingwrun.cpp)
+set_target_properties(${winmingwrun} PROPERTIES PREFIX "")
+
+target_include_directories(${winmingwrun}
+        INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+        PRIVATE ${PROJECT_SOURCE_DIR}
+        )
+
+# Create a list to append libraries for winmingwrun to link
+set(LIB_LIST "")
+
+set(LIB_UTILITIES "utilities")
+# add_subdirectory(${LIB_UTILITIES})
+list(APPEND LIB_LIST ${LIB_UTILITIES})
+
+set(LIB_NORMAL "normal")
+# add_subdirectory(${LIB_NORMAL})
+list(APPEND LIB_LIST ${LIB_NORMAL})
+
+set(LIB_BOOSTTEST "boosttest")
+# add_subdirectory(${LIB_BOOSTTEST})
+list(APPEND LIB_LIST ${LIB_BOOSTTEST})
+
+set(LIB_CPPFEATURES "cppfeatures")
+# add_subdirectory(${LIB_CPPFEATURES})
+list(APPEND LIB_LIST ${LIB_CPPFEATURES})
+
+set(LIB_EFFECTIVE_MODERN_CPP "EffectiveModernCpp")
+# add_subdirectory(${LIB_EFFECTIVE_MODERN_CPP})
+list(APPEND LIB_LIST ${LIB_EFFECTIVE_MODERN_CPP})
+
+# Set link library
+target_link_libraries(${winmingwrun} PUBLIC ${LIB_LIST})
+
+# # Create a directory list to append path for linking
+set(LINK_DIRS "")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/normal/")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/boosttest/")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/EffectiveModernCpp/")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/cppfeatures/")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/pyrun/")
+target_link_directories(${winmingwrun} PUBLIC ${LINK_DIRS} )
+
 MESSAGE(STATUS "[PYRAD]   ------------- [SUB DIR ${CurSharedLibName}] [END] -------------") 
