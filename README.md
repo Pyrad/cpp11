@@ -444,9 +444,59 @@ MSCTF.dll => /c/Windows/system32/MSCTF.dll (0x7fefd3f0000)
 
 
 
+## How to call functions in dynamic library `winmingwrun.dll` after compiled?
 
+A shared library named `winmingwrun`, defined in directory `src/pyrun/CMakeLists.txt`
 
+Usage of this lib `winmingwrun`
 
+- cd build directory
+
+  ```shell
+  cd ${REPO_ROOT}/build
+  ```
+
+- Check which dynamic libs `winmingwrun.dll` depends on
+
+  ```shell
+  $ ldd ./pyrun/winmingwrun.dll
+             ntdll.dll => /c/Windows/SYSTEM32/ntdll.dll (0x777d0000)
+             kernel32.dll => /c/Windows/system32/kernel32.dll (0x77570000)
+             KERNELBASE.dll => /c/Windows/system32/KERNELBASE.dll (0x7fefd1c0000)
+             msvcrt.dll => /c/Windows/system32/msvcrt.dll (0x7fefe960000)
+             winmingwrun.dll => /d/Gitee/cpp11/build/pyrun/winmingwrun.dll (0x7fee0ec0000)
+             libboosttest.dll => not found
+             libcppfeatures.dll => not found
+             libgcc_s_seh-1.dll => /mingw64/bin/libgcc_s_seh-1.dll (?)
+             libstdc++-6.dll => /mingw64/bin/libstdc++-6.dll (?)
+             libEffectiveModernCpp.dll => not found
+             libnormal.dll => not found
+  ```
+
+- Invoke python, and use `os.add_dll_directory` to add search paths for these `*.dll` files
+
+  Note that the path format should be in Windows style
+
+  ```python
+  import os
+  os.add_dll_directory("D:\\Gitee\\cpp11\\build\\boosttest")
+  os.add_dll_directory("D:\\Gitee\\cpp11\\build\\cppfeatures")
+  os.add_dll_directory("D:\\Gitee\\cpp11\\build\\EffectiveModernCpp")
+  os.add_dll_directory("D:\\Gitee\\cpp11\\build\\normal")
+  ```
+
+  Note, in Windows, use path format as above.
+
+- Use ctypes to load "winmingwrun", then run the functions it loaded
+
+  ```python
+  import ctypes
+  dl = ctypes.windll.LoadLibrary
+  lib = dl('./pyrun/winmingwrun.dll')
+  lib.run_normal()
+  ```
+
+  Here `run_normal()` is one of the functions defined in (and linked to) `winmingwrun.dll`.
 
 
 
