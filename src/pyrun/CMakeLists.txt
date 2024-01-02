@@ -118,36 +118,39 @@ target_link_directories(${BPY_run} PUBLIC ${BOOST_LIBRARYDIR})
 # A shared library named "winmingwrun"
 # 
 # Usage of this lib "winmingwrun"
-
+#
 # (1) cd directory: ${REPO_ROOT}/build
-# (2) Invoke python
-# (3) >>> import ctypes
+# (2) Check which dynamic libs "winmingwrun.dll" depends on
+#     $ ldd ./pyrun/winmingwrun.dll
+#            ntdll.dll => /c/Windows/SYSTEM32/ntdll.dll (0x777d0000)
+#            kernel32.dll => /c/Windows/system32/kernel32.dll (0x77570000)
+#            KERNELBASE.dll => /c/Windows/system32/KERNELBASE.dll (0x7fefd1c0000)
+#            msvcrt.dll => /c/Windows/system32/msvcrt.dll (0x7fefe960000)
+#            winmingwrun.dll => /d/Gitee/cpp11/build/pyrun/winmingwrun.dll (0x7fee0ec0000)
+#            libboosttest.dll => not found
+#            libcppfeatures.dll => not found
+#            libgcc_s_seh-1.dll => /mingw64/bin/libgcc_s_seh-1.dll (?)
+#            libstdc++-6.dll => /mingw64/bin/libstdc++-6.dll (?)
+#            libEffectiveModernCpp.dll => not found
+#            libnormal.dll => not found
+#
+# (3) Invoke python, and use "os.add_dll_directory" to add search paths for these *.dll files
+#     Note that the path format should be in Windows style
+#
+#     >>> import os
+#     >>> # In Windows, use path format as below
+#     >>> os.add_dll_directory("D:\\Gitee\\cpp11\\build\\boosttest")
+#     >>> os.add_dll_directory("D:\\Gitee\\cpp11\\build\\cppfeatures")
+#     >>> os.add_dll_directory("D:\\Gitee\\cpp11\\build\\EffectiveModernCpp")
+#     >>> os.add_dll_directory("D:\\Gitee\\cpp11\\build\\normal")
+#
+# (4) Use ctypes to load "winmingwrun", then run the functions it loaded
+#
+#     >>> import ctypes
 #     >>> dl = ctypes.windll.LoadLibrary
 #     >>> lib = dl('./pyrun/winmingwrun.dll')
 #     >>> lib.run_normal()
 #
-#     Use windll for Windows API and functions
-#     compiled with __stdcall, i.e., ctypes.windll.LoadLibrary
-#
-# (4) Now (2024-01-01) the following error occurs, and I haven't found the root cause,
-# 
-#     Pyrad@SSEA MINGW64 /d/Gitee/cpp11/build
-#     $ python
-#     Python 3.10.5 (main, Jun 18 2022, 01:16:30)  [GCC 12.1.0 64 bit (AMD64)] on win32
-#     Type "help", "copyright", "credits" or "license" for more information.
-#     >>> import ctypes
-#     >>> dl = ctypes.windll.LoadLibrary
-#     >>> lib = dl('./pyrun/winmingwrun.dll')
-#     Traceback (most recent call last):
-#       File "<stdin>", line 1, in <module>
-#       File "D:/procs/msys64/mingw64/lib/python3.10/ctypes/__init__.py", line 452, in LoadLibrary
-#         return self._dlltype(name)
-#       File "D:/procs/msys64/mingw64/lib/python3.10/ctypes/__init__.py", line 374, in __init__
-#         self._handle = _dlopen(self._name, mode)
-#     FileNotFoundError: Could not find module 'D:\Gitee\cpp11\build\pyrun\winmingwrun.dll' (or one of its dependencies). Try using the full path with constructor syntax.
-#     >>>
-#
-# (5) !!! Need to fix the issue above !!!
 #-------------------------------------------------------------------------------------
 set(winmingwrun "winmingwrun")
 add_library(${winmingwrun} SHARED winmingwrun.cpp)
