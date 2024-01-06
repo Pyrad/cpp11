@@ -82,36 +82,37 @@ target_link_libraries(${PyMod_cpp11runtest} ${Python3_LIBRARIES})
 target_link_directories(${PyMod_cpp11runtest} PUBLIC ${Python3_LIBRARY})
 
 
-
-# A shared library named "bpyrun", which I intended to build it as a library to be imported
-# directly in Python.
-# Though it can be compiled and linked successfully, it failed to be imported in Python on
-# MSYS2, Windows platform, I still haven't figured out why... (2023-10-04)
-set(BPY_run "bpyrun")
-add_library(${BPY_run} SHARED bpyrun.cpp)
-set_target_properties(${BPY_run} PROPERTIES PREFIX "")
-target_include_directories(${BPY_run}
-        INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-        PRIVATE ${BOOST_INCLUDEDIR}
-        PRIVATE ${Python3_INCLUDE_DIRS}
-        PRIVATE ${PROJECT_SOURCE_DIR}
-        )
-
-# Boost.Python still needs python library, set it accoordingly.
-set(boost_pylib "unknown_placeholder")
-if ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_VBox_Ubuntu_20_04_LTS")
-    set(boost_pylib "${BOOST_LIBRARYDIR}/libboost_python38.so")
-elseif ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_MSYS2")
-    set(boost_pylib "${BOOST_LIBRARYDIR}/libboost_python38-mgw12-mt-x64-1_83.dll" "${Python3_LIBRARIES}")
-else()
-    set(boost_pylib "unknown_placeholder")
-endif()
-
-#set(boost_pylib "${BOOST_LIBRARYDIR}/libboost_python36-mgw12-mt-x64-1_79.dll")
-#set(boost_pylib "${BOOST_LIBRARYDIR}/libboost_python38-mgw12-mt-x64-1_83.dll")
-
-target_link_libraries(${BPY_run} ${boost_pylib})
-target_link_directories(${BPY_run} PUBLIC ${BOOST_LIBRARYDIR})
+#     # Temporarily remove lib "bpyrun" from the source, 2024-01-06 15:42
+#     
+#     # A shared library named "bpyrun", which I intended to build it as a library to be imported
+#     # directly in Python.
+#     # Though it can be compiled and linked successfully, it failed to be imported in Python on
+#     # MSYS2, Windows platform, I still haven't figured out why... (2023-10-04)
+#     set(BPY_run "bpyrun")
+#     add_library(${BPY_run} SHARED bpyrun.cpp)
+#     set_target_properties(${BPY_run} PROPERTIES PREFIX "")
+#     target_include_directories(${BPY_run}
+#             INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+#             PRIVATE ${BOOST_INCLUDEDIR}
+#             PRIVATE ${Python3_INCLUDE_DIRS}
+#             PRIVATE ${PROJECT_SOURCE_DIR}
+#             )
+#     
+#     # Boost.Python still needs python library, set it accoordingly.
+#     set(boost_pylib "unknown_placeholder")
+#     if ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_VBox_Ubuntu_20_04_LTS")
+#         set(boost_pylib "${BOOST_LIBRARYDIR}/libboost_python38.so")
+#     elseif ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_MSYS2")
+#         set(boost_pylib "${BOOST_LIBRARYDIR}/libboost_python38-mgw12-mt-x64-1_83.dll" "${Python3_LIBRARIES}")
+#     else()
+#         set(boost_pylib "unknown_placeholder")
+#     endif()
+#     
+#     #set(boost_pylib "${BOOST_LIBRARYDIR}/libboost_python36-mgw12-mt-x64-1_79.dll")
+#     #set(boost_pylib "${BOOST_LIBRARYDIR}/libboost_python38-mgw12-mt-x64-1_83.dll")
+#     
+#     target_link_libraries(${BPY_run} ${boost_pylib})
+#     target_link_directories(${BPY_run} PUBLIC ${BOOST_LIBRARYDIR})
 
 
 #-------------------------------------------------------------------------------------
