@@ -50,6 +50,15 @@ target_include_directories(${CurSharedLibName}
 target_link_libraries(${CurSharedLibName} ${Python3_LIBRARIES})
 target_link_directories(${CurSharedLibName} PUBLIC ${Python3_LIBRARY})
 
+# Copy Python run script from source dir to build dir (2024-01-06)
+# Note here CMAKE_SOURCE_DIR is ${GIT_REPO_ROOT}/src, and CMAKE_CURRENT_BINARY_DIR
+# is ${GIT_REPO_ROOT}/build/pyrun
+add_custom_command(TARGET ${CurSharedLibName} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    ${CMAKE_SOURCE_DIR}/pyrun/run.py
+    ${CMAKE_CURRENT_BINARY_DIR}/run.py)
+
+
 # After compiled, when to run, remember set PATH (on Windows) or LIBRARA_PATH (on linux)
 # to make sure this shared object after compiled can find the python38.dll it needs.
 # 
