@@ -1,6 +1,6 @@
 import os
 
-# In Windows, use path format as below
+# On Windows, use path format as below
 os.add_dll_directory("D:/Gitee/cpp11/build/boosttest")
 os.add_dll_directory("D:/Gitee/cpp11/build/cppfeatures")
 os.add_dll_directory("D:/Gitee/cpp11/build/EffectiveModernCpp")
