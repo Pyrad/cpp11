@@ -51,6 +51,9 @@ bool run_python_script() {
 #endif // 0
 
 #if 1
+        // 2024-01-06 21:52
+        // Refer to the following URL to see how to read a file into a string.
+        // https://www.delftstack.com/howto/cpp/read-file-into-string-cpp/
         std::ifstream infile(fname);
         if (infile.is_open()) {
             std::ostringstream oss;

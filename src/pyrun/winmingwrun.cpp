@@ -17,10 +17,10 @@
 // #include "../normal/maintest.hpp"
 // #include "./pyrun.hpp"
 
-// // ------------------------------------------------------
-// // The following header files are included conditionally
-// // based on the macros defined in CMakeLists.txt
-// // ------------------------------------------------------
+// ------------------------------------------------------
+// The following header files are included conditionally
+// based on the macros defined in CMakeLists.txt
+// ------------------------------------------------------
 #ifdef ENB_NORMAL
 #include "../normal/normal.hpp"
 #include "../normal/template.hpp"
