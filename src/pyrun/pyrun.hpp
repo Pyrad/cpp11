@@ -3,11 +3,13 @@
 
 namespace pyrun {
 
-void pytest();
+bool show_env_info();
 
-void test_all();
+bool run_python_script();
 
-} // end namespace pyrun
+bool pyrun();
+
+} // namespace pyrun
 
 #endif // _PYRUN_HPP
 

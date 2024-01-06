@@ -164,7 +164,7 @@ target_link_directories(${PyMod_cpp11runtest} PUBLIC ${Python3_LIBRARY})
 #-------------------------------------------------------------------------------------
 set(winmingwrun "winmingwrun")
 add_library(${winmingwrun} SHARED winmingwrun.cpp)
-set_target_properties(${winmingwrun} PROPERTIES PREFIX "")
+#set_target_properties(${winmingwrun} PROPERTIES PREFIX "")
 
 target_include_directories(${winmingwrun}
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
@@ -194,6 +194,9 @@ list(APPEND LIB_LIST ${LIB_CPPFEATURES})
 set(LIB_EFFECTIVE_MODERN_CPP "EffectiveModernCpp")
 # add_subdirectory(${LIB_EFFECTIVE_MODERN_CPP})
 list(APPEND LIB_LIST ${LIB_EFFECTIVE_MODERN_CPP})
+
+# This dyn lib also depends on "libpyrun.dll" in current dir
+list(APPEND LIB_LIST ${CurSharedLibName})
 
 # Link to Python3 library (.so)
 list(APPEND LIB_LIST ${Python3_LIBRARIES})

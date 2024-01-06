@@ -12,6 +12,7 @@
 #include "../cppfeatures/lvalue_rvalue.hpp"
 #include "../EffectiveModernCpp/effectiveModernCpp.hpp"
 #include "../normal/maintest.hpp"
+#include "./pyrun.hpp"
 
 // // ------------------------------------------------------
 // // The following header files are included conditionally
@@ -131,5 +132,17 @@ bool __stdcall run_pytest() {
 
     return true;
 } // run_pytest
+
+
+/**
+ * @brief Show basic environmental information
+ */
+bool __stdcall show_env_info() {
+    return pyrun::show_env_info();
+} // show_env_info
+
+bool __stdcall run_python_script() {
+    return pyrun::run_python_script();
+} // run_python_script
 
 

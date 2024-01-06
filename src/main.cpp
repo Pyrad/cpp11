@@ -84,12 +84,12 @@ int main() {
     effective_mordern_cpp::test_all();
 #endif // ENB_EFFECTIVE_MODERN_
 
-    std::cout << "Running before ENB_PYRUN_CPP\n";
 #ifdef ENB_PYRUN_CPP
+    std::cout << "Running before ENB_PYRUN_CPP\n";
     std::cout << "Running ENB_PYRUN_CPP\n";
-    pyrun::test_all();
-#endif // ENB_PYRUN_CPP
+    pyrun::pyrun();
     std::cout << "Running after ENB_PYRUN_CPP\n";
+#endif // ENB_PYRUN_CPP
 
     std::cout << "\n\n---end of function main---\n" << std::endl;
 

@@ -12,4 +12,10 @@ extern "C" {
     __declspec(dllexport) bool __stdcall run_pytest();
 }
 
+extern "C" {
+    __declspec(dllexport) bool __stdcall show_env_info();
+    __declspec(dllexport) bool __stdcall run_python_script();
+}
+
+
 #endif // _WINMINGWRUN_HPP
