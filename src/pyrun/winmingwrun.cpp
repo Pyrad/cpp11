@@ -5,36 +5,44 @@
 
 #include <Python.h>
 #include <iostream>
+#include <stdio.h>
 
-#include "../normal/normal.hpp"
-#include "../normal/template.hpp"
-#include "../boosttest/boosttest.hpp"
-#include "../cppfeatures/lvalue_rvalue.hpp"
-#include "../EffectiveModernCpp/effectiveModernCpp.hpp"
-#include "../normal/maintest.hpp"
-#include "./pyrun.hpp"
+#include "projectconfig.h"
+
+// #include "../normal/normal.hpp"
+// #include "../normal/template.hpp"
+// #include "../boosttest/boosttest.hpp"
+// #include "../cppfeatures/lvalue_rvalue.hpp"
+// #include "../EffectiveModernCpp/effectiveModernCpp.hpp"
+// #include "../normal/maintest.hpp"
+// #include "./pyrun.hpp"
 
 // // ------------------------------------------------------
 // // The following header files are included conditionally
 // // based on the macros defined in CMakeLists.txt
 // // ------------------------------------------------------
-// #ifdef ENB_NORMAL
-// #include "../normal/normal.hpp"
-// #endif // ENB_NORMAL
-// 
-// #ifdef ENB_BOOSTTEST
-// #include "../boosttest/boosttest.hpp"
-// #endif // ENB_BOOSTTEST
-// 
-// #ifdef ENB_CPP_FEATURES
-// #include "../cppfeatures/lvalue_rvalue.hpp"
-// #endif // ENB_CPP_FEATURES
-// 
-// #ifdef ENB_EFFECTIVE_MODERN_CPP
-// #include "../EffectiveModernCpp/effectiveModernCpp.hpp"
-// #endif // ENB_EFFECTIVE_MODERN_CPP
-// 
-// #include "../normal/maintest.hpp"
+#ifdef ENB_NORMAL
+#include "../normal/normal.hpp"
+#include "../normal/template.hpp"
+#endif // ENB_NORMAL
+
+#ifdef ENB_BOOSTTEST
+#include "../boosttest/boosttest.hpp"
+#endif // ENB_BOOSTTEST
+
+#ifdef ENB_CPP_FEATURES
+#include "../cppfeatures/lvalue_rvalue.hpp"
+#endif // ENB_CPP_FEATURES
+
+#ifdef ENB_EFFECTIVE_MODERN_CPP
+#include "../EffectiveModernCpp/effectiveModernCpp.hpp"
+#endif // ENB_EFFECTIVE_MODERN_CPP
+
+#include "../normal/maintest.hpp"
+
+#ifdef ENB_PYRUN_CPP
+#include "pyrun.hpp"
+#endif // ENB_PYRUN_CPP
 
 // ------------------------------------------------------
 // Headers included conditionally end
@@ -64,6 +72,7 @@ void show_compiled_msg(const bool success, const char *funcname) {
 int __stdcall run_normal() {
     bool run_success = false;
 
+#ifdef ENB_NORMAL
     namespace M = mainspace;
     namespace T = template_test;
 
@@ -74,6 +83,10 @@ int __stdcall run_normal() {
 
     // To indicate this code snippet has been activated
     run_success = true;
+#else
+    fprintf(stdout, "Warning: macro %s is not defined, code in function %s not "
+                    "compiled\n", "ENB_NORMAL", __FUNCTION__);
+#endif // ENB_NORMAL
 
     show_compiled_msg(run_success, "run_normal");
     return 0;
@@ -83,12 +96,17 @@ int __stdcall run_normal() {
 int __stdcall run_boosttest() {
     bool run_success = false;
 
+#ifdef ENB_BOOSTTEST
     namespace B = boost_test;
     B::test_boost_all();
     B::boost_normal_test_all();
 
     // To indicate this code snippet has been activated
     run_success = true;
+#else
+    fprintf(stdout, "Warning: macro %s is not defined, code in function %s not "
+                    "compiled\n", "ENB_BOOSTTEST", __FUNCTION__);
+#endif // ENB_BOOSTTEST
 
     show_compiled_msg(run_success, "run_boosttest");
     return 0;
@@ -98,10 +116,15 @@ int __stdcall run_boosttest() {
 int __stdcall run_lvalue_rvalue() {
     bool run_success = false;
 
+#ifdef ENB_CPP_FEATURES
     lvalue_rvalue::test_all();
 
     // To indicate this code snippet has been activated
     run_success = true;
+#else
+    fprintf(stdout, "Warning: macro %s is not defined, code in function %s not "
+                    "compiled\n", "ENB_CPP_FEATURES", __FUNCTION__);
+#endif // ENB_CPP_FEATURES
 
     show_compiled_msg(run_success, "run_lvalue_rvalue");
     return 0;
@@ -110,10 +133,15 @@ int __stdcall run_lvalue_rvalue() {
 int __stdcall run_effective_modern_cpp() {
     bool run_success = false;
 
+#ifdef ENB_EFFECTIVE_MODERN_CPP
     effective_mordern_cpp::test_all();
 
     // To indicate this code snippet has been activated
     run_success = true;
+#else
+    fprintf(stdout, "Warning: macro %s is not defined, code in function %s not "
+                    "compiled\n", "ENB_EFFECTIVE_MODERN_CPP", __FUNCTION__);
+#endif // ENB_EFFECTIVE_MODERN_CPP
 
     show_compiled_msg(run_success, "run_lvalue_rvalue");
     return 0;
@@ -138,11 +166,23 @@ bool __stdcall run_pytest() {
  * @brief Show basic environmental information
  */
 bool __stdcall show_env_info() {
+#ifdef ENB_PYRUN_CPP
     return pyrun::show_env_info();
+#else
+    fprintf(stdout, "Warning: macro %s is not defined, code in function %s not "
+                    "compiled\n", "ENB_PYRUN_CPP", __FUNCTION__);
+    return false;
+#endif // ENB_PYRUN_CPP
 } // show_env_info
 
 bool __stdcall run_python_script() {
+#ifdef ENB_PYRUN_CPP
     return pyrun::run_python_script();
+#else
+    fprintf(stdout, "Warning: macro %s is not defined, code in function %s not "
+                    "compiled\n", "ENB_PYRUN_CPP", __FUNCTION__);
+    return false;
+#endif // ENB_PYRUN_CPP
 } // run_python_script
 
 

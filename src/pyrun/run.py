@@ -13,6 +13,8 @@ import ctypes
 dl = ctypes.windll.LoadLibrary
 lib = dl('./pyrun/libwinmingwrun.dll')
 
-# Run C function "run_pytest()"
-lib.run_python_script()
-
+# Run C functions
+lib.run_normal();
+lib.run_boosttest();
+lib.run_lvalue_rvalue();
+lib.run_effective_modern_cpp();

@@ -166,10 +166,13 @@ set(winmingwrun "winmingwrun")
 add_library(${winmingwrun} SHARED winmingwrun.cpp)
 #set_target_properties(${winmingwrun} PROPERTIES PREFIX "")
 
+# Note, add ${PROJECT_BINARY_DIR} folder for searching header "projectconfig.h", there
+# are a few macros defined in it to enable building some functions.
 target_include_directories(${winmingwrun}
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
         PRIVATE ${Python3_INCLUDE_DIRS}
         PRIVATE ${PROJECT_SOURCE_DIR}
+        PRIVATE ${PROJECT_BINARY_DIR}
         )
 
 # Create a list to append libraries for winmingwrun to link

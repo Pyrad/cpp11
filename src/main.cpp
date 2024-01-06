@@ -89,6 +89,9 @@ int main() {
     std::cout << "Running ENB_PYRUN_CPP\n";
     pyrun::pyrun();
     std::cout << "Running after ENB_PYRUN_CPP\n";
+#else
+    fprintf(stdout, "Warning: macro %s is not defined, code in function %s not "
+                    "compiled\n", "ENB_PYRUN_CPP", __FUNCTION__);
 #endif // ENB_PYRUN_CPP
 
     std::cout << "\n\n---end of function main---\n" << std::endl;
