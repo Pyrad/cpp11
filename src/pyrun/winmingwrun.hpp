@@ -8,4 +8,8 @@ extern "C" {
     __declspec(dllexport) int __stdcall run_effective_modern_cpp();
 }
 
+extern "C" {
+    __declspec(dllexport) bool __stdcall run_pytest();
+}
+
 #endif // _WINMINGWRUN_HPP

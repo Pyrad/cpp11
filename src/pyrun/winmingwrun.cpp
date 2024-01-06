@@ -3,6 +3,8 @@
 // Must include this to find the following ENB_* macros
 // #include "../projectconfig.h"
 
+#include <Python.h>
+#include <iostream>
 
 #include "../normal/normal.hpp"
 #include "../normal/template.hpp"
@@ -115,4 +117,19 @@ int __stdcall run_effective_modern_cpp() {
     show_compiled_msg(run_success, "run_lvalue_rvalue");
     return 0;
 } // run_effective_modern_cpp
+
+
+/**
+ * @brief A simple function to test various Py_* functions
+ *
+ * @return True if success, false otherwise
+ */
+bool __stdcall run_pytest() {
+    Py_Initialize();
+    PyRun_SimpleString("print(\"Hello, world!\")");
+    Py_Finalize();
+
+    return true;
+} // run_pytest
+
 

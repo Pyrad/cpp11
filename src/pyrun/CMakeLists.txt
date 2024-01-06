@@ -158,6 +158,7 @@ set_target_properties(${winmingwrun} PROPERTIES PREFIX "")
 
 target_include_directories(${winmingwrun}
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+        PRIVATE ${Python3_INCLUDE_DIRS}
         PRIVATE ${PROJECT_SOURCE_DIR}
         )
 
@@ -184,6 +185,9 @@ set(LIB_EFFECTIVE_MODERN_CPP "EffectiveModernCpp")
 # add_subdirectory(${LIB_EFFECTIVE_MODERN_CPP})
 list(APPEND LIB_LIST ${LIB_EFFECTIVE_MODERN_CPP})
 
+# Link to Python3 library (.so)
+list(APPEND LIB_LIST ${Python3_LIBRARIES})
+
 # Set link library
 target_link_libraries(${winmingwrun} PUBLIC ${LIB_LIST})
 
@@ -194,6 +198,8 @@ list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/boosttest/")
 list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/EffectiveModernCpp/")
 list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/cppfeatures/")
 list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/pyrun/")
+list(APPEND LINK_DIRS ${Python3_LIBRARIES})
+
 target_link_directories(${winmingwrun} PUBLIC ${LINK_DIRS} )
 
 MESSAGE(STATUS "[PYRAD]   ------------- [SUB DIR ${CurSharedLibName}] [END] -------------") 
