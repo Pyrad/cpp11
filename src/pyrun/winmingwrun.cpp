@@ -9,14 +9,6 @@
 
 #include "projectconfig.h"
 
-// #include "../normal/normal.hpp"
-// #include "../normal/template.hpp"
-// #include "../boosttest/boosttest.hpp"
-// #include "../cppfeatures/lvalue_rvalue.hpp"
-// #include "../EffectiveModernCpp/effectiveModernCpp.hpp"
-// #include "../normal/maintest.hpp"
-// #include "./pyrun.hpp"
-
 // ------------------------------------------------------
 // The following header files are included conditionally
 // based on the macros defined in CMakeLists.txt
@@ -64,11 +56,9 @@ void show_compiled_msg(const bool success, const char *funcname) {
     }
 } // show_compiled_msg
 
-// int __stdcall run_normal() { return 0; }
-// int __stdcall run_boosttest() { return 0; }
-// int __stdcall run_lvalue_rvalue() { return 0; }
-// int __stdcall run_effective_modern_cpp() { return 0; }
-
+/**
+ * @brief Run normal test function
+ */
 int __stdcall run_normal() {
     bool run_success = false;
 
@@ -93,6 +83,9 @@ int __stdcall run_normal() {
 
 } // run_normal
 
+/**
+ * @brief Run boost test function
+ */
 int __stdcall run_boosttest() {
     bool run_success = false;
 
@@ -113,6 +106,9 @@ int __stdcall run_boosttest() {
 
 } // run_boosttest
 
+/**
+ * @brief Run L-value & R-value related function
+ */
 int __stdcall run_lvalue_rvalue() {
     bool run_success = false;
 
@@ -130,6 +126,9 @@ int __stdcall run_lvalue_rvalue() {
     return 0;
 } // run_lvalue_rvalue
 
+/**
+ * @brief Run function related to Effective Modern C++
+ */
 int __stdcall run_effective_modern_cpp() {
     bool run_success = false;
 
