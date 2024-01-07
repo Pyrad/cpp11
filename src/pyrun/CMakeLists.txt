@@ -11,9 +11,9 @@ MESSAGE(STATUS "[PYRAD]   CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR
 # set(Python3_LIBRARY "D:/procs/python38")
 # set(PYTHON_EXECUTABLE "D:/procs/python38/python.exe")
 # 
-# if (DEFINED ENV{DISTINGUISHED_NICKNAME})
-#     MESSAGE(STATUS "[PYRAD]    A customized env variable DISTINGUISHED_NICKNAME is defined to distinguish host machines!")
-#     if ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_VBox_Ubuntu_20_04_LTS")
+# if (DEFINED ENV{DEV_NICKNAME})
+#     MESSAGE(STATUS "[PYRAD]    A customized env variable DEV_NICKNAME is defined to distinguish host machines!")
+#     if ($ENV{DEV_NICKNAME} STREQUAL "Asus_Win7_VBox_Ubuntu_20_04_LTS")
 #         # For Ubuntu 20.04 LTS installed on VirtualBox of Windows 7 (Asus desktop)
 #         set(Python3_INCLUDE_DIRS "/home/pyrad/procs/Python-3.8.3/include/python3.8")
 #         set(Python3_LIBRARIES "/home/pyrad/procs/Python-3.8.3/lib/libpython3.8.so")
@@ -21,7 +21,7 @@ MESSAGE(STATUS "[PYRAD]   CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR
 #         set(PYTHON_EXECUTABLE "/home/pyrad/procs/Python-3.8.3/bin/python3")
 #     endif()
 # else()
-#     MESSAGE(FATAL_ERROR "[PYRAD]    DISTINGUISHED_NICKNAME must be set to distinguish host machines!")
+#     MESSAGE(FATAL_ERROR "[PYRAD]    DEV_NICKNAME must be set to distinguish host machines!")
 # endif()
 
 # Following variables are set in src/CMakeLists.txt
@@ -109,9 +109,9 @@ target_link_directories(${PyMod_cpp11runtest} PUBLIC ${Python3_LIBRARY})
 #     
 #     # Boost.Python still needs python library, set it accoordingly.
 #     set(boost_pylib "unknown_placeholder")
-#     if ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_VBox_Ubuntu_20_04_LTS")
+#     if ($ENV{DEV_NICKNAME} STREQUAL "Asus_Win7_VBox_Ubuntu_20_04_LTS")
 #         set(boost_pylib "${BOOST_LIBRARYDIR}/libboost_python38.so")
-#     elseif ($ENV{DISTINGUISHED_NICKNAME} STREQUAL "Asus_Win7_MSYS2")
+#     elseif ($ENV{DEV_NICKNAME} STREQUAL "Asus_Win7_MSYS2")
 #         set(boost_pylib "${BOOST_LIBRARYDIR}/libboost_python38-mgw12-mt-x64-1_83.dll" "${Python3_LIBRARIES}")
 #     else()
 #         set(boost_pylib "unknown_placeholder")
