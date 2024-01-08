@@ -1,7 +1,6 @@
 # cpp11
+
 A repository for testing various features in CPP (c98, c11, and so on)
-
-
 
 ## Note: !!! Always Keeping 2 Repositories Same !!!
 
@@ -30,6 +29,36 @@ origin  git@gitee.com:pyrad/cpp11.git (push)
 origin  git@github.com:Pyrad/cpp11.git (push)
 ```
 
+What if to change fetch origin to another one instead of current one?
+
+For example, current fetch origin is `git@github.com:Pyrad/cpp.git`, but I'd like to change the fetch origin to `git@gitee.com:pyrad/cpp11.git` instead.
+
+```shell
+$ git remote -v
+origin  git@github.com:Pyrad/cpp11.git (fetch)
+origin  git@github.com:Pyrad/cpp11.git (push)
+
+$ git remote set-url --add origin git@gitee.com:pyrad/cpp11.git
+
+$ git remote -v
+origin  git@github.com:Pyrad/cpp11.git (fetch)
+origin  git@github.com:Pyrad/cpp11.git (push)
+origin  git@gitee.com:pyrad/cpp11.git (push)
+
+$ git remote set-url --delete origin git@github.com:Pyrad/cpp11.git
+
+$ g remote -v
+origin  git@gitee.com:pyrad/cpp11.git (fetch)
+origin  git@gitee.com:pyrad/cpp11.git (push)
+
+$ git remote set-url --add origin git@github.com:Pyrad/cpp11.git
+
+$ git remote -v
+origin  git@gitee.com:pyrad/cpp11.git (fetch)
+origin  git@gitee.com:pyrad/cpp11.git (push)
+origin  git@github.com:Pyrad/cpp11.git (push)
+```
+
 
 
 ## Dependencies
@@ -37,8 +66,6 @@ origin  git@github.com:Pyrad/cpp11.git (push)
 Currently only it only depends on`boost` library.
 
 - `boost` library
-
-
 
 ## Set include paths for header files
 
@@ -67,8 +94,6 @@ After setting it, now we could just use the directive below to include a header 
 #include "utilities/utilities.hpp"
 ```
 
-
-
 ## How to build?
 
 ### Build as usual
@@ -76,31 +101,26 @@ After setting it, now we could just use the directive below to include a header 
 - Create a directory named `build` in current folder, then change directory to `build` just created
 
 - Run CMake to generate Makefile
-
+  
   ```bash
   $ cmake -G Ninja ../src -DCMAKE_BUILD_TYPE=Release
   ```
 
-  
-
   If you want to generate `compile_commands.json` for editor's completion plugin, add option `-DCMAKE_EXPORT_COMPILE_COMMANDS=1`
 
-  ```bash
-  $ cmake -G Ninja ../src -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=1
-  ```
+```bash
+$ cmake -G Ninja ../src -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+```
 
   More about `compile_commands.json`, refer to [**clangd**](https://clangd.llvm.org/installation)
 
-  
-
 - Make
-
+  
   ```bash
   $ cmake --build .
   ```
 
 - Since currently I set the target name as `mymainrun`, so after compilation, a binary named `mymainrun` is created.
-
 
 ### Build with option settings in command line
 
@@ -128,9 +148,6 @@ After setting it in `CMakeList.txt`, it should be defined in a configure file (h
 
 Thus it can be defined when compiling.
 
-
-
-
 ## Dynamic Linkage
 
 In order to run the executables as expect without the error as below, some settings must be set.
@@ -139,8 +156,6 @@ In order to run the executables as expect without the error as below, some setti
 Pyrad@SSEA MINGW64 /d/Gitee/cpp11 $ ./build/mymainrun.exe
 D:/Gitee/cpp11/build/mymainrun.exe: error while loading shared libraries: libEffectiveModernCpp.dll: cannot open shared object file: No such file or directory
 ```
-
-
 
 ### 1 Linking setting in `CMakeList.txt` for each module
 
@@ -153,8 +168,6 @@ add_library(EffectiveModernCpp SHARED
     ...
     )
 ```
-
-
 
 ### 2 Linking setting in `CMakeList.txt` for top
 
@@ -189,13 +202,9 @@ MESSAGE(STATUS "[PYRAD] INC_DIRS = ${INC_DIRS}")
 target_include_directories(${MY_EXEC_NAME} PUBLIC ${INC_DIRS})
 ```
 
-
-
 ### 3 Build
 
 Build as usual, which is mentioned in the 2nd part.
-
-
 
 ### 4 Running settings
 
@@ -282,8 +291,6 @@ Pyrad@SSEA MINGW64 /d/Gitee/cpp11 $ ldd ./build/mymainrun.exe
         libnormal.dll => /d/Gitee/cpp11/build/normal/libnormal.dll (0x7fed3a30000)
 ```
 
-
-
 - **Linux**
 
 Variable `LD_LIBRARY_PATH` should set to include the paths for those shared libraries,
@@ -296,8 +303,6 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/d/Gitee/cpp11/build/normal"
 
 Then it's OK to run it as usual.
 
-
-
 ## How to build with Python library?
 
 In MSYS2 environment, take folder `pyrun` as an example
@@ -307,8 +312,6 @@ In MSYS2 environment, take folder `pyrun` as an example
 This means it will be compiled to a shared object to link to a Python library.
 
 In this project, we create `pyrun` folder, and link all the objects compiled to a Python library.
-
-
 
 ### 2 Setup `CMakeLists.txt` file
 
@@ -343,8 +346,6 @@ Next we notify `cmake` that we want to create a target as shared object, whose s
 Next we should notify compiler where to find the Python headers, for example, `Python.h`. Here we add `Python3_INCLUDE_DIRS` as include path by command `target_include_directories`.
 
 Then we let `cmake` aware that which Python library to link, and where to find it, we achieve this by using `target_link_libraries` and `target_link_directories` separately.
-
-
 
 ### 3 Set `PATH` or `LD_LIBRARY_PATH` variables
 
@@ -442,8 +443,6 @@ IMM32.DLL => /c/Windows/system32/IMM32.DLL (0x7fefd1e0000)
 MSCTF.dll => /c/Windows/system32/MSCTF.dll (0x7fefd3f0000)
 ```
 
-
-
 ## How to call functions in dynamic library `winmingwrun.dll` after compiled?
 
 A shared library named `winmingwrun`, defined in directory `src/pyrun/CMakeLists.txt`
@@ -451,13 +450,13 @@ A shared library named `winmingwrun`, defined in directory `src/pyrun/CMakeLists
 Usage of this lib `winmingwrun`
 
 - cd build directory
-
+  
   ```shell
   cd ${REPO_ROOT}/build
   ```
 
 - Check which dynamic libs `winmingwrun.dll` depends on
-
+  
   ```shell
   $ ldd ./pyrun/winmingwrun.dll
              ntdll.dll => /c/Windows/SYSTEM32/ntdll.dll (0x777d0000)
@@ -474,9 +473,9 @@ Usage of this lib `winmingwrun`
   ```
 
 - Invoke python, and use `os.add_dll_directory` to add search paths for these `*.dll` files
-
+  
   Note that the path format should be in Windows style
-
+  
   ```python
   import os
   os.add_dll_directory("D:\\Gitee\\cpp11\\build\\boosttest")
@@ -484,27 +483,16 @@ Usage of this lib `winmingwrun`
   os.add_dll_directory("D:\\Gitee\\cpp11\\build\\EffectiveModernCpp")
   os.add_dll_directory("D:\\Gitee\\cpp11\\build\\normal")
   ```
-
+  
   Note, in Windows, use path format as above.
 
 - Use ctypes to load "winmingwrun", then run the functions it loaded
-
+  
   ```python
   import ctypes
   dl = ctypes.windll.LoadLibrary
   lib = dl('./pyrun/winmingwrun.dll')
   lib.run_normal()
   ```
-
+  
   Here `run_normal()` is one of the functions defined in (and linked to) `winmingwrun.dll`.
-
-
-
-
-
-
-
-
-
-
-
