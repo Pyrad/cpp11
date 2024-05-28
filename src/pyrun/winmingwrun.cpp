@@ -59,7 +59,7 @@ void show_compiled_msg(const bool success, const char *funcname) {
 /**
  * @brief Run normal test function
  */
-int __stdcall run_normal() {
+int MY_STD_CALL_CONVENTION run_normal() {
     bool run_success = false;
 
 #ifdef ENB_NORMAL
@@ -86,7 +86,7 @@ int __stdcall run_normal() {
 /**
  * @brief Run boost test function
  */
-int __stdcall run_boosttest() {
+int MY_STD_CALL_CONVENTION run_boosttest() {
     bool run_success = false;
 
 #ifdef ENB_BOOSTTEST
@@ -109,7 +109,7 @@ int __stdcall run_boosttest() {
 /**
  * @brief Run L-value & R-value related function
  */
-int __stdcall run_lvalue_rvalue() {
+int MY_STD_CALL_CONVENTION run_lvalue_rvalue() {
     bool run_success = false;
 
 #ifdef ENB_CPP_FEATURES
@@ -129,7 +129,7 @@ int __stdcall run_lvalue_rvalue() {
 /**
  * @brief Run function related to Effective Modern C++
  */
-int __stdcall run_effective_modern_cpp() {
+int MY_STD_CALL_CONVENTION run_effective_modern_cpp() {
     bool run_success = false;
 
 #ifdef ENB_EFFECTIVE_MODERN_CPP
@@ -152,7 +152,7 @@ int __stdcall run_effective_modern_cpp() {
  *
  * @return True if success, false otherwise
  */
-bool __stdcall run_pytest() {
+bool MY_STD_CALL_CONVENTION run_pytest() {
     Py_Initialize();
     PyRun_SimpleString("print(\"Hello, world!\")");
     Py_Finalize();
@@ -164,7 +164,7 @@ bool __stdcall run_pytest() {
 /**
  * @brief Show basic environmental information
  */
-bool __stdcall show_env_info() {
+bool MY_STD_CALL_CONVENTION show_env_info() {
 #ifdef ENB_PYRUN_CPP
     return pyrun::show_env_info();
 #else
@@ -174,7 +174,7 @@ bool __stdcall show_env_info() {
 #endif // ENB_PYRUN_CPP
 } // show_env_info
 
-bool __stdcall run_python_script() {
+bool MY_STD_CALL_CONVENTION run_python_script() {
 #ifdef ENB_PYRUN_CPP
     return pyrun::run_python_script();
 #else
