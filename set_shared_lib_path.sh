@@ -41,24 +41,47 @@ S_temp_lib_arr=
 
 
 
-
-if [[ -z $DEV_NICKNAME ]]; then
+# Current DEV_NICKNAME allowed (2024-05-29)
+DEV_NICKNAME_LIST=(Asus_Win7_MSYS2 Asus_Win7_VBox_OpenSUSE Asus_Win7_VBox_Ubuntu_20_04_LTS LenovoXiaoXin_Win10_MSYS2)
+function show_err_msg_for_dev_nickname() {
+    declare -i cnt
+    cnt=0
+    arr=("$@")
 	echo "Environment variable DEV_NICKNAME must be set to one of the "
-	echo "followings according to different machines platforms"
-	echo "  (1) Asus_Win7_MSYS2"
-	echo "  (2) Asus_Win7_VBox_OpenSUSE"
-	echo "  (3) Asus_Win7_VBox_Ubuntu_20_04_LTS"
+    echo "followings according to different machines platforms"
+    for dname in "${arr[@]}"; do
+        cnt=$[$cnt+1]
+        echo "  ($cnt) $dname"
+    done
+}
+
+function check_right_dev_nickname() {
+    local curname=$1
+    shift
+    local -a arr=("$@")
+    local -i got=0
+    for dname in "${arr[@]}"; do
+        if [[ $curname = $dname ]]; then
+            got=1
+            break
+        fi
+    done
+
+    if [[ $got = 0 ]]; then
+        show_err_msg_for_dev_nickname "${arr[@]}"
+        return 22
+    fi
+}
+
+# Check environmental variable DEV_NICKNAME
+if [[ -z $DEV_NICKNAME ]]; then
+    show_err_msg_for_dev_nickname "${DEV_NICKNAME_LIST[@]}"
 	return 22
 fi
 
-if [[ $DEV_NICKNAME != "Asus_Win7_MSYS2" ]] && [[ $DEV_NICKNAME != "Asus_Win7_VBox_OpenSUSE" ]] && [[ $DEV_NICKNAME != "Asus_Win7_VBox_Ubuntu_20_04_LTS" ]]; then
-	echo "Environment variable DEV_NICKNAME must be one of the "
-	echo "followings according to different machines platforms"
-	echo "  (1) Asus_Win7_MSYS2"
-	echo "  (2) Asus_Win7_VBox_OpenSUSE"
-	echo "  (3) Asus_Win7_VBox_Ubuntu_20_04_LTS"
-	echo "Error: DEV_NICKNAME found is: $DEV_NICKNAME"
-	return 22
+check_right_dev_nickname $DEV_NICKNAME "${DEV_NICKNAME_LIST[@]}"
+if [[ $? != 0 ]]; then
+    return $?
 fi
 
 # Set Python3 & boost lib paths according to different machines
@@ -88,6 +111,18 @@ elif [[ $DEV_NICKNAME == "Asus_Win7_MSYS2" ]]; then
 	S_CUR_PYTHON_DYN_LIB_PATH="${S_MY_PYTHON3_HOME_DIR}"
 	S_CUR_PYTHON_DYN_LIB_1="$S_CUR_PYTHON_DYN_LIB_PATH/python.dll"
 	S_CUR_PYTHON_DYN_LIB_2="$S_CUR_PYTHON_DYN_LIB_PATH/python38.dll"
+elif [[ $DEV_NICKNAME == "LenovoXiaoXin_Win10_MSYS2" ]]; then
+    S_MY_BOOST_HOME_DIR="/d/procs/boost_1_79_0"
+    S_BOOST_INCLUDEDIR="${S_MY_BOOST_HOME_DIR}/include/boost-1_79"
+    S_BOOST_LIBRARYDIR="${S_MY_BOOST_HOME_DIR}/lib"
+	S_MY_PYTHON3_HOME_DIR="/d/procs/python311"
+    S_Python3_INCLUDE_DIRS="${S_MY_PYTHON3_HOME_DIR}/include"
+    S_Python3_LIBRARIES="${S_MY_PYTHON3_HOME_DIR}/python311.dll"
+    S_Python3_LIBRARY="${S_MY_PYTHON3_HOME_DIR}"
+    S_PYTHON_EXECUTABLE="${S_MY_PYTHON3_HOME_DIR}/python311.exe"
+	S_CUR_PYTHON_DYN_LIB_PATH="${S_MY_PYTHON3_HOME_DIR}"
+	S_CUR_PYTHON_DYN_LIB_1="$S_CUR_PYTHON_DYN_LIB_PATH/python.dll"
+	S_CUR_PYTHON_DYN_LIB_2="$S_CUR_PYTHON_DYN_LIB_PATH/python311.dll"
 elif [[ $DEV_NICKNAME == "Asus_Win7_VBox_OpenSUSE" ]]; then
     echo "Error: Python3 lib & boost lib paths have not been set for $DEV_NICKNAME yet"
 	return 22
@@ -136,7 +171,15 @@ fi
 # For now, only the following dynamic libs are needed when loading
 S_lib_array=("libcppfeatures.dll" "libEffectiveModernCpp.dll" "libpyrun.dll" "libnormal.dll" "libboosttest.dll")
 
-if [[ ! -z $TERM_PROGRAM ]] && [[ $TERM_PROGRAM == "Tabby" ]] && [[ ! -z $OS ]] && [[ $OS == "Windows_NT" ]] && [[ ! -z $OSTYPE ]] && [[ $OSTYPE == "msys" ]]; then
+# If current is Tabby terminal
+[[ ! -z $TERM_PROGRAM ]] && [[ $TERM_PROGRAM == "Tabby" ]] && IF_TABBY=1 || IF_TABBY=0
+# If current is Windows Terminal
+[[ ! -z $WT_SESSION ]] && IF_WTERM=1 || IF_WTERM=0
+# If current is Windows OS
+[[ ! -z $OS ]] && [[ $OS == "Windows_NT" ]] && [[ ! -z $OSTYPE ]] && IF_WIN=1 || IF_WIN=0
+[[ $OSTYPE == "msys" ]] && IF_MSYS=1 || IF_MSYS=0
+
+if ([[ $IF_TABBY = 1 ]] || [[ $IF_WTERM = 1 ]]) && [[ $IF_WIN = 1 ]] && [[ $IF_MSYS = 1 ]]; then
     # In Windows platform, using msys, and terminal is Tabby
     for S_ilib in ${S_lib_array[@]}; do
         S_ilib_path=`find "$S_build_dir_name" -type f -name "$S_ilib"`
