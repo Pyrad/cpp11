@@ -1,5 +1,4 @@
 #include "chapter5_item30.hpp"
-#include <cstdint>
 #include <stdio.h>
 
 namespace effective_mordern_cpp {

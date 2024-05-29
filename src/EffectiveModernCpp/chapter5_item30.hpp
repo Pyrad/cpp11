@@ -2,6 +2,7 @@
 #define EFFECTIVE_MODERN_CPP_CHAPTER5_ITEM30
 
 #include "../utilities/utilities.hpp"
+#include <cstdint>
 #include <cstddef>
 #include <utility>
 
