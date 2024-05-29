@@ -23,6 +23,12 @@ def run_on_Asus_Win7_MSYS2():
     lib.run_lvalue_rvalue();
     lib.run_effective_modern_cpp();
 
+def run_on_Asus_Win7_VBox_Ubuntu_20_04_LTS():
+    """
+    To run commands on Asus_Win7_VBox_Ubuntu_20_04_LTS
+    """
+    pass
+
 def run_main():
     # Get env dict
     edict = os.environ
@@ -35,6 +41,9 @@ def run_main():
     if edict[dname] == "Asus_Win7_MSYS2":
         run_on_Asus_Win7_MSYS2()
         print("Finished running Python function: run_on_Asus_Win7_MSYS2")
+    elif edict[dname] == "Asus_Win7_VBox_Ubuntu_20_04_LTS":
+        run_on_Asus_Win7_VBox_Ubuntu_20_04_LTS()
+        print("Finished running Python function: run_on_Asus_Win7_VBox_Ubuntu_20_04_LTS")
     else:
         print("Not a supported platform to run")
 
