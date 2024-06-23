@@ -38,6 +38,7 @@ MESSAGE(STATUS "[PYRAD]     PYTHON_EXECUTABLE = ${PYTHON_EXECUTABLE}")
 
 # This is the CMakeLists.txt file for folder pyrun
 add_library(${CurSharedLibName} SHARED pyrun.cpp)
+set_target_properties(${CurSharedLibName} PROPERTIES PREFIX "" SUFFIX ".pyd")
 
 # Remember INTERFACE means things that consumers 
 # require but the producer doesn't. 
@@ -81,15 +82,28 @@ add_custom_command(TARGET ${CurSharedLibName} POST_BUILD
 # as it can be used stand alone for Python import modules
 set(PyMod_cpp11runtest "cpp11runtest")
 add_library(${PyMod_cpp11runtest} SHARED cpp11runtest.cpp)
-set_target_properties(${PyMod_cpp11runtest} PROPERTIES PREFIX "")
+set_target_properties(${PyMod_cpp11runtest} PROPERTIES PREFIX "" SUFFIX ".pyd")
 target_include_directories(${PyMod_cpp11runtest}
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
         PRIVATE ${Python3_INCLUDE_DIRS}
         PRIVATE ${PROJECT_SOURCE_DIR}
+        PRIVATE ${PROJECT_BINARY_DIR}
         )
-target_link_libraries(${PyMod_cpp11runtest} ${Python3_LIBRARIES})
-target_link_directories(${PyMod_cpp11runtest} PUBLIC ${Python3_LIBRARY})
 
+
+# Set link library
+set(CUSTOM_LIB_LIST "utilities" "normal" "boosttest" "cppfeatures" "EffectiveModernCpp")
+
+# Create a directory list to append path for linking
+set(CUSTOM_LINK_DIRS "")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/normal/")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/boosttest/")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/EffectiveModernCpp/")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/cppfeatures/")
+list(APPEND LINK_DIRS "${PROJECT_BINARY_DIR}/pyrun/")
+
+target_link_libraries(${PyMod_cpp11runtest} ${Python3_LIBRARIES} ${CUSTOM_LIB_LIST})
+target_link_directories(${PyMod_cpp11runtest} PUBLIC ${Python3_LIBRARY} ${CUSTOM_LINK_DIRS})
 
 #     # Temporarily remove lib "bpyrun" from the source, 2024-01-06 15:42
 #     
@@ -164,7 +178,7 @@ target_link_directories(${PyMod_cpp11runtest} PUBLIC ${Python3_LIBRARY})
 #-------------------------------------------------------------------------------------
 set(winmingwrun "winmingwrun")
 add_library(${winmingwrun} SHARED winmingwrun.cpp)
-#set_target_properties(${winmingwrun} PROPERTIES PREFIX "")
+set_target_properties(${winmingwrun} PROPERTIES PREFIX "" SUFFIX ".pyd")
 
 # Note, add ${PROJECT_BINARY_DIR} folder for searching header "projectconfig.h", there
 # are a few macros defined in it to enable building some functions.

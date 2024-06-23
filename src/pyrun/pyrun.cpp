@@ -1,4 +1,5 @@
 #include "pyrun.hpp"
+// #include "pylifecycle.h"
 #include <Python.h>
 #include <iostream>
 #include <fstream>
@@ -24,6 +25,8 @@ bool show_env_info() {
 } // show_env_info
 
 bool run_python_script() {
+    Py_SetPythonHome((wchar_t*)L"D:/procs/msys64/mingw64");
+
     Py_Initialize();
     PyRun_SimpleString("print(\"===== Start running =====\")");
     show_env_info();
