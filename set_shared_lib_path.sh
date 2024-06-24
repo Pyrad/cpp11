@@ -98,7 +98,6 @@ if [[ $DEV_NICKNAME == "Asus_Win7_VBox_Ubuntu_20_04_LTS" ]]; then
 	S_CUR_PYTHON_DYN_LIB_1="${S_CUR_PYTHON_DYN_LIB_PATH}/libpython3.8.so"
 	S_CUR_PYTHON_DYN_LIB_2="${S_CUR_PYTHON_DYN_LIB_PATH}/libpython3.so"
 elif [[ $DEV_NICKNAME == "Asus_Win7_MSYS2" ]]; then
-    #set(S_MY_BOOST_HOME_DIR "D:/procs/boost_1_79_0")
     # (2023-10-04) Start to use boost_1_83_0 from today on
     S_MY_BOOST_HOME_DIR="/d/procs/boost_1_83_0"
     S_BOOST_INCLUDEDIR="${S_MY_BOOST_HOME_DIR}/include/boost-1_83"
@@ -116,14 +115,25 @@ elif [[ $DEV_NICKNAME == "LenovoXiaoXin_Win10_MSYS2" ]]; then
     S_MY_BOOST_HOME_DIR="/d/procs/boost_1_79_0"
     S_BOOST_INCLUDEDIR="${S_MY_BOOST_HOME_DIR}/include/boost-1_79"
     S_BOOST_LIBRARYDIR="${S_MY_BOOST_HOME_DIR}/lib"
-	S_MY_PYTHON3_HOME_DIR="/d/procs/python311"
-    S_Python3_INCLUDE_DIRS="${S_MY_PYTHON3_HOME_DIR}/include"
-    S_Python3_LIBRARIES="${S_MY_PYTHON3_HOME_DIR}/python311.dll"
-    S_Python3_LIBRARY="${S_MY_PYTHON3_HOME_DIR}"
-    S_PYTHON_EXECUTABLE="${S_MY_PYTHON3_HOME_DIR}/python311.exe"
-	S_CUR_PYTHON_DYN_LIB_PATH="${S_MY_PYTHON3_HOME_DIR}"
-	S_CUR_PYTHON_DYN_LIB_1="$S_CUR_PYTHON_DYN_LIB_PATH/python.dll"
-	S_CUR_PYTHON_DYN_LIB_2="$S_CUR_PYTHON_DYN_LIB_PATH/python311.dll"
+
+    # Setting up python (2024-06-24 14:21), using python provided by msys2
+	S_MY_MINGW64_HOME="/d/procs/msys64/mingw64"
+    S_Python3_INCLUDE_DIRS="${S_MY_MINGW64_HOME}/include/python3.11"
+    S_Python3_LIBRARY="${S_MY_MINGW64_HOME}/lib"
+    S_Python3_LIBRARIES="${S_MY_MINGW64_HOME}/lib/libpython3.11.dll.a"
+    S_PYTHON_EXECUTABLE="${S_MY_MINGW64_HOME}/bin/python"
+	S_CUR_PYTHON_DYN_LIB_PATH="${S_Python3_LIBRARY}"
+	S_CUR_PYTHON_DYN_LIB_1="${S_Python3_LIBRARIES}"
+	S_CUR_PYTHON_DYN_LIB_2=""
+
+	# S_MY_PYTHON3_HOME_DIR="/d/procs/python311"
+    # S_Python3_INCLUDE_DIRS="${S_MY_PYTHON3_HOME_DIR}/include"
+    # S_Python3_LIBRARIES="${S_MY_PYTHON3_HOME_DIR}/python311.dll"
+    # S_Python3_LIBRARY="${S_MY_PYTHON3_HOME_DIR}"
+    # S_PYTHON_EXECUTABLE="${S_MY_PYTHON3_HOME_DIR}/python311.exe"
+	# S_CUR_PYTHON_DYN_LIB_PATH="${S_MY_PYTHON3_HOME_DIR}"
+	# S_CUR_PYTHON_DYN_LIB_1="$S_CUR_PYTHON_DYN_LIB_PATH/python.dll"
+	# S_CUR_PYTHON_DYN_LIB_2="$S_CUR_PYTHON_DYN_LIB_PATH/python311.dll"
 elif [[ $DEV_NICKNAME == "Asus_Win7_VBox_OpenSUSE" ]]; then
     echo "Error: Python3 lib & boost lib paths have not been set for $DEV_NICKNAME yet"
 	return 22
