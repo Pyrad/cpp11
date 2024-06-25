@@ -41,6 +41,17 @@ def run_on_Asus_Win7_VBox_Ubuntu_20_04_LTS():
     """
     pass
 
+def run_on_LenovoXiaoXin_Win10_MSYS2_direct_import():
+    """
+    To run commands on LenovoXiaoXin_Win10_MSYS2
+    """
+    #os.add_dll_directory("D:/Gitee/cpp11/build/pyrun")
+    sys.path.append("D:/Pyrad/Gitee/cpp11/build/pyrun")
+    import cpp11runtest
+    cpp11runtest.run()
+    cpp11runtest.run_normal()
+    #pass
+
 def run_main():
     # Get env dict
     edict = os.environ
@@ -57,6 +68,9 @@ def run_main():
     elif edict[dname] == "Asus_Win7_VBox_Ubuntu_20_04_LTS":
         run_on_Asus_Win7_VBox_Ubuntu_20_04_LTS()
         print("Finished running Python function: run_on_Asus_Win7_VBox_Ubuntu_20_04_LTS")
+    elif edict[dname] == "LenovoXiaoXin_Win10_MSYS2":
+        run_on_LenovoXiaoXin_Win10_MSYS2_direct_import()
+        print("Finished running Python function: run_on_LenovoXiaoXin_Win10_MSYS2_direct_import")
     else:
         print("Not a supported platform to run")
 
