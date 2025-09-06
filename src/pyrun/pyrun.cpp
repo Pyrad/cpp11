@@ -7,6 +7,7 @@
 #include <string>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <cstdlib>
 
 namespace pyrun {
 
@@ -25,9 +26,37 @@ bool show_env_info() {
 } // show_env_info
 
 bool run_python_script() {
-    Py_SetPythonHome((wchar_t*)L"D:/procs/msys64/mingw64");
+    const std::string dev_nickname(getenv("DEV_NICKNAME"));
+    if (dev_nickname.empty()) {
+        fprintf(stdout, "DEV_NICKNAME does NOT exist\n");
+        return false;
+    }
+
+    if (dev_nickname == "Asus_Win7_MSYS2") {
+        fprintf(stdout, "Error: Platform not supported, DEV_NICKNAME is %s\n", dev_nickname.c_str());
+        return false;
+    } else if (dev_nickname == "Asus_Win7_VBox_Ubuntu_20_04_LTS") {
+        fprintf(stdout, "Error: Platform not supported, DEV_NICKNAME is %s\n", dev_nickname.c_str());
+        return false;
+    } else if (dev_nickname == "LenovoXiaoXin_Win10_MSYS2") {
+        fprintf(stdout, "Error: Platform not supported, DEV_NICKNAME is %s\n", dev_nickname.c_str());
+        return false;
+    } else if (dev_nickname == "Asus_tuf_gaming_b650m_plus_Win11_WSL_Ubuntu_24_04_LTS") {
+	// const char *pyhome = "/home/pyrad/proc/Python-3.13.7/";
+	const char *pyhome = "/usr/bin/";
+        fprintf(stdout, "INFO: Setting python home path to: %s\n", pyhome);
+        Py_SetPythonHome((wchar_t*) pyhome);
+        fprintf(stdout, "INFO: Python home path is set to: %s\n", pyhome);
+    } else {
+        fprintf(stdout, "Error: Unrecognized platform, DEV_NICKNAME is %s\n", dev_nickname.c_str());
+        return false;
+    }
+
+    // Py_SetPythonHome((wchar_t*)L"D:/procs/msys64/mingw64");
 
     Py_Initialize();
+    fprintf(stdout, "INFO: Python was initialized by function Py_Initialize()\n");
+
     PyRun_SimpleString("print(\"===== Start running =====\")");
     show_env_info();
 
