@@ -36,9 +36,21 @@ MESSAGE(STATUS "[PYRAD]     PYTHON_EXECUTABLE = ${PYTHON_EXECUTABLE}")
 #set(Python3_LIBRARY "/mingw64/bin")
 #set(PYTHON_EXECUTABLE "/mingw64/bin/python")
 
+set(SHARED_OBJ_SUFFIX ".so")
+if (${SYS_PLATFORM} STREQUAL "linux")
+  set(SHARED_OBJ_SUFFIX ".so")
+elseif (${SYS_PLATFORM} STREQUAL "windows")
+  set(SHARED_OBJ_SUFFIX ".pyd")
+else()
+  MESSAGE(FATAL_ERROR "[PYRAD]    DEV_NICKNAME must be set to distinguish host machines!")
+endif()
+
+MESSAGE(STATUS "[PYRAD]    Set SHARED_OBJ_SUFFIX to: ${SHARED_OBJ_SUFFIX}")
+
 # This is the CMakeLists.txt file for folder pyrun
 add_library(${CurSharedLibName} SHARED pyrun.cpp)
-set_target_properties(${CurSharedLibName} PROPERTIES PREFIX "" SUFFIX ".pyd")
+# set_target_properties(${CurSharedLibName} PROPERTIES PREFIX "" SUFFIX ".pyd")
+set_target_properties(${CurSharedLibName} PROPERTIES PREFIX "" SUFFIX ${SHARED_OBJ_SUFFIX})
 
 # Remember INTERFACE means things that consumers 
 # require but the producer doesn't. 
@@ -82,7 +94,8 @@ add_custom_command(TARGET ${CurSharedLibName} POST_BUILD
 # as it can be used stand alone for Python import modules
 set(PyMod_cpp11runtest "cpp11runtest")
 add_library(${PyMod_cpp11runtest} SHARED cpp11runtest.cpp)
-set_target_properties(${PyMod_cpp11runtest} PROPERTIES PREFIX "" SUFFIX ".pyd")
+# set_target_properties(${PyMod_cpp11runtest} PROPERTIES PREFIX "" SUFFIX ".pyd")
+set_target_properties(${PyMod_cpp11runtest} PROPERTIES PREFIX "" SUFFIX ${SHARED_OBJ_SUFFIX})
 target_include_directories(${PyMod_cpp11runtest}
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
         PRIVATE ${Python3_INCLUDE_DIRS}
@@ -178,7 +191,8 @@ target_link_directories(${PyMod_cpp11runtest} PUBLIC ${Python3_LIBRARY} ${CUSTOM
 #-------------------------------------------------------------------------------------
 set(winmingwrun "winmingwrun")
 add_library(${winmingwrun} SHARED winmingwrun.cpp)
-set_target_properties(${winmingwrun} PROPERTIES PREFIX "" SUFFIX ".pyd")
+# set_target_properties(${winmingwrun} PROPERTIES PREFIX "" SUFFIX ".pyd")
+set_target_properties(${winmingwrun} PROPERTIES PREFIX "" SUFFIX ${SHARED_OBJ_SUFFIX})
 
 # Note, add ${PROJECT_BINARY_DIR} folder for searching header "projectconfig.h", there
 # are a few macros defined in it to enable building some functions.

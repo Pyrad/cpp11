@@ -42,8 +42,9 @@ bool run_python_script() {
         fprintf(stdout, "Error: Platform not supported, DEV_NICKNAME is %s\n", dev_nickname.c_str());
         return false;
     } else if (dev_nickname == "Asus_tuf_gaming_b650m_plus_Win11_WSL_Ubuntu_24_04_LTS") {
-	// const char *pyhome = "/home/pyrad/proc/Python-3.13.7/";
-	const char *pyhome = "/usr/bin/";
+	// const char *pyhome = "/usr/bin/";
+	// const char *pyhome = "/home/pyrad/proc/Python-3.12.11";
+	const char *pyhome = "/home/pyrad/proc/Python-3.13.7/";
         fprintf(stdout, "INFO: Setting python home path to: %s\n", pyhome);
         Py_SetPythonHome((wchar_t*) pyhome);
         fprintf(stdout, "INFO: Python home path is set to: %s\n", pyhome);
