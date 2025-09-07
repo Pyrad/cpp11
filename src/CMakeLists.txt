@@ -166,6 +166,25 @@ elseif ($ENV{DEV_NICKNAME} STREQUAL "Asus_tuf_gaming_b650m_plus_Win11_WSL_Ubuntu
     # set(Python3_LIBRARY "${MY_PYTHON_HOME_DIR}/lib")
     # set(PYTHON_EXECUTABLE "${MY_PYTHON_HOME_DIR}/bin/python3")
 
+    # set(MY_PYTHON_HOME_DIR "/home/pyrad/proc/Python-3.12.4")
+    # set(Python3_INCLUDE_DIRS "${MY_PYTHON_HOME_DIR}/include/python3.12")
+    # set(Python3_LIBRARIES "${MY_PYTHON_HOME_DIR}/lib/libpython3.12.so")
+    # set(Python3_LIBRARY "${MY_PYTHON_HOME_DIR}/lib")
+    # set(PYTHON_EXECUTABLE "${MY_PYTHON_HOME_DIR}/bin/python3")
+
+    # set(MY_PYTHON_HOME_DIR "/home/pyrad/proc/Python-3.11.13")
+    # set(Python3_INCLUDE_DIRS "${MY_PYTHON_HOME_DIR}/include/python3.11")
+    # set(Python3_LIBRARIES "${MY_PYTHON_HOME_DIR}/lib/libpython3.11.so")
+    # set(Python3_LIBRARY "${MY_PYTHON_HOME_DIR}/lib")
+    # set(PYTHON_EXECUTABLE "${MY_PYTHON_HOME_DIR}/bin/python3")
+
+    # set(MY_PYTHON_HOME_DIR "/home/pyrad/proc/Python-3.10.18")
+    # set(Python3_INCLUDE_DIRS "${MY_PYTHON_HOME_DIR}/include/python3.10")
+    # set(Python3_LIBRARIES "${MY_PYTHON_HOME_DIR}/lib/libpython3.10.so")
+    # set(Python3_LIBRARY "${MY_PYTHON_HOME_DIR}/lib")
+    # set(PYTHON_EXECUTABLE "${MY_PYTHON_HOME_DIR}/bin/python3")
+
+
     # set(Python3_INCLUDE_DIRS "/usr/include/python3.12")
     # set(Python3_LIBRARIES "/usr/lib/x86_64-linux-gnu/libpython3.12.so.1.0")
     # set(Python3_LIBRARY "/usr/lib/python3.12")

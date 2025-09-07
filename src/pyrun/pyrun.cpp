@@ -42,11 +42,14 @@ bool run_python_script() {
         fprintf(stdout, "Error: Platform not supported, DEV_NICKNAME is %s\n", dev_nickname.c_str());
         return false;
     } else if (dev_nickname == "Asus_tuf_gaming_b650m_plus_Win11_WSL_Ubuntu_24_04_LTS") {
-	// const char *pyhome = "/usr/bin/";
-	// const char *pyhome = "/home/pyrad/proc/Python-3.12.11";
-	const char *pyhome = "/home/pyrad/proc/Python-3.13.7/";
+        // const char *pyhome = "/usr/bin/";
+        const char *pyhome = "/home/pyrad/proc/Python-3.13.7/";
+        // const char *pyhome = "/home/pyrad/proc/Python-3.12.11";
+        // const char *pyhome = "/home/pyrad/proc/Python-3.12.4";
+        // const char *pyhome = "/home/pyrad/proc/Python-3.11.13";
+        // const char *pyhome = "/home/pyrad/proc/Python-3.10.18";
         fprintf(stdout, "INFO: Setting python home path to: %s\n", pyhome);
-        Py_SetPythonHome((wchar_t*) pyhome);
+        // Py_SetPythonHome((wchar_t*) pyhome);
         fprintf(stdout, "INFO: Python home path is set to: %s\n", pyhome);
     } else {
         fprintf(stdout, "Error: Unrecognized platform, DEV_NICKNAME is %s\n", dev_nickname.c_str());
@@ -66,7 +69,7 @@ bool run_python_script() {
     int retcode = 1;
     if (stat(fname, &stat_block) == 0 && !(stat_block.st_mode & S_IFDIR)) {
         fprintf(stdout, "File exist, start to run: %s\n", fname);
-#if 0
+#if 1
         // 2024-01-06 21:44
         // This code snippet to run Python would cause segment fault crash, currently I don't
         // know why.
@@ -74,6 +77,8 @@ bool run_python_script() {
         // 2024-01-06 20:18
         // Mentioned in: https://docs.python.org/3/c-api/veryhigh.html#c.PyRun_SimpleFileExFlags
         // On Windows, the file to execute should be opened as "rb"
+        // 2025-09-07 17:34
+        // On WSL Ubuntu 24.04 LTS, it works now
         FILE *fp = fopen(fname, "rb");
         if (fp) {
             retcode = PyRun_SimpleFile(fp, fname);
@@ -83,7 +88,7 @@ bool run_python_script() {
         }
 #endif // 0
 
-#if 1
+#if 0
         // 2024-01-06 21:52
         // Refer to the following URL to see how to read a file into a string.
         // https://www.delftstack.com/howto/cpp/read-file-into-string-cpp/
