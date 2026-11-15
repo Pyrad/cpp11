@@ -1,95 +1,59 @@
+"""
+Entry script executed by the embedded CPython interpreter in src/pyrun/pyrun.cpp.
+
+The build copies this file next to the runtime artifacts and executes it with
+PyRun_SimpleStringFlags(), which sets __file__ but not sys.path[0]. Paths are
+derived from __file__ instead of the old per-machine DEV_NICKNAME dispatch
+with hard-coded absolute paths such as D:/Gitee/cpp11/build/pyrun or
+/home/pyrad/gitee/cpp11/build/pyrun.
+"""
+
 import os
 import sys
 
-def run_on_Asus_Win7_MSYS2():
-    """
-    To run commands on Asus_Win7_MSYS2, w/ help of ctypes
-    """
-    # On Windows, use path format as below
-    os.add_dll_directory("D:/Gitee/cpp11/build/boosttest")
-    os.add_dll_directory("D:/Gitee/cpp11/build/cppfeatures")
-    os.add_dll_directory("D:/Gitee/cpp11/build/EffectiveModernCpp")
-    os.add_dll_directory("D:/Gitee/cpp11/build/normal")
-    os.add_dll_directory("D:/Gitee/cpp11/build/pyrun")
-    os.add_dll_directory("D:/procs/python38")
 
-    # Load dynamic library
-    import ctypes
-    dl = ctypes.windll.LoadLibrary
-    lib = dl('./pyrun/libwinmingwrun.dll')
+def add_module_directories(script_dir):
+    """Make both the Python module and its native dependencies importable.
 
-    # Run C functions
-    lib.run_normal();
-    lib.run_boosttest();
-    lib.run_lvalue_rvalue();
-    lib.run_effective_modern_cpp();
+    Since Python 3.8 on Windows, LoadLibraryEx no longer searches PATH for an
+    extension module's dependent DLLs; os.add_dll_directory() is required.
+    Registration is derived from the script location so it works with the
+    historical layout (DLLs in build/<module>/) and with the optimized layout
+    where every DLL sits next to this script in build/bin/.
+    """
+    candidates = {os.path.abspath(script_dir)}
+    parent = os.path.dirname(os.path.abspath(script_dir))
+    for root in (os.path.abspath(script_dir), parent):
+        try:
+            entries = list(os.scandir(root))
+        except OSError:
+            continue
+        for entry in entries:
+            if entry.is_dir():
+                candidates.add(entry.path)
 
-def run_on_Asus_Win7_MSYS2_direct_import():
-    """
-    To run commands on Asus_Win7_MSYS2
-    """
-    #os.add_dll_directory("D:/Gitee/cpp11/build/pyrun")
-    sys.path.append("D:/Gitee/cpp11/build/pyrun")
-    import cpp11runtest
-    cpp11runtest.run()
-    cpp11runtest.run_normal()
-    #pass
+    for path in sorted(candidates):
+        if hasattr(os, "add_dll_directory"):
+            try:
+                os.add_dll_directory(path)
+            except OSError:
+                pass
+        if path not in sys.path:
+            sys.path.insert(0, path)
 
-def run_on_Asus_Win7_VBox_Ubuntu_20_04_LTS():
-    """
-    To run commands on Asus_Win7_VBox_Ubuntu_20_04_LTS
-    """
-    pass
-
-def run_on_LenovoXiaoXin_Win10_MSYS2_direct_import():
-    """
-    To run commands on LenovoXiaoXin_Win10_MSYS2
-    """
-    #os.add_dll_directory("D:/Gitee/cpp11/build/pyrun")
-    sys.path.append("D:/Pyrad/Gitee/cpp11/build/pyrun")
-    import cpp11runtest
-    cpp11runtest.run()
-    cpp11runtest.run_normal()
-    #pass
-
-def run_on_Asus_tuf_gaming_b650m_plus_Win11_WSL_Ubuntu_24_04_LTS():
-    """
-    To run commands on LenovoXiaoXin_Win10_MSYS2
-    """
-    #os.add_dll_directory("D:/Gitee/cpp11/build/pyrun")
-    # sys.path.append("D:/Pyrad/Gitee/cpp11/build/pyrun")
-    sys.path.append("/home/pyrad/gitee/cpp11/build/pyrun")
-    import cpp11runtest
-    cpp11runtest.run()
-    cpp11runtest.run_normal()
-    #pass
 
 def run_main():
-    # Get env dict
-    edict = os.environ
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    add_module_directories(script_dir)
 
-    # Need env var DEV_NICKNAME to decide paths to boost, python and others
-    dname = "DEV_NICKNAME"
-    if dname not in edict:
-        return False
+    # cpp11runtest is the Python extension module built by CMake.
+    import cpp11runtest
 
-    if edict[dname] == "Asus_Win7_MSYS2":
-        #run_on_Asus_Win7_MSYS2()
-        run_on_Asus_Win7_MSYS2_direct_import()
-        print("Finished running Python function: run_on_Asus_Win7_MSYS2")
-    elif edict[dname] == "Asus_Win7_VBox_Ubuntu_20_04_LTS":
-        run_on_Asus_Win7_VBox_Ubuntu_20_04_LTS()
-        print("Finished running Python function: run_on_Asus_Win7_VBox_Ubuntu_20_04_LTS")
-    elif edict[dname] == "LenovoXiaoXin_Win10_MSYS2":
-        run_on_LenovoXiaoXin_Win10_MSYS2_direct_import()
-        print("Finished running Python function: run_on_LenovoXiaoXin_Win10_MSYS2_direct_import")
-    elif edict[dname] == "Asus_tuf_gaming_b650m_plus_Win11_WSL_Ubuntu_24_04_LTS":
-        run_on_Asus_tuf_gaming_b650m_plus_Win11_WSL_Ubuntu_24_04_LTS()
-        print("Finished running Python function: run_on_Asus_tuf_gaming_b650m_plus_Win11_WSL_Ubuntu_24_04_LTS")
-    else:
-        print("Error: Not a supported platform to run")
-        print("Error: Unknow DEV_NICKNAME:", edict[dname])
+    cpp11runtest.run()
+    cpp11runtest.run_normal()
+    print("Finished running Python function: run_main")
+    return True
+
 
 if __name__ == "__main__":
     run_main()
-

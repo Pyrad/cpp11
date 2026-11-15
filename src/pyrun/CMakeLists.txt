@@ -63,13 +63,14 @@ target_include_directories(${CurSharedLibName}
 target_link_libraries(${CurSharedLibName} ${Python3_LIBRARIES})
 target_link_directories(${CurSharedLibName} PUBLIC ${Python3_LIBRARY})
 
-# Copy Python run script from source dir to build dir (2024-01-06)
-# Note here CMAKE_SOURCE_DIR is ${GIT_REPO_ROOT}/src, and CMAKE_CURRENT_BINARY_DIR
-# is ${GIT_REPO_ROOT}/build/pyrun
-add_custom_command(TARGET ${CurSharedLibName} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-    ${CMAKE_SOURCE_DIR}/pyrun/run.py
-    ${CMAKE_CURRENT_BINARY_DIR}/run.py)
+# Copy the Python entry script next to the runtime artifacts.
+# configure_file(COPYONLY) (instead of a POST_BUILD copy) registers run.py as
+# a configure dependency, so editing the script always refreshes the copy --
+# the old POST_BUILD command only ran when the pyrun target happened to relink.
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/run.py
+    ${CMAKE_CURRENT_BINARY_DIR}/run.py
+    COPYONLY)
 
 
 # After compiled, when to run, remember set PATH (on Windows) or LIBRARA_PATH (on linux)
