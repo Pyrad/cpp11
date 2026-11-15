@@ -3,6 +3,7 @@
 | 项目 | 内容 |
 | --- | --- |
 | 报告日期 | 2026-11-15 |
+| 最后更新 | 2026-11-15（补记 Boost 安装目录更名，见 1.1 节） |
 | 工作目录 | `D:/Pyrad/Gitee/cpp11`（MSYS2 路径 `/d/Pyrad/Gitee/cpp11`） |
 | 分支 | `master` |
 | 依据文档 | `BUILD_CONFIG_REVIEW.md`（2026-11-14 的评审与分阶段改进建议） |
@@ -33,6 +34,8 @@
 
 一句话结论：项目从「只在一台已知机器、全开关打开、手工 source 脚本这一条窄路径可用」，改造成「依赖由 `find_package` 校验、依赖由 CMake target 传递、产物自包含、开关与标准可切换、构建过程由 Presets 版本化」。
 
+> 补记（2026-11-15）：本机 Boost 安装目录已由误写的 `boost_1_97_0_msys` 更正为 `boost_1_92_0_msys`，本报告涉及该前缀的命令与说明已同步更新，详见 1.1 节。
+
 ---
 
 ## 1. 环境实测
@@ -43,21 +46,48 @@
 | CMake | 4.0.2（`/d/proc/msys64/mingw64/bin/cmake.exe`） |
 | Ninja | 1.12.1 |
 | g++ | 15.1.0（MSYS2 project, MinGW-w64, x86_64-win32-seh） |
-| Boost | 目录名 `D:/proc/boost_1_97_0_msys`，**实际内容 Boost 1.92.0**（`include/boost-1_92`、`lib/cmake/Boost-1.92.0/BoostConfig.cmake`） |
+| Boost | `D:/proc/boost_1_92_0_msys` = **Boost 1.92.0**（`include/boost-1_92`、`lib/cmake/Boost-1.92.0/BoostConfig.cmake`、`BOOST_VERSION 109200`）。此目录原名 `boost_1_97_0_msys`（误写），已于 2026-11-15 更正，见 1.1 节 |
 | Python | `D:/proc/Python313` = CPython **3.13.7**（MSVC ABI，只有 `libs/python313.lib`，无 `.dll.a`） |
 | `DEV_NICKNAME` | 由 `.bashrc` 提供，**优化后 CMake 已不再依赖它** |
 
-> 注意：Boost 目录名里的 `1_97_0` 与真实版本 `1.92.0` 不一致，是历史命名。现在由 `find_package(Boost CONFIG)` 读取 `BoostConfig.cmake` 自动得到真实版本，不再依赖人工写对目录名。
+> 注意：目录名只是传给 `CMAKE_PREFIX_PATH` 的查找前缀；真实版本始终由 `find_package(Boost CONFIG)` 从 `BoostConfig.cmake` 读取。因此目录更名只影响路径字符串，不影响版本判定，也不改变本报告已验证的任何结论。
 
 配置时显式给出本机依赖前缀（这些**没有**写进版本库）：
 
 ```bash
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_PREFIX_PATH="D:/proc/boost_1_97_0_msys" \
+      -DCMAKE_PREFIX_PATH="D:/proc/boost_1_92_0_msys" \
       -DPython3_ROOT_DIR="D:/proc/Python313"
 ```
 
 等价的免参数方式是使用本机 `CMakeUserPresets.json`（已 gitignore）中的 `local` 预设：`cmake --preset local`。
+
+### 1.1 补记：Boost 安装目录更名（2026-11-15）
+
+**起因与更正**
+
+| 项 | 更名前 | 更名后 |
+| --- | --- | --- |
+| 安装前缀 | `D:/proc/boost_1_97_0_msys` | `D:/proc/boost_1_92_0_msys` |
+| 目录内容 | Boost **1.92.0** | Boost **1.92.0**（未变） |
+| 版本证据 | `include/boost-1_92`、`lib/cmake/Boost-1.92.0/BoostConfig.cmake`、`BOOST_VERSION 109200`、`BOOST_LIB_VERSION "1_92"` | 同左 |
+
+目录名中的 `1_97_0` 是把真实版本 `1.92.0` 误写而成，**并不是另一个 Boost 版本，也不是历史命名**；该目录自始至终都是 Boost 1.92.0。本报告初稿把它解释为「目录名与真实版本不一致、属历史命名」，属于误判，现予更正。目录已由使用者重命名，旧路径 `D:/proc/boost_1_97_0_msys` 现已不存在。
+
+**影响范围**（都只是路径字符串，不涉及 CMake 构建逻辑）
+
+| 位置 | 是否入库 | 处理 |
+| --- | --- | --- |
+| `OPTIMIZATION_REPORT.md` 环境表与第 1、7、10 节命令示例 | 是 | 全部改为新前缀（本次更新） |
+| `README.md` Quick Start 的两处示例 | 是 | 同步改为新前缀（本次更新） |
+| `CMakeUserPresets.json` 中 `local` 预设的 `CMAKE_PREFIX_PATH` | 否（gitignore，本机） | 同步改为新前缀；否则 `cmake --preset local` 会因目录不存在而失败 |
+| `build/CMakeCache.txt` 的 `Boost_DIR` / `CMAKE_PREFIX_PATH` | 否（构建产物） | **不手工改缓存**，用 `cmake --fresh -S . -B build` 重新配置刷新 |
+
+`CMakeLists.txt` 与 `CMakePresets.json` 中没有任何硬编码的本机 Boost 路径（依赖前缀一律由外部传入），所以构建配置本身无需改动；`BUILD_CONFIG_REVIEW.md` 中出现的 `/home/pyrad/proc/boost_1_89_0` 是旧配置的评审证据，不在本次更正范围内。
+
+> 补充：`build/` 下的历史诊断日志与 `build/matrix/*` 试验缓存中仍会 grep 到旧字符串，它们是不入库的一次性构建产物，不影响任何构建或运行，无需处理；若想彻底清除，删掉 `build/matrix/` 后重新生成即可。报告中保留的旧名只出现在「更名说明 / 对比表」里，属于历史陈述。
+
+**更名不改变已有结论**：Boost 版本仍为 1.92.0，C++ 标准矩阵、6 种 `ENB_*` 开关组合、零 PATH 运行、`ctest` 等结论全部保持有效；更名后已重新做一次全新配置 + 构建 + 运行复验，结果见 7.5 节。
 
 ---
 
@@ -244,6 +274,8 @@ Thread 1 received signal SIGSEGV
 `.gitignore`、`README.md`、`cmakeMyTest.cmake`、`no_use/run.sh`、`set_shared_lib_path.sh`、`src/CMakeLists.txt`、`src/projectconfig.h.in`、`src/{utilities,normal,boosttest,cppfeatures,EffectiveModernCpp,pymods,pyrun}/CMakeLists.txt`、`src/pyrun/pyrun.cpp`。
 
 > `run.py` 的改动已在第二次提交 `c738bf5` 中完成，本次未再改动。
+>
+> 补记（2026-11-15，第三次提交之后的文档更正）：随 Boost 安装目录更名，另修改了 `OPTIMIZATION_REPORT.md`（本文件）、`README.md`（Quick Start 的 2 处示例路径），以及 gitignored 的本机 `CMakeUserPresets.json`（`local` 预设的 `CMAKE_PREFIX_PATH`）。`CMakeLists.txt` / `CMakePresets.json` 中没有硬编码本机路径，无需改动；`build/CMakeCache.txt` 由 `--fresh` 重新配置刷新，不纳入版本库。详见 1.1 节与 7.5 节。
 
 ---
 
@@ -255,7 +287,7 @@ Thread 1 received signal SIGSEGV
 MSYSTEM=MINGW64 /d/proc/msys64/usr/bin/bash.exe -lic '
 cd /d/Pyrad/Gitee/cpp11
 cmake --fresh -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_PREFIX_PATH="D:/proc/boost_1_97_0_msys" \
+      -DCMAKE_PREFIX_PATH="D:/proc/boost_1_92_0_msys" \
       -DPython3_ROOT_DIR="D:/proc/Python313"
 cmake --build build --clean-first -j 4
 cd build/bin && PATH="/d/proc/msys64/mingw64/bin:/usr/bin" ./mymainrun.exe
@@ -308,6 +340,26 @@ boost/math/tools/type_traits.hpp: error: 'is_final' / 'remove_cv_t'
 
 **这些不是本次优化新引入的缺陷，而是新打开的警告把它们暴露出来了**。与评审文档的建议一致：不加 `-Werror`，构建不受影响，清理留作单独任务。需要安静构建时可用 `-DCPP11_ENABLE_WARNINGS=OFF`（矩阵验证中即使用该开关）。
 
+### 7.5 Boost 目录更名后的复验（2026-11-15）
+
+```bash
+MSYSTEM=MINGW64 /d/proc/msys64/usr/bin/bash.exe -lic '
+cd /d/Pyrad/Gitee/cpp11
+cmake --preset local --fresh              # 读取更正后的 CMAKE_PREFIX_PATH
+cmake --build build --clean-first -j 4
+cd build/bin && PATH="/d/proc/msys64/mingw64/bin:/usr/bin" ./mymainrun.exe
+ctest --preset local --output-on-failure'
+```
+
+| 检查项 | 结果 |
+| --- | --- |
+| 配置 | 退出码 0；输出 `Boost 1.92.0 (D:/proc/boost_1_92_0_msys/include/boost-1_92)`；缓存中 `Boost_DIR=D:/proc/boost_1_92_0_msys/lib/cmake/Boost-1.92.0`、`CMAKE_PREFIX_PATH=D:/proc/boost_1_92_0_msys`，**无旧路径残留** |
+| 构建 | `54/54`，0 错误，143 条既有警告（与更名前完全一致） |
+| 运行（PATH 仅含 MSYS2 工具链） | 退出码 0，804 行输出，`sys.prefix=D:/proc/Python313`、`retcode=0`、无 Traceback |
+| `ctest` | `1/1 Passed` |
+
+结论：更名只是一次「依赖查找前缀」的字符串变更，未改动 CMake 逻辑、源码或产物布局；7.1–7.4 的历史验证数据继续有效。注意 `cmake --preset local --fresh` 中的 `--fresh` 是必需的：旧 `build/CMakeCache.txt` 缓存着旧路径，直接增量配置不会刷新 `Boost_DIR`。
+
 ---
 
 ## 8. 遗留项与后续建议
@@ -358,6 +410,9 @@ ctest --preset local --output-on-failure
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_PREFIX_PATH="<boost 安装前缀，需含 lib/cmake/Boost-*/BoostConfig.cmake>" \
       -DPython3_ROOT_DIR="<python 安装前缀>"
+# 本机当前具体值（2026-11-15 更名后）：
+#   CMAKE_PREFIX_PATH = D:/proc/boost_1_92_0_msys
+#   Python3_ROOT_DIR  = D:/proc/Python313
 cmake --build build -j 4
 ./build/bin/mymainrun.exe
 

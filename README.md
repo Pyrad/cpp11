@@ -25,7 +25,7 @@ the repository, via `CMakeUserPresets.json` (gitignored) or `-D` flags:
 ```bash
 # One-time, on this machine (already present locally):
 #   CMakeUserPresets.json -> preset "local" ->
-#     CMAKE_PREFIX_PATH = D:/proc/boost_1_97_0_msys
+#     CMAKE_PREFIX_PATH = D:/proc/boost_1_92_0_msys
 #     Python3_ROOT_DIR   = D:/proc/Python313
 ```
 
@@ -44,7 +44,7 @@ Equivalent without presets:
 
 ```bash
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_PREFIX_PATH="D:/proc/boost_1_97_0_msys" \
+      -DCMAKE_PREFIX_PATH="D:/proc/boost_1_92_0_msys" \
       -DPython3_ROOT_DIR="D:/proc/Python313"
 cmake --build build -j 4
 ./build/bin/mymainrun.exe
