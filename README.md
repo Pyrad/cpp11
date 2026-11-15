@@ -2,6 +2,80 @@
 
 A repository for testing various features in CPP (c98, c11, and so on)
 
+## Quick Start (current build system)
+
+> The sections **below "Historical notes"** describe the old Makefile/early CMake
+> setup and are kept for reference. The instructions in this section are the
+> ones that are actually verified.
+
+### Requirements
+
+| Item | Version used for verification | Notes |
+| --- | --- | --- |
+| CMake | >= 3.21 (tested 4.0.2) | Needed for `CMakePresets.json` v3 and `$<TARGET_RUNTIME_DLLS>` |
+| Generator | Ninja (tested 1.12.1) | MSYS2 `mingw-w64-x86_64-ninja` |
+| C++ compiler | g++ 15.1.0 | MSYS2 `mingw-w64-x86_64-gcc` |
+| Boost | >= 1.70 (tested 1.92.0) | Only headers are used; `BoostConfig.cmake` must be discoverable |
+| Python | >= 3.8 (tested CPython 3.13.7) | `Interpreter` + `Development` components |
+
+`DEV_NICKNAME` is **no longer required** for CMake (it may still be used by
+other legacy scripts). Machine-specific dependency roots are supplied outside
+the repository, via `CMakeUserPresets.json` (gitignored) or `-D` flags:
+
+```bash
+# One-time, on this machine (already present locally):
+#   CMakeUserPresets.json -> preset "local" ->
+#     CMAKE_PREFIX_PATH = D:/proc/boost_1_97_0_msys
+#     Python3_ROOT_DIR   = D:/proc/Python313
+```
+
+### Configure, build, run
+
+```bash
+# From the repository root, in an MSYS2 MINGW64 shell:
+cmake --preset local                 # binaryDir = ./build
+cmake --build --preset local
+ctest --preset local --output-on-failure
+
+./build/bin/mymainrun.exe            # no PATH / source script needed
+```
+
+Equivalent without presets:
+
+```bash
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_PREFIX_PATH="D:/proc/boost_1_97_0_msys" \
+      -DPython3_ROOT_DIR="D:/proc/Python313"
+cmake --build build -j 4
+./build/bin/mymainrun.exe
+```
+
+All DLLs, the `run.py` / `top.py` helpers and a copy of `python313.dll` are
+placed in `build/bin/`, so the executable is self-contained. The legacy
+`set_shared_lib_path.sh` is now an optional compatibility fallback only.
+
+### Useful switches
+
+```bash
+cmake -S . -B build -DCPP11_CXX_STANDARD=17   # 11 / 14 / 17 / 20 / 23
+cmake -S . -B build -DENB_NORMAL=OFF          # any ENB_* module can be disabled
+cmake -S . -B build -DCPP11_ENABLE_ASAN=ON    # ASan + UBSan (GCC/Clang)
+cmake -S . -B build -DCPP11_ENABLE_WARNINGS=OFF
+cmake --list-presets                          # msys2 / linux / cxx11 / cxx17 / cxx20 / asan
+```
+
+### Layout of the build configuration
+
+| Path | Role |
+| --- | --- |
+| `CMakeLists.txt` | Project entry point: standard, output dirs, `find_package`, global options |
+| `CMakePresets.json` | Versioned, machine-independent presets |
+| `CMakeUserPresets.json` | Local paths only, **gitignored** |
+| `src/CMakeLists.txt` | Feature switches, module targets, `mymainrun`, smoke test |
+| `src/*/CMakeLists.txt` | One file per module, target-based dependencies |
+| `BUILD_CONFIG_REVIEW.md` | The review that motivated this overhaul |
+| `OPTIMIZATION_REPORT.md` | Log/report of the executed optimization work |
+
 ## Note: !!! Always Keeping 2 Repositories Same !!!
 
 There are 2 repositories working as backups for each other, which are
@@ -47,7 +121,7 @@ origin  git@gitee.com:pyrad/cpp11.git (push)
 
 $ git remote set-url --delete origin git@github.com:Pyrad/cpp11.git
 
-$ g remote -v
+$ git remote -v
 origin  git@gitee.com:pyrad/cpp11.git (fetch)
 origin  git@gitee.com:pyrad/cpp11.git (push)
 
@@ -63,9 +137,10 @@ origin  git@github.com:Pyrad/cpp11.git (push)
 
 ## Dependencies
 
-Currently only it only depends on`boost` library.
-
-- `boost` library
+- `boost` library (headers only in the current code; discovered with
+  `find_package(Boost CONFIG)`)
+- `Python 3` (`Interpreter` + `Development`; discovered with
+  `find_package(Python3)`) for the `pyrun` modules
 
 ## Set include paths for header files
 
@@ -93,6 +168,16 @@ After setting it, now we could just use the directive below to include a header 
 ```cpp
 #include "utilities/utilities.hpp"
 ```
+
+---
+
+## Historical notes (legacy build instructions, kept for reference)
+
+Everything from here down describes the pre-2026-11 layout: the top-level
+`CMakeLists.txt` used to live in `src/`, dependency paths were selected by
+`DEV_NICKNAME`, DLLs were scattered over `build/<module>/` and had to be added
+to `PATH` / `LD_LIBRARY_PATH` by hand. Use the **Quick Start** section above
+for actual builds.
 
 ## How to build?
 

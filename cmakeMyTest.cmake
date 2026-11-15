@@ -3,6 +3,10 @@
 ### The purpose of this CMake script is to test CMake features
 ### Use "cmake -P <cmake_script>" to run
 ###
+### NOTE: This is a standalone CMake-language experiment. It is NOT part
+###       of the project build and is never included by CMakeLists.txt.
+###       The real build entry point is the repository-root CMakeLists.txt.
+###
 ################################################################
 SET(CMAKE_CXX_STANDARD 14)
 

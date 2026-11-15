@@ -1,7 +1,16 @@
-#!/bin/sh -
+#!/usr/bin/env bash
 
 ########################################################
 # A script to set dynamic library paths
+#
+# NOTE 1: This script uses bash arrays, [[ ]], function and $BASH_SOURCE,
+#         so it must NOT be run with /bin/sh. The shebang used to say
+#         "#!/bin/sh -", which did not match its own syntax.
+# NOTE 2: It is meant to be SOURCED, not executed.
+# NOTE 3: Since the 2026-11 build-config overhaul this script is an optional
+#         compatibility fallback only. All DLLs/SOs are emitted into one
+#         directory next to the executable, so neither PATH nor
+#         LD_LIBRARY_PATH has to be adjusted before running mymainrun.
 ########################################################
 
 # I add prefix "S_" to make these variables unique, because this script would be sourced,

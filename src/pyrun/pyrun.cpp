@@ -168,12 +168,38 @@ bool run_python_script() {
     // Python home is deliberately left to CPython's own detection. The old
     // code printed a hard-coded WSL path but never actually called
     // Py_SetPythonHome(), which was misleading on Windows/MSYS2.
+#ifdef CPP11_PYTHON_HOME
+    // On Windows the build copies python3xx.dll next to mymainrun.exe so the
+    // Windows loader resolves it without any PATH tweaks. CPython would then
+    // derive sys.prefix from that DLL location and lose its standard library
+    // ("Could not find platform independent libraries <prefix>"). Pin the
+    // home explicitly with the modern PyConfig API instead of the deprecated
+    // Py_SetPythonHome().
+    PyConfig config;
+    PyConfig_InitPythonConfig(&config);
+    PyStatus status = PyConfig_SetBytesString(&config, &config.home,
+                                              CPP11_PYTHON_HOME);
+    if (PyStatus_Exception(status)) {
+        fprintf(stderr, "Failed to set Python home: %s\n",
+                status.err_msg ? status.err_msg : "unknown error");
+        PyConfig_Clear(&config);
+        return false;
+    }
+    status = Py_InitializeFromConfig(&config);
+    PyConfig_Clear(&config);
+    if (PyStatus_Exception(status)) {
+        fprintf(stderr, "Failed to initialize Python: %s\n",
+                status.err_msg ? status.err_msg : "unknown error");
+        return false;
+    }
+#else
     Py_Initialize();
     if (!Py_IsInitialized()) {
         fprintf(stderr, "Failed to initialize the Python interpreter\n");
         return false;
     }
-    fprintf(stdout, "INFO: Python was initialized by function Py_Initialize()\n");
+#endif
+    fprintf(stdout, "INFO: Python interpreter initialized\n");
 
     PyRun_SimpleString("print(\"===== Start running =====\")");
     show_env_info();

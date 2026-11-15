@@ -57,3 +57,22 @@ build/
 
 # Ignore compiled database
 compile_commands.json
+
+# Ignore any CMake build tree (build/, build2/, build/<preset>/, ...)
+build*/
+
+# Machine-local CMake presets must never enter either remote repository
+CMakeUserPresets.json
+
+# Python extension modules and MinGW import libraries produced by CMake
+*.pyd
+*.dll.a
+
+# IDE / package-manager scratch directories
+out/
+cmake-build-*/
+.vs/
+_deps/
+
+# WorkBuddy project-local data (session notes, not source)
+.workbuddy/

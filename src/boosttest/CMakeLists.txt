@@ -1,13 +1,7 @@
-MESSAGE(STATUS "[PYRAD]   ------------- [SUB DIR boosttest] -------------") 
-MESSAGE(STATUS "[PYRAD]   CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR})
-
 add_library(boosttest SHARED boosttest.cpp)
 
-# Remember INTERFACE means things that consumers 
-# require but the producer doesn't. 
-target_include_directories(boosttest
-        INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-        PRIVATE ${PROJECT_SOURCE_DIR}
-        )
-
-MESSAGE(STATUS "[PYRAD]   ------------- [SUB DIR boosttest] [END] -------------") 
+# boost/geometry, boost/bimap, boost/circular_buffer etc. are header-only, so
+# Boost::headers (via cpp11_config) is the only Boost requirement today.
+target_link_libraries(boosttest PUBLIC cpp11_config PRIVATE cpp11_warnings)
+target_include_directories(boosttest PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)

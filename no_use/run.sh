@@ -1,4 +1,4 @@
-#!/bin/sh -
+#!/usr/bin/env bash
 
 BDIR="bin"
 BINARY_FILE_LINUX="${BDIR}/run-g"

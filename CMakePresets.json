@@ -1,0 +1,38 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": { "major": 3, "minor": 21, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_CXX_EXTENSIONS": "OFF",
+        "CPP11_CXX_STANDARD": "14"
+      }
+    },
+    { "name": "msys2", "inherits": "base", "displayName": "MSYS2 MinGW64" },
+    { "name": "linux", "inherits": "base", "displayName": "Linux / WSL" },
+    { "name": "debug", "inherits": "base", "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug" } },
+    { "name": "cxx11", "inherits": "base", "cacheVariables": { "CPP11_CXX_STANDARD": "11" } },
+    { "name": "cxx17", "inherits": "base", "cacheVariables": { "CPP11_CXX_STANDARD": "17" } },
+    { "name": "cxx20", "inherits": "base", "cacheVariables": { "CPP11_CXX_STANDARD": "20" } },
+    { "name": "asan",  "inherits": "base", "cacheVariables": { "CPP11_ENABLE_ASAN": "ON" } }
+  ],
+  "buildPresets": [
+    { "name": "msys2", "configurePreset": "msys2" },
+    { "name": "linux", "configurePreset": "linux" },
+    { "name": "debug", "configurePreset": "debug" },
+    { "name": "cxx11", "configurePreset": "cxx11" },
+    { "name": "cxx17", "configurePreset": "cxx17" },
+    { "name": "cxx20", "configurePreset": "cxx20" },
+    { "name": "asan",  "configurePreset": "asan" }
+  ],
+  "testPresets": [
+    { "name": "msys2", "configurePreset": "msys2", "output": { "outputOnFailure": true } },
+    { "name": "linux", "configurePreset": "linux", "output": { "outputOnFailure": true } }
+  ]
+}
