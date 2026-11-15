@@ -149,16 +149,37 @@ if ($ENV{DEV_NICKNAME} STREQUAL "Asus_Win7_VBox_Ubuntu_20_04_LTS")
     set(Python3_LIBRARY "/home/pyrad/procs/Python-3.8.3/lib")
     set(PYTHON_EXECUTABLE "/home/pyrad/procs/Python-3.8.3/bin/python3")
 elseif ($ENV{DEV_NICKNAME} STREQUAL "Asus_tuf_gaming_b650m_plus_Win11_WSL_Ubuntu_24_04_LTS")
-    set(SYS_PLATFORM "linux")
-    set(MY_BOOST_HOME_DIR "/home/pyrad/proc/boost_1_89_0")
-    set(BOOST_INCLUDEDIR ${MY_BOOST_HOME_DIR}/include)
-    set(BOOST_LIBRARYDIR ${MY_BOOST_HOME_DIR}/lib)
+    # The same physical machine can be built either in WSL Ubuntu or in
+    # Windows/MSYS2, so pick the dependency paths by platform instead of by
+    # the machine nickname alone. WSL branch below is kept unchanged.
+    if(WIN32)
+        # (2026-11-15) Windows/MSYS2.
+        # NOTE: the folder is named boost_1_97_0_msys but actually contains
+        # Boost 1.92, whose headers live in include/boost-1_92/.
+        # Python is CPython 3.13.7 (MSVC ABI), so the import library is a .lib.
+        set(SYS_PLATFORM "windows")
+        set(MY_BOOST_HOME_DIR "D:/proc/boost_1_97_0_msys")
+        set(BOOST_INCLUDEDIR "${MY_BOOST_HOME_DIR}/include/boost-1_92")
+        set(BOOST_LIBRARYDIR "${MY_BOOST_HOME_DIR}/lib")
 
-    set(MY_PYTHON_HOME_DIR "/home/pyrad/proc/Python-3.13.7")
-    set(Python3_INCLUDE_DIRS "${MY_PYTHON_HOME_DIR}/include/python3.13")
-    set(Python3_LIBRARIES "${MY_PYTHON_HOME_DIR}/lib/libpython3.13.so")
-    set(Python3_LIBRARY "${MY_PYTHON_HOME_DIR}/lib")
-    set(PYTHON_EXECUTABLE "${MY_PYTHON_HOME_DIR}/bin/python3")
+        set(MY_PYTHON_HOME_DIR "D:/proc/Python313")
+        set(Python3_INCLUDE_DIRS "${MY_PYTHON_HOME_DIR}/include")
+        set(Python3_LIBRARIES "${MY_PYTHON_HOME_DIR}/libs/python313.lib")
+        set(Python3_LIBRARY "${MY_PYTHON_HOME_DIR}/libs")
+        set(PYTHON_EXECUTABLE "${MY_PYTHON_HOME_DIR}/python.exe")
+    else()
+        # WSL Ubuntu 24.04 LTS (original settings, untouched)
+        set(SYS_PLATFORM "linux")
+        set(MY_BOOST_HOME_DIR "/home/pyrad/proc/boost_1_89_0")
+        set(BOOST_INCLUDEDIR ${MY_BOOST_HOME_DIR}/include)
+        set(BOOST_LIBRARYDIR ${MY_BOOST_HOME_DIR}/lib)
+
+        set(MY_PYTHON_HOME_DIR "/home/pyrad/proc/Python-3.13.7")
+        set(Python3_INCLUDE_DIRS "${MY_PYTHON_HOME_DIR}/include/python3.13")
+        set(Python3_LIBRARIES "${MY_PYTHON_HOME_DIR}/lib/libpython3.13.so")
+        set(Python3_LIBRARY "${MY_PYTHON_HOME_DIR}/lib")
+        set(PYTHON_EXECUTABLE "${MY_PYTHON_HOME_DIR}/bin/python3")
+    endif()
 
     # set(MY_PYTHON_HOME_DIR "/home/pyrad/proc/Python-3.12.11")
     # set(Python3_INCLUDE_DIRS "${MY_PYTHON_HOME_DIR}/include/python3.12")
