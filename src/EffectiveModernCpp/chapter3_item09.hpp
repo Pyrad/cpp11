@@ -2,7 +2,7 @@
 #define EFFECTIVE_MODERN_CPP_CHAPTER3_ITEM09
 
 #include <iostream>
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
 

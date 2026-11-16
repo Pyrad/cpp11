@@ -26,7 +26,7 @@ configure_file(
 # ---------------------------------------------------------------------------
 add_library(pyrun SHARED pyrun.cpp)
 target_link_libraries(pyrun PRIVATE Python3::Python cpp11_config cpp11_warnings)
-target_include_directories(pyrun PUBLIC
+target_include_directories(pyrun PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 target_compile_definitions(pyrun PRIVATE
         CPP11_PYRUN_SCRIPT="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/run.py")

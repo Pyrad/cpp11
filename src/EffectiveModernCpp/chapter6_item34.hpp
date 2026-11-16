@@ -1,7 +1,7 @@
 #ifndef EFFECTIVE_MODERN_CPP_CHAPTER6_ITEM34
 #define EFFECTIVE_MODERN_CPP_CHAPTER6_ITEM34
 
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 #include <chrono>
 
 namespace effective_mordern_cpp {

@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "chapter1_item01.hpp"
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
 

@@ -1,7 +1,7 @@
 #include "winmingwrun.hpp"
 
 // Must include this to find the following ENB_* macros
-// #include "../projectconfig.h"
+// #include "projectconfig.h"
 
 #include <Python.h>
 #include <iostream>
@@ -14,23 +14,23 @@
 // based on the macros defined in CMakeLists.txt
 // ------------------------------------------------------
 #ifdef ENB_NORMAL
-#include "../normal/normal.hpp"
-#include "../normal/template.hpp"
+#include "normal/normal.hpp"
+#include "normal/template.hpp"
 #endif // ENB_NORMAL
 
 #ifdef ENB_BOOSTTEST
-#include "../boosttest/boosttest.hpp"
+#include "boosttest/boosttest.hpp"
 #endif // ENB_BOOSTTEST
 
 #ifdef ENB_CPP_FEATURES
-#include "../cppfeatures/lvalue_rvalue.hpp"
+#include "cppfeatures/lvalue_rvalue.hpp"
 #endif // ENB_CPP_FEATURES
 
 #ifdef ENB_EFFECTIVE_MODERN_CPP
-#include "../EffectiveModernCpp/effectiveModernCpp.hpp"
+#include "EffectiveModernCpp/effectiveModernCpp.hpp"
 #endif // ENB_EFFECTIVE_MODERN_CPP
 
-#include "../normal/maintest.hpp"
+#include "normal/maintest.hpp"
 
 #ifdef ENB_PYRUN_CPP
 #include "pyrun.hpp"

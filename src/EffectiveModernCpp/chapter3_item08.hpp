@@ -5,7 +5,7 @@
 #include <memory>
 #include <stdio.h>
 #include <mutex>
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
 

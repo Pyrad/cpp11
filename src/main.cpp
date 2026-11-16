@@ -1,5 +1,5 @@
 #include "main.hpp"
-#include "./normal/template.hpp"
+#include "normal/template.hpp"
 #include <memory>
 
 #include "projectconfig.h"
@@ -9,7 +9,7 @@
 // based on the macros defined in CMakeLists.txt
 // ------------------------------------------------------
 #ifdef ENB_PYRUN_CPP
-#include "./pyrun/pyrun.hpp"
+#include "pyrun/pyrun.hpp"
 #endif // ENB_PYRUN_CPP
 
 int main(int argc, char* argv[]) {

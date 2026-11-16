@@ -1,7 +1,7 @@
 #ifndef EFFECTIVE_MODERN_CPP_CHAPTER3_ITEM11
 #define EFFECTIVE_MODERN_CPP_CHAPTER3_ITEM11
 
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 #include <stdint.h>
 #include <stdio.h>
 

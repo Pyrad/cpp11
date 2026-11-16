@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <vector>
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
 

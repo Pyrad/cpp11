@@ -8,5 +8,5 @@ list(SORT CPP11_EMCXX_SOURCES)
 add_library(EffectiveModernCpp SHARED ${CPP11_EMCXX_SOURCES})
 
 target_link_libraries(EffectiveModernCpp PUBLIC cpp11_config PRIVATE cpp11_warnings)
-target_include_directories(EffectiveModernCpp PUBLIC
+target_include_directories(EffectiveModernCpp PRIVATE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)

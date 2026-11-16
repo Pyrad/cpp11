@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <boost/type_index.hpp>
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
 

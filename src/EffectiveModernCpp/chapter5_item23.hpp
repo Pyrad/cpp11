@@ -1,7 +1,7 @@
 #ifndef EFFECTIVE_MODERN_CPP_CHAPTER5_ITEM23
 #define EFFECTIVE_MODERN_CPP_CHAPTER5_ITEM23
 
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 #include <stdio.h>
 #include <type_traits>
 #include <utility>

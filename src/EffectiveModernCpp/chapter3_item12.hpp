@@ -1,7 +1,7 @@
 #ifndef EFFECTIVE_MODERN_CPP_CHAPTER3_ITEM12
 #define EFFECTIVE_MODERN_CPP_CHAPTER3_ITEM12
 
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 #include <stdio.h>
 #include <vector>
 

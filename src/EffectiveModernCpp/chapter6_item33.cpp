@@ -1,6 +1,6 @@
 #include "chapter6_item33.hpp"
 
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 
 #include <string>
 

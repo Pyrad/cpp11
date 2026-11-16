@@ -1,7 +1,7 @@
 #ifndef EFFECTIVE_MODERN_CPP_CHAPTER3_ITEM16
 #define EFFECTIVE_MODERN_CPP_CHAPTER3_ITEM16
 
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 #include <cmath>
 #include <vector>
 #include <mutex>

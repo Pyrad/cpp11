@@ -75,6 +75,22 @@ cmake --list-presets                          # msys2 / linux / cxx11 / cxx17 / 
 | `src/*/CMakeLists.txt` | One file per module, target-based dependencies |
 | `BUILD_CONFIG_REVIEW.md` | The review that motivated this overhaul |
 | `OPTIMIZATION_REPORT.md` | Log/report of the executed optimization work |
+| `INCLUDE_STYLE_REPORT.md` | Why `utilities/utilities.hpp` needs an include root, and how it is enforced |
+
+### Include convention
+
+A header that belongs to another module is always included through the module
+root (`src/`), never through a relative path:
+
+```cpp
+#include "utilities/utilities.hpp"      // correct: resolved via CPP11_SOURCE_ROOT = <repo>/src
+#include "../utilities/utilities.hpp"   // compiles only because of this file's own location
+```
+
+`CPP11_SOURCE_ROOT` is put on the search path by the `cpp11_config` INTERFACE
+target and checked at configure time; each module keeps its own directory
+`PRIVATE`, so the compiler enforces the module-root form. Headers inside the
+same module may still be included by bare file name.
 
 ## Note: !!! Always Keeping 2 Repositories Same !!!
 

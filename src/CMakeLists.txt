@@ -24,10 +24,32 @@ configure_file(projectconfig.h.in
 
 # ---------------------------------------------------------------------------
 # INTERFACE targets carry the requirements shared by every module.
+#
+# CPP11_SOURCE_ROOT is the single include root for cross-module headers. With
+# it on the search path a module is always reachable by directory name:
+#
+#     #include "utilities/utilities.hpp"
+#     #include "pyrun/pyrun.hpp"
+#
+# no matter where the including file lives. The relative form
+# "../utilities/utilities.hpp" also compiles, but only because the compiler
+# searches the including file's own directory first; it silently breaks as
+# soon as that file is moved to another directory, so the module-root form is
+# the convention used throughout src/. Dropping this root makes every quoted
+# module include fail with "No such file or directory", hence the check below
+# so a wrong root fails loudly at configure time instead of at compile time.
 # ---------------------------------------------------------------------------
+set(CPP11_SOURCE_ROOT "${PROJECT_SOURCE_DIR}/src")
+if(NOT EXISTS "${CPP11_SOURCE_ROOT}/utilities/utilities.hpp")
+    message(FATAL_ERROR
+        "[cpp11] ${CPP11_SOURCE_ROOT}/utilities/utilities.hpp is missing, so "
+        "CPP11_SOURCE_ROOT is wrong and quoted includes such as "
+        "\"utilities/utilities.hpp\" would fail to compile.")
+endif()
+
 add_library(cpp11_config INTERFACE)
 target_include_directories(cpp11_config INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>            # "pyrun/winmingwrun.hpp" etc.
+    $<BUILD_INTERFACE:${CPP11_SOURCE_ROOT}>               # "utilities/utilities.hpp" etc.
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)        # generated projectconfig.h
 target_link_libraries(cpp11_config INTERFACE Boost::headers)
 

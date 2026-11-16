@@ -1,7 +1,7 @@
 #ifndef EFFECTIVE_MODERN_CPP_CHAPTER6_ITEM32
 #define EFFECTIVE_MODERN_CPP_CHAPTER6_ITEM32
 
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 #include <string>
 
 namespace effective_mordern_cpp {

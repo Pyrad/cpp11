@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
 

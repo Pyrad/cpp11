@@ -1,7 +1,7 @@
 #ifndef EFFECTIVE_MODERN_CPP_CHAPTER3_ITEM13
 #define EFFECTIVE_MODERN_CPP_CHAPTER3_ITEM13
 
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 #include <algorithm>
 #include <iterator>
 

@@ -8,7 +8,7 @@
 #   include <cxxabi.h>
 #endif // _MSC_VER
 
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
 

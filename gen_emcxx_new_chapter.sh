@@ -45,7 +45,7 @@ cat << EOF > $hname
 #ifndef EFFECTIVE_MODERN_CPP_CHAPTER${cnum}_ITEM${inum}
 #define EFFECTIVE_MODERN_CPP_CHAPTER${cnum}_ITEM${inum}
 
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 
 namespace effective_mordern_cpp {
 

@@ -1,5 +1,5 @@
 #include "chapter3_item15.hpp"
-#include "../utilities/utilities.hpp"
+#include "utilities/utilities.hpp"
 #include <stdio.h>
 
 namespace effective_mordern_cpp {
