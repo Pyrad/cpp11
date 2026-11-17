@@ -88,10 +88,40 @@ endif()
 find_package(Boost 1.70 CONFIG REQUIRED)
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 
+# ---------------------------------------------------------------------------
+# Optional dependency: CGAL
+#
+# CGAL 6.x is header-only, but it requires C++17 and, for exact constructions,
+# the non-header-only GMP/MPFR libraries. Its imported target CGAL::CGAL
+# carries the include dirs, cxx_std_17 and the GMP/MPFR link interface, so
+# nothing has to be spelled out by hand here.
+#
+# A missing CGAL is not fatal: the example is compiled out and the build keeps
+# working, which matters for the C++11/C++14 experiments and for machines that
+# do not have CGAL installed.
+# ---------------------------------------------------------------------------
+option(CPP11_ENABLE_CGAL
+       "Build the CGAL example in the normal module (needs CGAL 6.x + GMP/MPFR)" ON)
+if(CPP11_ENABLE_CGAL)
+    find_package(CGAL 6.0 QUIET)
+    if(NOT CGAL_FOUND)
+        message(WARNING
+            "CGAL not found: the CGAL example will be compiled out. "
+            "Pass -DCGAL_DIR=<prefix>/lib/cmake/CGAL, or add the install "
+            "prefix to CMAKE_PREFIX_PATH, or configure with "
+            "-DCPP11_ENABLE_CGAL=OFF to silence this warning.")
+    endif()
+endif()
+
 message(STATUS "[cpp11] ==========================================================")
 message(STATUS "[cpp11] C++ standard   : ${CPP11_CXX_STANDARD} (extensions OFF)")
 message(STATUS "[cpp11] Boost          : ${Boost_VERSION}  (${Boost_INCLUDE_DIRS})")
 message(STATUS "[cpp11] Python         : ${Python3_VERSION}  (${Python3_EXECUTABLE})")
+if(CGAL_FOUND)
+    message(STATUS "[cpp11] CGAL           : ${CGAL_VERSION}  (${CGAL_DIR})")
+else()
+    message(STATUS "[cpp11] CGAL           : not used")
+endif()
 message(STATUS "[cpp11] Build type     : ${CMAKE_BUILD_TYPE}")
 message(STATUS "[cpp11] Runtime output : ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 message(STATUS "[cpp11] ==========================================================")

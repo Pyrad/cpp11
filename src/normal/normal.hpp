@@ -124,6 +124,11 @@ typedef enum GLOBAL_KEYS { DEV = 0, FIL, LLX, LLY, URX, URY, SHK, DBU, ORT, ROT,
 // Function declarations
 void normal_test_all();
 
+// CGAL example (normal.cpp). Declared unconditionally so that the callers do not
+// need to care whether CGAL was available at build time: the definition prints a
+// "not configured" message when ENB_CGAL is undefined.
+void cgal_demo();
+
 // End of function declarations
 
 

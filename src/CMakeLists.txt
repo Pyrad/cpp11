@@ -17,6 +17,15 @@ option(ENB_CPP_FEATURES "Build the C++ language feature tests" ON)
 option(ENB_EFFECTIVE_MODERN_CPP "Build the EffectiveModernCpp notes" ON)
 option(ENB_PYRUN_CPP "Build the embedded-Python modules" ON)
 
+# CGAL is not a plain ON/OFF switch: it can only be enabled when the package was
+# actually found by the root CMakeLists.txt. The result still ends up in
+# projectconfig.h as ENB_CGAL, so normal.cpp can guard its #include with it.
+if(CPP11_ENABLE_CGAL AND CGAL_FOUND)
+    set(ENB_CGAL ON)
+else()
+    set(ENB_CGAL OFF)
+endif()
+
 # PROJECT_VERSION_* comes from project(cpp11 VERSION 0.1) in the root file.
 # @ONLY keeps ${...} sequences inside this template untouched.
 configure_file(projectconfig.h.in
@@ -124,4 +133,45 @@ if(WIN32 AND CPP11_COPY_RUNTIME_DLLS)
                 $<TARGET_RUNTIME_DLLS:mymainrun> $<TARGET_FILE_DIR:mymainrun>
         COMMAND_EXPAND_LISTS
         COMMENT "[cpp11] Copying third-party runtime DLLs next to mymainrun")
+endif()
+
+# ---------------------------------------------------------------------------
+# Self-contained Windows runtime, part 2: the toolchain's own DLLs.
+#
+# $<TARGET_RUNTIME_DLLS> only knows about imported *targets*, so it never sees
+# libgcc/libstdc++/libwinpthread (they come from the compiler) nor the GMP and
+# MPFR DLLs used by CGAL's exact kernels (CGAL passes them as plain library
+# paths). Python 3.8+ stops searching PATH when it loads an extension module,
+# so `import cpp11runtest` fails with error 126 ("the specified module could not
+# be found") unless every one of those DLLs sits next to the .pyd. Copying them
+# also makes build/bin launchable without any MSYS2 PATH.
+# ---------------------------------------------------------------------------
+if(MINGW AND CPP11_COPY_RUNTIME_DLLS)
+    get_filename_component(_cpp11_mingw_bin "${CMAKE_CXX_COMPILER}" DIRECTORY)
+
+    set(_cpp11_toolchain_dlls "")
+    foreach(_dll IN ITEMS
+            libgcc_s_seh-1.dll libgcc_s_dw2-1.dll
+            libstdc++-6.dll libwinpthread-1.dll)
+        if(EXISTS "${_cpp11_mingw_bin}/${_dll}")
+            list(APPEND _cpp11_toolchain_dlls "${_cpp11_mingw_bin}/${_dll}")
+        endif()
+    endforeach()
+
+    if(CGAL_FOUND)
+        # Globs keep this working when MSYS2 bumps the ABI numbers
+        # (libgmp-10.dll, libmpfr-6.dll, libgmpxx-4.dll, ...).
+        file(GLOB _cpp11_bignum_dlls
+                "${_cpp11_mingw_bin}/libgmp-*.dll"
+                "${_cpp11_mingw_bin}/libmpfr-*.dll"
+                "${_cpp11_mingw_bin}/libgmpxx-*.dll")
+        list(APPEND _cpp11_toolchain_dlls ${_cpp11_bignum_dlls})
+    endif()
+
+    if(_cpp11_toolchain_dlls)
+        add_custom_command(TARGET mymainrun POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                    ${_cpp11_toolchain_dlls} $<TARGET_FILE_DIR:mymainrun>
+            COMMENT "[cpp11] Copying MinGW/CGAL runtime DLLs next to mymainrun")
+    endif()
 endif()
