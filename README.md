@@ -17,6 +17,7 @@ A repository for testing various features in CPP (c98, c11, and so on)
 | C++ compiler | g++ 15.1.0 | MSYS2 `mingw-w64-x86_64-gcc` |
 | Boost | >= 1.70 (tested 1.92.0) | Only headers are used; `BoostConfig.cmake` must be discoverable |
 | Python | >= 3.8 (tested CPython 3.13.7) | `Interpreter` + `Development` components |
+| CGAL (optional) | >= 6.0 (tested 6.2.1) | Header-only, but needs C++17 and GMP/MPFR; see [cgal-install-spec.md](cgal-install-spec.md) |
 
 `DEV_NICKNAME` is **no longer required** for CMake (it may still be used by
 other legacy scripts). Machine-specific dependency roots are supplied outside
@@ -25,8 +26,18 @@ the repository, via `CMakeUserPresets.json` (gitignored) or `-D` flags:
 ```bash
 # One-time, on this machine (already present locally):
 #   CMakeUserPresets.json -> preset "local" ->
-#     CMAKE_PREFIX_PATH = D:/proc/boost_1_92_0_msys
+#     CMAKE_PREFIX_PATH = D:/proc/boost_1_92_0_msys;D:/proc/cgal6p2p1
 #     Python3_ROOT_DIR   = D:/proc/Python313
+#     CGAL_DIR          = D:/proc/cgal6p2p1/lib/cmake/CGAL
+```
+
+Alternative to the preset, using the same environment-variable convention for
+all three optional roots:
+
+```bash
+export CPP11_BOOST_ROOT=D:/proc/boost_1_92_0_msys
+export CPP11_PYTHON_ROOT=D:/proc/Python313
+export CPP11_CGAL_ROOT=D:/proc/cgal6p2p1     # install prefix, not lib/cmake/CGAL
 ```
 
 ### Configure, build, run
@@ -44,8 +55,9 @@ Equivalent without presets:
 
 ```bash
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_PREFIX_PATH="D:/proc/boost_1_92_0_msys" \
-      -DPython3_ROOT_DIR="D:/proc/Python313"
+      -DCMAKE_PREFIX_PATH="D:/proc/boost_1_92_0_msys;D:/proc/cgal6p2p1" \
+      -DPython3_ROOT_DIR="D:/proc/Python313" \
+      -DCGAL_DIR="D:/proc/cgal6p2p1/lib/cmake/CGAL"
 cmake --build build -j 4
 ./build/bin/mymainrun.exe
 ```
@@ -61,8 +73,28 @@ cmake -S . -B build -DCPP11_CXX_STANDARD=17   # 11 / 14 / 17 / 20 / 23
 cmake -S . -B build -DENB_NORMAL=OFF          # any ENB_* module can be disabled
 cmake -S . -B build -DCPP11_ENABLE_ASAN=ON    # ASan + UBSan (GCC/Clang)
 cmake -S . -B build -DCPP11_ENABLE_WARNINGS=OFF
-cmake --list-presets                          # msys2 / linux / cxx11 / cxx17 / cxx20 / asan
+cmake -S . -B build -DCPP11_ENABLE_CGAL=OFF   # compile the CGAL example out
+cmake --list-presets                          # local / msys2 / linux / debug /
+                                              # cxx11 / cxx17 / cxx20 / nocgal / asan
 ```
+
+### CGAL (optional dependency)
+
+CGAL 6.x is header-only but requires **C++17** and the binary **GMP/MPFR**
+libraries for its exact kernels. It is discovered with
+`find_package(CGAL 6.0 QUIET)`: if it is missing, the example is compiled out
+and the rest of the project still builds (so the C++11/14 experiments and CI
+without CGAL stay usable).
+
+Only the `normal` module links it, and with `PRIVATE`, so the C++17 requirement
+does **not** leak into `mymainrun` / `pyrun` (verified: `normal.cpp` compiles
+with `-std=c++17` while `main.cpp` stays at `-std=c++14`). The GMP/MPFR DLLs
+are copied next to the executable by the same POST_BUILD step that copies the
+MinGW runtime, so `build/bin` remains self-contained.
+
+Installation on this machine is documented step by step in
+[cgal-install-spec.md](cgal-install-spec.md) (prefix `D:/proc/cgal6p2p1`,
+CGAL 6.2.1, GMP 6.3.0, MPFR 4.2.2).
 
 ### Layout of the build configuration
 
@@ -76,6 +108,7 @@ cmake --list-presets                          # msys2 / linux / cxx11 / cxx17 / 
 | `BUILD_CONFIG_REVIEW.md` | The review that motivated this overhaul |
 | `OPTIMIZATION_REPORT.md` | Log/report of the executed optimization work |
 | `INCLUDE_STYLE_REPORT.md` | Why `utilities/utilities.hpp` needs an include root, and how it is enforced |
+| `cgal-install-spec.md` | CGAL 6.2.1 install log, dependency constraints and project integration |
 
 ### Include convention
 
@@ -157,6 +190,9 @@ origin  git@github.com:Pyrad/cpp11.git (push)
   `find_package(Boost CONFIG)`)
 - `Python 3` (`Interpreter` + `Development`; discovered with
   `find_package(Python3)`) for the `pyrun` modules
+- `CGAL 6.x` (**optional**, header-only; discovered with `find_package(CGAL)`)
+  plus `GMP` / `MPFR` for the exact-construction example in the `normal`
+  module. Verified with CGAL 6.2.1, GMP 6.3.0, MPFR 4.2.2 from MSYS2.
 
 ## Set include paths for header files
 
