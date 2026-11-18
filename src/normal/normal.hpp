@@ -129,6 +129,10 @@ void normal_test_all();
 // "not configured" message when ENB_CGAL is undefined.
 void cgal_demo();
 
+// oneTBB example (normal.cpp), same contract: unconditionally declared, prints a
+// "not configured" message when ENB_TBB is undefined.
+void tbb_demo();
+
 // End of function declarations
 
 

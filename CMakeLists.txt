@@ -113,6 +113,36 @@ if(CPP11_ENABLE_CGAL)
     endif()
 endif()
 
+# ---------------------------------------------------------------------------
+# Optional dependency: oneTBB
+#
+# oneTBB is the opposite case of CGAL: its headers are thin wrappers over the
+# task scheduler that lives in tbb12.dll, so TBB::tbb has to be linked. It does
+# not declare any compile feature of its own -- its headers were verified to
+# build under C++11/14/17 -- so it does not raise CPP11_CXX_STANDARD either.
+#
+# Its TBBConfig.cmake is minimal -- it only includes TBBTargets.cmake -- so the
+# import target is the reliable indicator that the package is usable here, not
+# the TBB_FOUND variable alone.
+#
+# Same policy as CGAL: a missing oneTBB warns and compiles the example out.
+# ---------------------------------------------------------------------------
+option(CPP11_ENABLE_TBB
+       "Build the oneTBB example in the normal module (needs oneTBB 2021+)" ON)
+if(CPP11_ENABLE_TBB)
+    find_package(TBB 2021 QUIET)
+    if(TBB_FOUND AND NOT TARGET TBB::tbb)
+        set(TBB_FOUND FALSE)
+    endif()
+    if(NOT TBB_FOUND)
+        message(WARNING
+            "oneTBB not found: the TBB example will be compiled out. "
+            "Pass -DTBB_DIR=<prefix>/lib/cmake/TBB, or add the install prefix "
+            "to CMAKE_PREFIX_PATH, or configure with -DCPP11_ENABLE_TBB=OFF "
+            "to silence this warning.")
+    endif()
+endif()
+
 message(STATUS "[cpp11] ==========================================================")
 message(STATUS "[cpp11] C++ standard   : ${CPP11_CXX_STANDARD} (extensions OFF)")
 message(STATUS "[cpp11] Boost          : ${Boost_VERSION}  (${Boost_INCLUDE_DIRS})")
@@ -121,6 +151,11 @@ if(CGAL_FOUND)
     message(STATUS "[cpp11] CGAL           : ${CGAL_VERSION}  (${CGAL_DIR})")
 else()
     message(STATUS "[cpp11] CGAL           : not used")
+endif()
+if(TBB_FOUND)
+    message(STATUS "[cpp11] oneTBB         : ${TBB_VERSION}  (${TBB_DIR})")
+else()
+    message(STATUS "[cpp11] oneTBB         : not used")
 endif()
 message(STATUS "[cpp11] Build type     : ${CMAKE_BUILD_TYPE}")
 message(STATUS "[cpp11] Runtime output : ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")

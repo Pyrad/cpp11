@@ -26,6 +26,14 @@ else()
     set(ENB_CGAL OFF)
 endif()
 
+# Same derivation for oneTBB, for the same reason: the module must know whether
+# the package was actually found, not just whether the user wanted it.
+if(CPP11_ENABLE_TBB AND TBB_FOUND)
+    set(ENB_TBB ON)
+else()
+    set(ENB_TBB OFF)
+endif()
+
 # PROJECT_VERSION_* comes from project(cpp11 VERSION 0.1) in the root file.
 # @ONLY keeps ${...} sequences inside this template untouched.
 configure_file(projectconfig.h.in
@@ -145,6 +153,10 @@ endif()
 # so `import cpp11runtest` fails with error 126 ("the specified module could not
 # be found") unless every one of those DLLs sits next to the .pyd. Copying them
 # also makes build/bin launchable without any MSYS2 PATH.
+#
+# oneTBB belongs in the same list for a different reason: TBB::tbb is linked
+# PRIVATE by the normal module, so mymainrun's own $<TARGET_RUNTIME_DLLS> never
+# sees libtbb12.dll -- it is a dependency of libnormal.dll, not of the exe.
 # ---------------------------------------------------------------------------
 if(MINGW AND CPP11_COPY_RUNTIME_DLLS)
     get_filename_component(_cpp11_mingw_bin "${CMAKE_CXX_COMPILER}" DIRECTORY)
@@ -168,10 +180,16 @@ if(MINGW AND CPP11_COPY_RUNTIME_DLLS)
         list(APPEND _cpp11_toolchain_dlls ${_cpp11_bignum_dlls})
     endif()
 
+    if(ENB_TBB AND TARGET TBB::tbb)
+        # Resolved through the imported target, so the file name (libtbb12.dll
+        # for MinGW, tbb12.dll for MSVC) and its directory follow the install.
+        list(APPEND _cpp11_toolchain_dlls $<TARGET_FILE:TBB::tbb>)
+    endif()
+
     if(_cpp11_toolchain_dlls)
         add_custom_command(TARGET mymainrun POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
                     ${_cpp11_toolchain_dlls} $<TARGET_FILE_DIR:mymainrun>
-            COMMENT "[cpp11] Copying MinGW/CGAL runtime DLLs next to mymainrun")
+            COMMENT "[cpp11] Copying MinGW/CGAL/TBB runtime DLLs next to mymainrun")
     endif()
 endif()

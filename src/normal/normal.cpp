@@ -23,6 +23,21 @@
 #define CPP11_STR(x) CPP11_STR_IMPL(x)
 #endif // ENB_CGAL
 
+#ifdef ENB_TBB
+// oneTBB is not header-only: everything under tbb/ is a thin wrapper over the
+// task scheduler implemented in tbb12.dll (libtbb12.dll with MinGW). Linking
+// TBB::tbb is therefore what makes these calls resolve at run time, which is
+// exactly what the demo below checks.
+#include <tbb/blocked_range.h>
+#include <tbb/concurrent_vector.h>
+#include <tbb/info.h>
+#include <tbb/parallel_for.h>
+#include <tbb/parallel_reduce.h>
+#include <tbb/version.h>
+
+#include <vector>
+#endif // ENB_TBB
+
 #include<stdlib.h>
 #include<string.h>
 #include<list>
@@ -848,12 +863,87 @@ void cgal_demo() {
 }  // cgal_demo()
 
 
+/**
+ * @brief A small oneTBB example, kept in normal.cpp on purpose.
+ *
+ * Unlike the CGAL demo this one is not about exact arithmetic but about the
+ * build: tbb::parallel_for / parallel_reduce / concurrent_vector all end up in
+ * the scheduler of tbb12.dll, so a correct result proves both that the import
+ * library was linked and that the DLL was found at run time.
+ *
+ * Every printed value is deterministic, so the output can be compared between
+ * runs and between machines: parallel_for writes each element exactly once,
+ * parallel_deterministic_reduce keeps a fixed reduction tree, and the
+ * concurrent_vector is only checked by size (its order is scheduler dependent
+ * by design).
+ */
+void tbb_demo() {
+    std::cout << "===== oneTBB demo =====" << std::endl;
+#ifndef ENB_TBB
+    std::cout << "oneTBB is not configured (ENB_TBB undefined); skipping the demo"
+              << std::endl;
+#else
+    std::cout << "oneTBB version: " << TBB_VERSION_STRING
+              << "  (interface " << TBB_INTERFACE_VERSION << ")" << std::endl;
+    std::cout << "default concurrency = " << tbb::info::default_concurrency()
+              << std::endl;
+
+    // 1. parallel_for over an index range. Each element is written by exactly
+    //    one task, so the content does not depend on how the work was split.
+    const std::size_t kCount = 1u << 20;  // 1 048 576
+    std::vector<long long> squares(kCount);
+    tbb::parallel_for(std::size_t(0), kCount, [&squares](std::size_t i) {
+        squares[i] = static_cast<long long>(i) * static_cast<long long>(i);
+    });
+    std::cout << "parallel_for    : " << squares.size() << " squares, last = "
+              << squares.back() << std::endl;
+
+    // 2. Deterministic reduction: same tree on every run, so the result is
+    //    reproducible and can be compared with the closed form n(n+1)(2n+1)/6.
+    const long long kMax = 1000000;
+    const long long sum = tbb::parallel_deterministic_reduce(
+        tbb::blocked_range<long long>(0, kMax + 1), 0LL,
+        [](const tbb::blocked_range<long long> &r, long long partial) {
+            for (long long i = r.begin(); i != r.end(); ++i) {
+                partial += i * i;
+            }
+            return partial;
+        },
+        [](long long a, long long b) { return a + b; });
+    const long long closed_form = kMax * (kMax + 1) * (2 * kMax + 1) / 6;
+    std::cout << "sum of i^2      : " << sum << " (closed form " << closed_form
+              << ", match: " << ((sum == closed_form) ? "true" : "false") << ")"
+              << std::endl;
+
+    // 3. concurrent_vector: push_back from many tasks at once, no mutex needed.
+    //    Only the size is checked; the insertion order is scheduler dependent.
+    tbb::concurrent_vector<long long> multiples;
+    tbb::parallel_for(std::size_t(0), kCount,
+                      [&multiples, &squares](std::size_t i) {
+                          if (squares[i] % 7 == 0) {
+                              multiples.push_back(static_cast<long long>(i));
+                          }
+                      });
+    const std::size_t expected = (kCount - 1) / 7 + 1;
+    std::cout << "concurrent_vector: " << multiples.size()
+              << " multiples of 7 in [0, 2^20) (expected " << expected
+              << ", match: "
+              << ((multiples.size() == expected) ? "true" : "false") << ")"
+              << std::endl;
+#endif // ENB_TBB
+    std::cout << "===== oneTBB demo end =====" << std::endl;
+}  // tbb_demo()
+
+
 void normal_test_all() {
     std::cout << "---------- START OF FUNCTION: " << __FUNCTION__ << std::endl;
 
     // CGAL smoke test: verifies the build configuration (headers + GMP/MPFR)
     // and the runtime, since the result is printed.
     cgal_demo();
+
+    // oneTBB smoke test: same idea, but the headers need tbb12.dll behind them.
+    tbb_demo();
 
 
     // for (ENUM_KEYS e = ENUM_KEYS::DEV; e < ENUM_KEYS::DEL; e = (ENUM_KEYS)(e + 1)) {

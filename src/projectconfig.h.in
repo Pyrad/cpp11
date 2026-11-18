@@ -16,5 +16,6 @@
 #cmakedefine ENB_EFFECTIVE_MODERN_CPP
 #cmakedefine ENB_PYRUN_CPP
 #cmakedefine ENB_CGAL
+#cmakedefine ENB_TBB
 
 #endif // CPP11_PROJECTCONFIG_H
