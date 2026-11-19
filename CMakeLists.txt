@@ -103,13 +103,20 @@ find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 option(CPP11_ENABLE_CGAL
        "Build the CGAL example in the normal module (needs CGAL 6.x + GMP/MPFR)" ON)
 if(CPP11_ENABLE_CGAL)
+    # Same convention as CPP11_BOOST_ROOT / CPP11_PYTHON_ROOT above: a machine
+    # whose CGAL lives outside CMAKE_PREFIX_PATH can export CPP11_CGAL_ROOT
+    # (the install prefix, e.g. D:/proc/cgal6p2p1) instead of hard-coding the
+    # path here or passing -DCGAL_DIR on every configure.
+    if(DEFINED ENV{CPP11_CGAL_ROOT} AND NOT DEFINED CGAL_DIR)
+        set(CGAL_DIR "$ENV{CPP11_CGAL_ROOT}/lib/cmake/CGAL")
+    endif()
     find_package(CGAL 6.0 QUIET)
     if(NOT CGAL_FOUND)
         message(WARNING
             "CGAL not found: the CGAL example will be compiled out. "
             "Pass -DCGAL_DIR=<prefix>/lib/cmake/CGAL, or add the install "
-            "prefix to CMAKE_PREFIX_PATH, or configure with "
-            "-DCPP11_ENABLE_CGAL=OFF to silence this warning.")
+            "prefix to CMAKE_PREFIX_PATH (or set CPP11_CGAL_ROOT to it), or "
+            "configure with -DCPP11_ENABLE_CGAL=OFF to silence this warning.")
     endif()
 endif()
 
